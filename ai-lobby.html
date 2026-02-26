@@ -1,0 +1,2554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI LOBBY — The Grand Intelligence Hotel</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --gb-cream: #FAF0E4;
+    --gb-cream-dark: #EDE0CC;
+    --gb-pink: #D4556B;
+    --gb-pink-light: #E8899A;
+    --gb-pink-dark: #B03A50;
+    --gb-red: #9B2335;
+    --gb-red-deep: #6B1825;
+    --gb-burgundy: #5A1A2A;
+    --gb-brown: #8B6914;
+    --gb-brown-light: #C49A3C;
+    --gb-brown-dark: #5C4510;
+    --gb-gold: #D4A843;
+    --gb-gold-light: #E8C86A;
+    --gb-purple: #4A2040;
+    --gb-purple-light: #6B3A5C;
+    --gb-teal: #2D6B5E;
+    --gb-teal-light: #4A9B8A;
+    --gb-white: #FFFFFF;
+    --gb-black: #1A0A10;
+    --gb-text: #3A1A25;
+    --gb-text-light: #8A6A72;
+    --gb-border: #D4B8A0;
+    --gb-shadow: rgba(90,26,42,0.15);
+    --tools-color: #D4A843;
+    --analysis-color: #D4556B;
+    --strategy-color: #2D6B5E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--gb-cream);
+    color: var(--gb-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── WALLPAPER PATTERN ── */
+  .wallpaper {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 78px,
+        rgba(154,35,53,0.04) 78px,
+        rgba(154,35,53,0.04) 80px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 78px,
+        rgba(154,35,53,0.04) 78px,
+        rgba(154,35,53,0.04) 80px
+      );
+  }
+
+  .wallpaper-art {
+    position: fixed; inset: 0; z-index: 0;
+    opacity: 0.025;
+    background-image:
+      radial-gradient(circle at 50% 50%, var(--gb-red) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .ornament-top {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg,
+      var(--gb-gold) 0%, var(--gb-red) 15%, var(--gb-pink) 30%,
+      var(--gb-gold) 50%,
+      var(--gb-pink) 70%, var(--gb-red) 85%, var(--gb-gold) 100%);
+    z-index: 200;
+  }
+
+  .ornament-bottom {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gb-gold), var(--gb-red), var(--gb-gold));
+    z-index: 200;
+  }
+
+  #root { position: relative; z-index: 1; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes expandIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+  @keyframes doorOpen { from { opacity: 0; transform: perspective(800px) rotateY(-15deg); } to { opacity: 1; transform: perspective(800px) rotateY(0deg); } }
+  @keyframes bellRing { 0%,100% { transform: rotate(0deg); } 15% { transform: rotate(14deg); } 30% { transform: rotate(-12deg); } 45% { transform: rotate(10deg); } 60% { transform: rotate(-6deg); } 75% { transform: rotate(3deg); } }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  @keyframes typewriter { from { width: 0; } to { width: 100%; } }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+  @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 8px rgba(212,168,67,0.2); } 50% { box-shadow: 0 0 20px rgba(212,168,67,0.5); } }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 36px;
+    background: var(--gb-red-deep);
+    border-bottom: 3px solid var(--gb-gold);
+    position: sticky; top: 6px; z-index: 100;
+    box-shadow: 0 4px 24px rgba(26,10,16,0.3);
+  }
+
+  .header-left { display: flex; align-items: center; gap: 16px; }
+
+  .logo-frame {
+    width: 52px; height: 52px;
+    background: var(--gb-gold);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    border: 2px solid var(--gb-brown-light);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 2px 8px rgba(212,168,67,0.4);
+    position: relative;
+  }
+
+  .logo-frame::after {
+    content: '';
+    position: absolute; inset: 3px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 800;
+    letter-spacing: 5px; color: var(--gb-cream);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .logo-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--gb-gold-light);
+    font-style: italic;
+  }
+
+  .nav-tabs {
+    display: flex; gap: 2px;
+    background: rgba(0,0,0,0.2);
+    padding: 3px; border-radius: 6px;
+    border: 1px solid rgba(212,168,67,0.2);
+  }
+
+  .nav-tab {
+    padding: 10px 24px; border-radius: 4px;
+    border: none; background: transparent;
+    color: rgba(250,240,228,0.5);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .nav-tab:hover { color: var(--gb-cream); }
+  .nav-tab.active { background: var(--gb-pink-dark); color: var(--gb-cream); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .nav-tab:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  .header-right { display: flex; align-items: center; gap: 14px; }
+
+  .user-badge {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 18px;
+    background: rgba(212,168,67,0.12);
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 4px;
+    font-size: 13px; color: var(--gb-gold-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; letter-spacing: 0.5px;
+  }
+
+  .btn-logout {
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid rgba(250,240,228,0.2);
+    border-radius: 4px;
+    color: rgba(250,240,228,0.6);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .btn-logout:hover { border-color: var(--gb-pink-light); color: var(--gb-pink-light); }
+
+  /* ── LOGIN ── */
+  .login-screen {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 20px;
+  }
+
+  .login-card {
+    background: var(--gb-white);
+    border: 3px solid var(--gb-gold);
+    border-radius: 8px;
+    padding: 48px 44px;
+    width: 440px; max-width: 100%;
+    text-align: center;
+    animation: doorOpen 0.7s ease;
+    box-shadow: 0 24px 60px var(--gb-shadow), 0 0 0 1px rgba(212,168,67,0.1);
+    position: relative;
+  }
+
+  .login-card::before {
+    content: ''; position: absolute;
+    top: -3px; left: 30%; right: 30%; height: 3px;
+    background: var(--gb-pink); border-radius: 0 0 4px 4px;
+  }
+
+  .login-keyhole {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--gb-red), var(--gb-pink-dark));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 38px;
+    margin: 0 auto 20px;
+    border: 3px solid var(--gb-gold);
+    box-shadow: 0 6px 20px rgba(155,35,53,0.3);
+    position: relative;
+  }
+
+  .login-keyhole::after {
+    content: ''; position: absolute; inset: 5px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+  }
+
+  .login-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 800;
+    letter-spacing: 6px; color: var(--gb-red-deep);
+    margin-bottom: 2px;
+  }
+
+  .login-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; color: var(--gb-text-light);
+    font-style: italic; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .login-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 20px 0;
+    color: var(--gb-border);
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .login-divider::before, .login-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gb-border), transparent);
+  }
+
+  .login-user-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .login-user-btn {
+    display: flex; align-items: center; gap: 14px;
+    width: 100%; padding: 12px 16px;
+    background: var(--gb-cream);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 6px;
+    cursor: pointer; transition: all 0.3s;
+    text-align: left; color: var(--gb-text);
+    font-family: 'Inter', sans-serif;
+    position: relative; overflow: hidden;
+  }
+
+  .login-user-btn::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .login-user-btn.role-guest::before { background: var(--analysis-color); }
+  .login-user-btn.role-concierge::before { background: var(--tools-color); }
+  .login-user-btn.role-bellboy::before { background: var(--strategy-color); }
+
+  .login-user-btn:hover { border-color: var(--gb-gold); transform: translateX(4px); box-shadow: 0 4px 16px var(--gb-shadow); }
+  .login-user-btn:hover::before { opacity: 1; }
+
+  .login-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0; border: 2px solid;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .login-user-info { flex: 1; }
+  .login-user-name { font-size: 14px; font-weight: 600; color: var(--gb-text); }
+  .login-user-role { font-size: 11px; color: var(--gb-text-light); font-family: 'Cormorant Garamond', serif; font-style: italic; letter-spacing: 0.5px; }
+
+  .login-card form .form-input {
+    border: 2px solid var(--gb-border);
+    padding: 14px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .login-card form .form-input:focus {
+    border-color: var(--gb-gold);
+    box-shadow: 0 0 0 3px rgba(212,168,67,0.12);
+  }
+
+  /* ── LOBBY SCREEN ── */
+  .lobby-screen { padding: 36px 40px; animation: fadeIn 0.5s ease; }
+
+  .lobby-welcome {
+    text-align: center; margin-bottom: 44px;
+    animation: slideUp 0.6s ease;
+  }
+
+  .welcome-crest {
+    display: inline-flex; align-items: center; gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .crest-line {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gb-gold), transparent);
+  }
+
+  .crest-icon { font-size: 28px; }
+
+  .lobby-welcome h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px; font-weight: 700;
+    color: var(--gb-red-deep);
+    margin-bottom: 6px;
+  }
+
+  .lobby-welcome p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; color: var(--gb-text-light);
+    font-style: italic; letter-spacing: 1.5px;
+  }
+
+  .floor-label {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--gb-text-light);
+  }
+
+  .floor-label::after { content: ''; flex: 1; height: 1px; background: var(--gb-border); }
+
+  .columns-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .column { animation: slideUp 0.5s ease both; }
+  .column:nth-child(1) { animation-delay: 0.05s; }
+  .column:nth-child(2) { animation-delay: 0.15s; }
+  .column:nth-child(3) { animation-delay: 0.25s; }
+
+  .column-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 18px; padding-bottom: 14px;
+    border-bottom: 2px solid;
+    position: relative;
+  }
+
+  .column-header.tools { border-color: var(--tools-color); }
+  .column-header.analysis { border-color: var(--analysis-color); }
+  .column-header.strategy { border-color: var(--strategy-color); }
+
+  .col-icon {
+    width: 44px; height: 44px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    border: 1.5px solid;
+    position: relative;
+  }
+
+  .col-icon.tools { background: rgba(212,168,67,0.1); border-color: rgba(212,168,67,0.3); }
+  .col-icon.analysis { background: rgba(212,85,107,0.08); border-color: rgba(212,85,107,0.25); }
+  .col-icon.strategy { background: rgba(45,107,94,0.08); border-color: rgba(45,107,94,0.25); }
+
+  .col-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--gb-text);
+  }
+
+  .col-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; color: var(--gb-text-light);
+    font-style: italic; letter-spacing: 1px;
+  }
+
+  /* ── ROOM DOORS (Platform Cards) ── */
+  .room-door {
+    background: var(--gb-white);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    position: relative; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(90,26,42,0.06);
+  }
+
+  .room-door::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; bottom: 0; width: 5px;
+  }
+
+  .room-door.tools-door::before { background: var(--tools-color); }
+  .room-door.analysis-door::before { background: var(--analysis-color); }
+  .room-door.strategy-door::before { background: var(--strategy-color); }
+
+  .room-door:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px var(--gb-shadow);
+    border-color: var(--gb-gold);
+  }
+
+  .door-content { padding: 18px 18px 18px 22px; }
+
+  .door-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .door-number.tools { color: var(--tools-color); }
+  .door-number.analysis { color: var(--analysis-color); }
+  .door-number.strategy { color: var(--strategy-color); }
+
+  .door-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--gb-text);
+    margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .door-arrow {
+    font-size: 16px; color: var(--gb-border);
+    transition: all 0.3s;
+  }
+  .room-door:hover .door-arrow { color: var(--gb-gold); transform: translateX(3px); }
+
+  .door-meta {
+    display: flex; gap: 6px;
+  }
+
+  .door-tag {
+    font-size: 10px; padding: 2px 10px;
+    border-radius: 3px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; font-style: italic;
+  }
+
+  .door-tag.author { background: rgba(90,26,42,0.06); color: var(--gb-text-light); }
+  .door-tag.feat { background: rgba(212,168,67,0.1); color: var(--gb-brown); }
+
+  /* ── EXPANDED ROOM ── */
+  .expanded-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,10,16,0.6);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .expanded-room {
+    background: var(--gb-white);
+    border: 3px solid var(--gb-gold);
+    border-radius: 10px;
+    width: 92%; max-width: 620px;
+    overflow: hidden;
+    animation: doorOpen 0.45s ease;
+    box-shadow: 0 30px 80px rgba(26,10,16,0.4);
+    position: relative;
+  }
+
+  .expanded-room-bar {
+    height: 5px;
+  }
+  .expanded-room-bar.tools { background: linear-gradient(90deg, var(--tools-color), rgba(212,168,67,0.2)); }
+  .expanded-room-bar.analysis { background: linear-gradient(90deg, var(--analysis-color), rgba(212,85,107,0.2)); }
+  .expanded-room-bar.strategy { background: linear-gradient(90deg, var(--strategy-color), rgba(45,107,94,0.2)); }
+
+  .expanded-body { padding: 36px; }
+
+  .expanded-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+
+  .expanded-room-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; letter-spacing: 4px;
+    text-transform: uppercase; font-style: italic;
+  }
+
+  .expanded-room-num.tools { color: var(--tools-color); }
+  .expanded-room-num.analysis { color: var(--analysis-color); }
+  .expanded-room-num.strategy { color: var(--strategy-color); }
+
+  .expanded-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 800;
+    color: var(--gb-red-deep); margin-bottom: 16px;
+  }
+
+  .close-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gb-border);
+    background: var(--gb-cream);
+    color: var(--gb-text-light);
+    font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .close-btn:hover { background: var(--gb-pink); color: white; border-color: var(--gb-pink); }
+
+  .expanded-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; line-height: 1.8;
+    color: var(--gb-text-light);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .expanded-preview {
+    width: 100%; height: 180px;
+    background: var(--gb-cream);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .preview-door-frame {
+    width: 80px; height: 100px;
+    border: 2px solid var(--gb-border);
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .preview-door-frame::after {
+    content: ''; position: absolute;
+    right: 12px; top: 50%;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gb-gold);
+    transform: translateY(-50%);
+  }
+
+  .preview-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; color: var(--gb-text-light);
+    font-style: italic;
+  }
+
+  .expanded-footer {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .expanded-meta { display: flex; gap: 20px; }
+
+  .meta-item { font-size: 13px; color: var(--gb-text); }
+  .meta-label {
+    display: block; font-size: 9px;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gb-text-light); margin-bottom: 2px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .btn-enter-room {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, var(--gb-red), var(--gb-pink-dark));
+    border: none; border-radius: 6px;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 14px;
+    cursor: pointer; transition: all 0.3s;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 16px rgba(155,35,53,0.3);
+  }
+  .btn-enter-room:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(155,35,53,0.45); }
+
+  /* ── ACCESS DENIED MODAL ── */
+  .denied-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,10,16,0.6);
+    backdrop-filter: blur(6px);
+    z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .denied-card {
+    background: var(--gb-white);
+    border: 3px solid var(--gb-pink);
+    border-radius: 12px;
+    padding: 44px 40px;
+    text-align: center;
+    max-width: 400px; width: 90%;
+    animation: expandIn 0.35s ease;
+    box-shadow: 0 20px 60px rgba(26,10,16,0.4);
+  }
+
+  .denied-bell {
+    font-size: 64px;
+    display: block; margin-bottom: 16px;
+    animation: bellRing 1.2s ease 0.3s;
+  }
+
+  .denied-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--gb-red-deep);
+    margin-bottom: 8px;
+  }
+
+  .denied-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; color: var(--gb-text-light);
+    font-style: italic; line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .denied-close {
+    padding: 10px 28px;
+    background: var(--gb-cream);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 6px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--gb-text);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .denied-close:hover { border-color: var(--gb-pink); color: var(--gb-pink); }
+
+  /* ── CONFIG SCREEN ── */
+  .config-screen { padding: 36px 40px; max-width: 1440px; margin: 0 auto; animation: fadeIn 0.5s ease; }
+
+  .config-section {
+    margin-bottom: 36px;
+    animation: slideUp 0.5s ease both;
+  }
+  .config-section:nth-child(2) { animation-delay: 0.1s; }
+  .config-section:nth-child(3) { animation-delay: 0.2s; }
+
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--gb-border);
+  }
+
+  .section-title-group { display: flex; align-items: center; gap: 12px; }
+
+  .section-icon {
+    width: 38px; height: 38px;
+    background: rgba(155,35,53,0.08);
+    border: 1.5px solid rgba(155,35,53,0.15);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--gb-red-deep);
+  }
+
+  .section-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; color: var(--gb-text-light);
+    font-style: italic;
+  }
+
+  .btn-add {
+    padding: 8px 20px;
+    background: transparent;
+    border: 1.5px solid var(--gb-red);
+    border-radius: 5px;
+    color: var(--gb-red);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+  .btn-add:hover { background: var(--gb-red); color: white; }
+
+  .config-table {
+    width: 100%;
+    border-collapse: separate; border-spacing: 0;
+    background: var(--gb-white);
+    border-radius: 8px; overflow: hidden;
+    border: 1.5px solid var(--gb-border);
+    box-shadow: 0 2px 12px rgba(90,26,42,0.06);
+  }
+
+  .config-table thead th {
+    text-align: left; padding: 12px 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--gb-text-light);
+    background: var(--gb-cream);
+    border-bottom: 1.5px solid var(--gb-border);
+    font-weight: 700;
+  }
+
+  .config-table tbody td {
+    padding: 12px 18px; font-size: 13px;
+    border-bottom: 1px solid rgba(212,184,160,0.4);
+    color: var(--gb-text);
+  }
+
+  .config-table tbody tr:last-child td { border-bottom: none; }
+  .config-table tbody tr { transition: background 0.2s; }
+  .config-table tbody tr:hover { background: rgba(250,240,228,0.6); }
+
+  .role-badge {
+    display: inline-block; padding: 3px 12px;
+    border-radius: 4px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; font-weight: 700; font-style: italic;
+    letter-spacing: 0.5px;
+  }
+
+  .role-guest { background: rgba(212,85,107,0.1); color: var(--gb-pink-dark); }
+  .role-concierge { background: rgba(212,168,67,0.12); color: var(--gb-brown); }
+  .role-bellboy { background: rgba(45,107,94,0.1); color: var(--gb-teal); }
+
+  .access-pills { display: flex; gap: 4px; }
+  .access-pill {
+    font-size: 9px; padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(212,184,160,0.3); color: var(--gb-border);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+  }
+  .access-pill.active { background: rgba(45,107,94,0.1); color: var(--gb-teal); }
+
+  .score-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .score-track { width: 80px; height: 5px; background: var(--gb-cream-dark); border-radius: 3px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 800; min-width: 28px; }
+
+  .space-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+  .space-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .space-dot.tools { background: var(--tools-color); }
+  .space-dot.analysis { background: var(--analysis-color); }
+  .space-dot.strategy { background: var(--strategy-color); }
+
+  .delete-btn {
+    background: none; border: none;
+    color: var(--gb-border); cursor: pointer;
+    font-size: 13px; padding: 4px 8px;
+    border-radius: 4px; transition: all 0.2s;
+  }
+  .delete-btn:hover { color: var(--gb-pink); background: rgba(212,85,107,0.08); }
+
+  /* ── AI CONCIERGE (AI Analysis) ── */
+  .ai-section {
+    background: var(--gb-white);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(90,26,42,0.08);
+  }
+
+  .ai-header {
+    background: linear-gradient(135deg, var(--gb-red-deep), var(--gb-burgundy));
+    padding: 24px 28px;
+    display: flex; align-items: center; gap: 16px;
+    color: var(--gb-cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-header::after {
+    content: ''; position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent, transparent 38px,
+      rgba(212,168,67,0.05) 38px,
+      rgba(212,168,67,0.05) 40px
+    );
+  }
+
+  .ai-icon-wrap {
+    width: 48px; height: 48px;
+    background: rgba(212,168,67,0.15);
+    border: 1.5px solid rgba(212,168,67,0.3);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    position: relative; z-index: 1;
+    animation: pulseGlow 3s ease infinite;
+  }
+
+  .ai-header-text { position: relative; z-index: 1; }
+
+  .ai-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--gb-cream);
+  }
+
+  .ai-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; color: var(--gb-gold-light);
+    font-style: italic;
+  }
+
+  .ai-body { padding: 24px 28px; }
+
+  .ai-tabs {
+    display: flex; gap: 4px;
+    margin-bottom: 20px;
+    background: var(--gb-cream);
+    padding: 4px; border-radius: 6px;
+  }
+
+  .ai-tab {
+    flex: 1; padding: 10px;
+    border: none; border-radius: 4px;
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--gb-text-light);
+    cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-tab:hover { color: var(--gb-text); }
+  .ai-tab.active { background: var(--gb-white); color: var(--gb-red-deep); box-shadow: 0 2px 8px rgba(90,26,42,0.1); }
+
+  .ai-prompt-area {
+    background: var(--gb-cream);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .ai-prompt-input {
+    width: 100%; border: none;
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px; color: var(--gb-text);
+    outline: none; resize: vertical;
+    min-height: 48px;
+    font-style: italic;
+  }
+
+  .ai-prompt-input::placeholder { color: var(--gb-border); }
+
+  .ai-prompt-actions {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 12px;
+  }
+
+  .ai-quick-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .ai-quick-tag {
+    padding: 4px 12px;
+    background: var(--gb-white);
+    border: 1px solid var(--gb-border);
+    border-radius: 4px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--gb-text-light);
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .ai-quick-tag:hover { border-color: var(--gb-red); color: var(--gb-red); }
+
+  .btn-analyze {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--gb-red), var(--gb-pink-dark));
+    border: none; border-radius: 5px;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+  .btn-analyze:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(155,35,53,0.3); }
+
+  .ai-results {
+    background: var(--gb-cream);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .ai-result-header {
+    padding: 12px 16px;
+    background: rgba(45,107,94,0.06);
+    border-bottom: 1px solid var(--gb-border);
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; font-weight: 700;
+    color: var(--gb-teal);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .ai-result-body {
+    padding: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px; line-height: 1.8;
+    color: var(--gb-text);
+  }
+
+  .ai-finding {
+    padding: 14px;
+    background: var(--gb-white);
+    border: 1px solid var(--gb-border);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .ai-finding::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px; border-radius: 4px 0 0 4px;
+  }
+
+  .ai-finding.warn::before { background: var(--gb-gold); }
+  .ai-finding.info::before { background: var(--analysis-color); }
+  .ai-finding.success::before { background: var(--gb-teal); }
+
+  .ai-finding-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--gb-text); margin-bottom: 4px;
+  }
+
+  .ai-finding-text {
+    font-size: 13px; color: var(--gb-text-light);
+    line-height: 1.6;
+  }
+
+  /* ── MODALS ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,10,16,0.6);
+    backdrop-filter: blur(6px);
+    z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .modal {
+    background: var(--gb-white);
+    border: 2px solid var(--gb-gold);
+    border-radius: 10px;
+    width: 460px; max-width: 92%;
+    padding: 32px;
+    animation: expandIn 0.3s ease;
+    box-shadow: 0 24px 60px rgba(26,10,16,0.4);
+  }
+
+  .modal h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--gb-red-deep);
+    margin-bottom: 24px;
+  }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gb-text-light);
+    margin-bottom: 5px; font-weight: 700;
+  }
+
+  .form-input, .form-select {
+    width: 100%; padding: 10px 14px;
+    background: var(--gb-cream);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 6px;
+    color: var(--gb-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--gb-gold); }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
+
+  .btn-cancel {
+    padding: 10px 22px;
+    background: transparent;
+    border: 1.5px solid var(--gb-border);
+    border-radius: 6px;
+    color: var(--gb-text-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-cancel:hover { border-color: var(--gb-text); color: var(--gb-text); }
+
+  .btn-save {
+    padding: 10px 22px;
+    background: linear-gradient(135deg, var(--gb-red), var(--gb-pink-dark));
+    border: none; border-radius: 6px;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-save:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(155,35,53,0.3); }
+
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--gb-white);
+    border: 2px solid var(--gb-gold);
+    border-radius: 8px;
+    padding: 14px 24px;
+    color: var(--gb-text);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; font-weight: 600;
+    z-index: 400;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 8px 32px var(--gb-shadow);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .empty-hallway {
+    text-align: center; padding: 40px 20px;
+    color: var(--gb-text-light);
+  }
+  .empty-hallway-icon { font-size: 36px; margin-bottom: 8px; opacity: 0.3; }
+  .empty-hallway-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px; font-style: italic;
+  }
+
+  /* ── WELCOME POPUP ── */
+  .welcome-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,10,16,0.55);
+    backdrop-filter: blur(6px);
+    z-index: 250;
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .welcome-popup {
+    background: var(--gb-white);
+    border: 3px solid var(--gb-gold);
+    border-radius: 14px;
+    width: 520px; max-width: 92%;
+    overflow: hidden;
+    animation: doorOpen 0.55s ease;
+    box-shadow: 0 30px 80px rgba(26,10,16,0.45);
+    position: relative;
+  }
+
+  .welcome-popup-bar {
+    height: 5px;
+    background: linear-gradient(90deg, var(--gb-gold), var(--gb-red), var(--gb-pink), var(--gb-red), var(--gb-gold));
+  }
+
+  .welcome-popup-body {
+    padding: 40px 36px 32px;
+    text-align: center;
+  }
+
+  .welcome-bell {
+    font-size: 56px;
+    display: block;
+    margin-bottom: 14px;
+    animation: bellRing 1.4s ease 0.4s;
+  }
+
+  .welcome-greeting {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 800;
+    color: var(--gb-red-deep);
+    margin-bottom: 6px;
+  }
+
+  .welcome-phrase {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; color: var(--gb-text-light);
+    font-style: italic; letter-spacing: 1px;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .welcome-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gb-border);
+    font-weight: 700;
+  }
+
+  .welcome-divider::before, .welcome-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gb-border), transparent);
+  }
+
+  .welcome-instructions {
+    text-align: left;
+    background: var(--gb-cream);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+
+  .welcome-step {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .welcome-step:last-child { margin-bottom: 0; }
+
+  .welcome-step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--gb-red-deep);
+    color: var(--gb-cream);
+    font-family: 'Playfair Display', serif;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .welcome-step-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; color: var(--gb-text);
+    line-height: 1.6;
+  }
+
+  .welcome-step-text strong {
+    color: var(--gb-red-deep);
+    font-weight: 700;
+  }
+
+  .welcome-step-text em {
+    color: var(--gb-text-light);
+    font-size: 12px;
+  }
+
+  .btn-welcome-enter {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--gb-red), var(--gb-pink-dark));
+    border: none; border-radius: 8px;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 15px;
+    cursor: pointer; transition: all 0.3s;
+    letter-spacing: 1.5px;
+    box-shadow: 0 4px 20px rgba(155,35,53,0.3);
+  }
+
+  .btn-welcome-enter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(155,35,53,0.45);
+  }
+
+  .welcome-footnote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; color: var(--gb-border);
+    font-style: italic;
+    margin-top: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── UPLOAD SECTION ── */
+  .upload-section {
+    background: var(--gb-white);
+    border: 1.5px solid var(--gb-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(90,26,42,0.08);
+  }
+
+  .upload-header {
+    background: linear-gradient(135deg, var(--gb-brown-dark), var(--gb-brown));
+    padding: 22px 28px;
+    display: flex; align-items: center; gap: 16px;
+    position: relative; overflow: hidden;
+  }
+
+  .upload-header::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(90deg,transparent,transparent 38px,rgba(212,168,67,0.08) 38px,rgba(212,168,67,0.08) 40px);
+  }
+
+  .upload-header-icon {
+    width: 48px; height: 48px;
+    background: rgba(212,168,67,0.2);
+    border: 1.5px solid rgba(212,168,67,0.35);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    position: relative; z-index: 1;
+  }
+
+  .upload-header-text { position: relative; z-index: 1; }
+
+  .upload-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: var(--gb-cream);
+  }
+
+  .upload-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; color: var(--gb-gold-light); font-style: italic;
+  }
+
+  .upload-body { padding: 28px; }
+
+  .drop-zone {
+    border: 2.5px dashed var(--gb-border);
+    border-radius: 12px;
+    padding: 40px 24px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    background: var(--gb-cream);
+    position: relative;
+  }
+
+  .drop-zone:hover, .drop-zone.drag-over {
+    border-color: var(--gb-gold);
+    background: rgba(212,168,67,0.06);
+    box-shadow: 0 0 24px rgba(212,168,67,0.1);
+  }
+
+  .drop-zone.has-file {
+    border-color: var(--gb-teal);
+    border-style: solid;
+    background: rgba(45,107,94,0.04);
+  }
+
+  .drop-icon {
+    font-size: 44px; margin-bottom: 12px;
+    display: block;
+  }
+
+  .drop-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--gb-text); margin-bottom: 6px;
+  }
+
+  .drop-hint {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; color: var(--gb-text-light);
+    font-style: italic; margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .drop-or {
+    display: flex; align-items: center; gap: 12px;
+    margin: 16px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gb-border);
+  }
+  .drop-or::before, .drop-or::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gb-border), transparent);
+  }
+
+  .url-input-row {
+    display: flex; gap: 10px;
+    max-width: 480px; margin: 0 auto;
+  }
+
+  .url-input-row .form-input {
+    flex: 1;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+  }
+
+  .btn-url-add {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--gb-red), var(--gb-pink-dark));
+    border: none; border-radius: 6px;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-url-add:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(155,35,53,0.3); }
+
+  .file-accepted {
+    display: flex; align-items: center; gap: 14px;
+    justify-content: center;
+  }
+
+  .file-accepted-icon {
+    width: 48px; height: 48px;
+    background: rgba(45,107,94,0.1);
+    border: 1.5px solid rgba(45,107,94,0.25);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  .file-accepted-info { text-align: left; }
+
+  .file-accepted-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--gb-text);
+  }
+
+  .file-accepted-type {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; color: var(--gb-teal);
+    font-style: italic;
+  }
+
+  .file-remove {
+    background: none; border: none;
+    color: var(--gb-text-light); cursor: pointer;
+    font-size: 16px; padding: 4px 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .file-remove:hover { color: var(--gb-pink); background: rgba(212,85,107,0.08); }
+
+  .upload-form { margin-top: 24px; }
+
+  .upload-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .upload-form-full { grid-column: 1 / -1; }
+
+  .access-checkboxes {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .access-check-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    border: 1.5px solid var(--gb-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--gb-text-light);
+    background: var(--gb-cream);
+  }
+
+  .access-check-item:hover { border-color: var(--gb-gold); }
+
+  .access-check-item.checked {
+    border-color: var(--gb-teal);
+    background: rgba(45,107,94,0.06);
+    color: var(--gb-teal);
+  }
+
+  .access-check-item.locked {
+    border-color: rgba(45,107,94,0.3);
+    background: rgba(45,107,94,0.04);
+    color: var(--gb-teal);
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .access-check-box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--gb-border);
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .access-check-item.checked .access-check-box,
+  .access-check-item.locked .access-check-box {
+    background: var(--gb-teal);
+    border-color: var(--gb-teal);
+    color: white;
+  }
+
+  .upload-actions {
+    display: flex; justify-content: flex-end; gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gb-border);
+  }
+
+  .btn-publish {
+    padding: 12px 32px;
+    background: linear-gradient(135deg, var(--gb-red), var(--gb-pink-dark));
+    border: none; border-radius: 6px;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 14px;
+    cursor: pointer; transition: all 0.3s;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 16px rgba(155,35,53,0.25);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-publish:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(155,35,53,0.4); }
+  .btn-publish:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .btn-reset-upload {
+    padding: 12px 24px;
+    background: transparent;
+    border: 1.5px solid var(--gb-border);
+    border-radius: 6px;
+    color: var(--gb-text-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-reset-upload:hover { border-color: var(--gb-text); color: var(--gb-text); }
+
+  .upload-step-indicator {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--gb-border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 12px; font-weight: 700;
+    color: var(--gb-text-light);
+    transition: all 0.3s;
+  }
+
+  .step-dot.active { border-color: var(--gb-red); color: var(--gb-red); background: rgba(155,35,53,0.06); }
+  .step-dot.done { border-color: var(--gb-teal); color: white; background: var(--gb-teal); }
+
+  .step-line {
+    flex: 1; height: 2px;
+    background: var(--gb-border);
+    transition: background 0.3s;
+  }
+  .step-line.done { background: var(--gb-teal); }
+
+  .step-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; color: var(--gb-text-light);
+    letter-spacing: 1px; font-style: italic;
+  }
+
+  .tbl-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    flex-shrink: 0; border: 1.5px solid;
+    margin-right: 8px; vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+<div class="wallpaper"></div>
+<div class="wallpaper-art"></div>
+<div class="ornament-top"></div>
+<div class="ornament-bottom"></div>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+// ─── DATA ───
+const initialUsers = [
+  { id: 1, name: "Rafa Vázquez", email: "r.vazquez@sesametime.com", role: "bellboy", avatar: "RV" },
+  { id: 2, name: "Carlos Méndez", email: "c.mendez@sesametime.com", role: "concierge", avatar: "CM" },
+  { id: 3, name: "Laura García", email: "l.garcia@sesametime.com", role: "concierge", avatar: "LG" },
+  { id: 4, name: "Ana López", email: "a.lopez@sesametime.com", role: "guest", avatar: "AL" },
+  { id: 5, name: "Miguel Torres", email: "m.torres@sesametime.com", role: "guest", avatar: "MT" },
+  { id: 6, name: "Sofía Ruiz", email: "s.ruiz@sesametime.com", role: "guest", avatar: "SR" },
+];
+
+const initialPlatforms = [
+  { id: 1, name: "Beaver's Dam", room: "101", category: "tools", description: "Productivity suite for AEs featuring AI-powered task automation, pipeline tracking, and smart report generation. Includes personalized dashboards and intelligent alerts for deal movement.", author: "Carlos Méndez", authorId: 2, url: "#", complexity: 95, lines: 2400, features: 18, accessLevel: "all" },
+  { id: 2, name: "New Weekly", room: "201", category: "analysis", description: "Interactive weekly report consolidating sales KPIs, SDR activity metrics, and conversion funnels. Concierges fill in strategic insights while Guests review the compiled intelligence.", author: "Laura García", authorId: 3, url: "#", complexity: 88, lines: 1800, features: 14, accessLevel: "all" },
+  { id: 3, name: "Pipeline Radar", room: "102", category: "tools", description: "Real-time pipeline visualization with AI-powered close predictions and next-best-action recommendations for each opportunity in the funnel.", author: "Carlos Méndez", authorId: 2, url: "#", complexity: 78, lines: 1500, features: 11, accessLevel: "all" },
+  { id: 4, name: "Competitor Intel", room: "301", category: "strategy", description: "Competitive comparison matrix featuring dynamic battle cards, market positioning analysis, and real-time alerts on competitor movements and pricing changes.", author: "Laura García", authorId: 3, url: "#", complexity: 72, lines: 1200, features: 9, accessLevel: "concierge" },
+  { id: 5, name: "Deal Autopsy", room: "202", category: "analysis", description: "Post-mortem analysis engine for won and lost deals. AI identifies behavioral patterns, timing issues, and stakeholder dynamics to improve future win rates.", author: "Carlos Méndez", authorId: 2, url: "#", complexity: 65, lines: 980, features: 8, accessLevel: "all" },
+  { id: 6, name: "Launch Pad", room: "302", category: "strategy", description: "New product launch project management with go-to-market timelines, resource allocation, milestone tracking, and cross-team collaboration workflows.", author: "Rafa Vázquez", authorId: 1, url: "#", complexity: 60, lines: 850, features: 7, accessLevel: "concierge" },
+  { id: 7, name: "Quota Compass", room: "103", category: "tools", description: "Quota attainment tracker with forecasting models, territory balancing tools, and incentive scenario planning for sales managers.", author: "Laura García", authorId: 3, url: "#", complexity: 55, lines: 720, features: 6, accessLevel: "all" },
+];
+
+const roleConfig = {
+  guest: { label: "Guest", icon: "🏷️", color: "var(--analysis-color)", bg: "rgba(212,85,107,0.1)", border: "var(--analysis-color)" },
+  concierge: { label: "Concierge", icon: "🔑", color: "var(--gb-brown)", bg: "rgba(212,168,67,0.1)", border: "var(--tools-color)" },
+  bellboy: { label: "Bellboy", icon: "🛎️", color: "var(--gb-teal)", bg: "rgba(45,107,94,0.1)", border: "var(--strategy-color)" },
+};
+
+const catLabel = { tools: "Tools", analysis: "Analysis", strategy: "Strategy" };
+const catIcon = { tools: "🛠️", analysis: "📊", strategy: "🚀" };
+
+function calcScores(platforms) {
+  if (!platforms.length) return {};
+  const max = Math.max(...platforms.map(p => p.complexity));
+  const s = {};
+  platforms.forEach(p => { s[p.id] = Math.round((p.complexity / max) * 100); });
+  return s;
+}
+
+function scoreColor(s) {
+  if (s >= 80) return "var(--gb-teal)";
+  if (s >= 50) return "var(--gb-gold)";
+  return "var(--gb-pink)";
+}
+
+// ACCESS MATRIX:
+// Guest:     Tools=use, Analysis=view-only, Strategy=no-access
+// Concierge: Tools=full, Analysis=full,     Strategy=view-only
+// Bellboy:   Tools=full, Analysis=full,      Strategy=full
+//
+// "full"      = can enter + edit
+// "view-only" = can enter but NOT edit
+// "no-access" = cannot even open
+
+function getAccessLevel(user, category) {
+  const role = user.role;
+  if (role === "bellboy") return "full";
+  if (role === "concierge") {
+    if (category === "strategy") return "view-only";
+    return "full";
+  }
+  // guest
+  if (category === "tools") return "use";
+  if (category === "analysis") return "view-only";
+  return "no-access"; // strategy
+}
+
+function canAccess(user, platform) {
+  return getAccessLevel(user, platform.category) !== "no-access";
+}
+
+function canEdit(user, category) {
+  return getAccessLevel(user, category) === "full";
+}
+
+// ─── TOAST ───
+function Toast({ msg, onClose }) {
+  useEffect(() => { const t = setTimeout(onClose, 3000); return () => clearTimeout(t); }, []);
+  return <div className="toast">🛎️ {msg}</div>;
+}
+
+// ─── ACCESS DENIED ───
+function AccessDenied({ onClose, deniedMsg }) {
+  return (
+    <div className="denied-overlay" onClick={onClose}>
+      <div className="denied-card" onClick={e => e.stopPropagation()}>
+        <span className="denied-bell">🛎️</span>
+        <div className="denied-title">Oops! This room is locked</div>
+        <div className="denied-text">
+          {deniedMsg || "It seems you don't have access to this report. Please contact a Concierge or Bellboy to request entry to this room."}
+        </div>
+        <button className="denied-close" onClick={onClose}>Return to Lobby</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── LOGIN ───
+function LoginScreen({ users, onLogin }) {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [shakeKey, setShakeKey] = useState(0);
+
+  const handleSubmit = (e) => {
+    e && e.preventDefault();
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed) { setError("Please enter your email address."); return; }
+    const found = users.find(u => u.email.toLowerCase() === trimmed);
+    if (!found) {
+      setError("No reservation found for this email. Please contact a Bellboy to register.");
+      setShakeKey(k => k + 1);
+      return;
+    }
+    onLogin(found);
+  };
+
+  return (
+    <div className="login-screen">
+      <div className="login-card" key={shakeKey} style={ shakeKey > 0 ? { animation: 'doorOpen 0.4s ease' } : {} }>
+        <div className="login-keyhole">🏨</div>
+        <div className="login-title">AI LOBBY</div>
+        <div className="login-sub">The Grand Intelligence Hotel</div>
+        <div className="login-divider">Present your credentials</div>
+
+        <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
+          <div className="form-group">
+            <label className="form-label">Email address</label>
+            <input
+              className="form-input"
+              type="email"
+              value={email}
+              onChange={e => { setEmail(e.target.value); setError(""); }}
+              placeholder="your.name@sesametime.com"
+              autoFocus
+              style={{ textAlign: 'center', fontSize: 15, fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
+            />
+          </div>
+
+          {error && (
+            <div style={{
+              background: 'rgba(212,85,107,0.08)',
+              border: '1.5px solid rgba(212,85,107,0.2)',
+              borderRadius: 8,
+              padding: '12px 16px',
+              marginBottom: 16,
+              display: 'flex', alignItems: 'center', gap: 10,
+              animation: 'fadeIn 0.3s ease',
+            }}>
+              <span style={{ fontSize: 20 }}>🛎️</span>
+              <span style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 13, color: 'var(--gb-pink-dark)',
+                fontStyle: 'italic', lineHeight: 1.5,
+              }}>{error}</span>
+            </div>
+          )}
+
+          <button type="submit" className="btn-welcome-enter" style={{ width: '100%', marginTop: 4 }}>
+            Check In →
+          </button>
+        </form>
+
+        <div style={{
+          marginTop: 24,
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 11, color: 'var(--gb-border)',
+          fontStyle: 'italic', letterSpacing: 0.5,
+        }}>
+          Only registered guests may enter. Contact administration for new reservations.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── ROOM CARD ───
+function RoomDoor({ platform, category, onClick }) {
+  return (
+    <div className={`room-door ${category}-door`} onClick={onClick}>
+      <div className="door-content">
+        <div className={`door-number ${category}`}>Room {platform.room}</div>
+        <div className="door-name">
+          {platform.name}
+          <span className="door-arrow">→</span>
+        </div>
+        <div className="door-meta">
+          <span className="door-tag author">{platform.author}</span>
+          <span className="door-tag feat">{platform.features} features</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── EXPANDED ROOM ───
+function ExpandedRoom({ platform, category, accessLevel, currentUser, onClose }) {
+  const isViewOnly = accessLevel === "view-only";
+  const accessLabel = accessLevel === "full" ? "Full Access" : accessLevel === "use" ? "Use Only" : "View Only";
+  const accessColor = accessLevel === "full" ? "var(--gb-teal)" : accessLevel === "use" ? "var(--gb-gold)" : "var(--gb-pink)";
+
+  return (
+    <div className="expanded-overlay" onClick={onClose}>
+      <div className="expanded-room" onClick={e => e.stopPropagation()}>
+        <div className={`expanded-room-bar ${category}`} />
+        <div className="expanded-body">
+          <div className="expanded-header">
+            <div>
+              <div className={`expanded-room-num ${category}`}>{catIcon[category]} Room {platform.room} — {catLabel[category]}</div>
+              <div className="expanded-title">{platform.name}</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{
+                padding: '4px 12px',
+                borderRadius: 4,
+                fontSize: 11,
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 700,
+                fontStyle: 'italic',
+                background: `${accessColor}15`,
+                color: accessColor,
+                border: `1px solid ${accessColor}30`,
+                letterSpacing: 0.5,
+              }}>
+                {isViewOnly ? '👁️' : '✓'} {accessLabel}
+              </span>
+              <button className="close-btn" onClick={onClose}>✕</button>
+            </div>
+          </div>
+
+          {isViewOnly && (
+            <div style={{
+              background: 'rgba(212,85,107,0.06)',
+              border: '1.5px solid rgba(212,85,107,0.15)',
+              borderRadius: 8,
+              padding: '10px 16px',
+              marginBottom: 16,
+              display: 'flex', alignItems: 'center', gap: 10,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 13,
+              color: 'var(--gb-pink-dark)',
+              fontStyle: 'italic',
+            }}>
+              <span style={{ fontSize: 16 }}>🛎️</span>
+              You have view-only access to this room. Editing requires {category === 'strategy' ? 'Bellboy' : 'Concierge'} privileges.
+            </div>
+          )}
+
+          <div className="expanded-desc">{platform.description}</div>
+          <div className="expanded-preview">
+            <div className="preview-door-frame">
+              <span style={{ fontSize: 24 }}>{catIcon[category]}</span>
+            </div>
+            <div className="preview-label">Platform preview — Room {platform.room}</div>
+          </div>
+          <div className="expanded-footer">
+            <div className="expanded-meta">
+              <div className="meta-item"><span className="meta-label">Created by</span>{platform.author}</div>
+              <div className="meta-item"><span className="meta-label">Lines</span>{platform.lines?.toLocaleString()}</div>
+              <div className="meta-item"><span className="meta-label">Features</span>{platform.features}</div>
+            </div>
+            {isViewOnly ? (
+              <button className="btn-enter-room" style={{ background: 'var(--gb-border)', boxShadow: 'none', cursor: 'default' }} disabled>
+                👁️ View Only
+              </button>
+            ) : (
+              <button className="btn-enter-room" onClick={() => { if(platform.url && platform.url !== '#') window.open(platform.url,'_blank'); }}>
+                Enter Room →
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── LOBBY ───
+function LobbyScreen({ platforms, currentUser }) {
+  const [expanded, setExpanded] = useState(null);
+  const [deniedState, setDeniedState] = useState(null); // null or { msg }
+
+  const deniedMessages = {
+    strategy: "The Strategy floor is reserved for Concierges and Bellboys. Guests cannot access these rooms. Please contact your manager to request a key upgrade.",
+    "analysis-edit": "You can view the Analysis reports, but editing is reserved for Concierges and Bellboys.",
+    "strategy-edit": "You can view Strategy rooms, but editing is reserved for Bellboys only.",
+  };
+
+  const handleClick = (p, cat) => {
+    const access = getAccessLevel(currentUser, cat);
+    if (access === "no-access") {
+      setDeniedState({ msg: deniedMessages[cat] || "It seems you don't have access to this report. Please contact a Concierge or Bellboy to request entry to this room." });
+      return;
+    }
+    setExpanded({ ...p, _cat: cat, _access: access });
+  };
+
+  const tools = platforms.filter(p => p.category === "tools");
+  const analysis = platforms.filter(p => p.category === "analysis");
+  const strategy = platforms.filter(p => p.category === "strategy");
+
+  const renderCol = (items, cat, icon, title, sub) => {
+    const access = getAccessLevel(currentUser, cat);
+    const isBlocked = access === "no-access";
+    return (
+      <div className="column" style={ isBlocked ? { opacity: 0.45, filter: 'grayscale(0.3)' } : {} }>
+        <div className={`column-header ${cat}`}>
+          <div className={`col-icon ${cat}`}>{icon}</div>
+          <div>
+            <div className="col-title">{title} {isBlocked && '🔒'}</div>
+            <div className="col-subtitle">
+              {isBlocked ? 'Restricted floor' : access === 'view-only' ? sub + ' · View only' : sub}
+            </div>
+          </div>
+        </div>
+        {items.length ? items.map(p => (
+          <RoomDoor key={p.id} platform={p} category={cat} onClick={() => handleClick(p, cat)} />
+        )) : (
+          <div className="empty-hallway">
+            <div className="empty-hallway-icon">🚪</div>
+            <div className="empty-hallway-text">No rooms on this floor yet</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="lobby-screen">
+      <div className="lobby-welcome">
+        <div className="welcome-crest">
+          <div className="crest-line" />
+          <div className="crest-icon">🏨</div>
+          <div className="crest-line" />
+        </div>
+        <h2>Welcome, {currentUser.name.split(" ")[0]}</h2>
+        <p>Your suite of AI-powered intelligence awaits</p>
+      </div>
+      <div className="floor-label">Hotel Directory</div>
+      <div className="columns-container">
+        {renderCol(tools, "tools", "🛠️", "Tools", "Productivity suites for Guests")}
+        {renderCol(analysis, "analysis", "📊", "Analysis", "Reports & intelligence insights")}
+        {renderCol(strategy, "strategy", "🚀", "Strategy", "Product launch projects")}
+      </div>
+      {expanded && <ExpandedRoom platform={expanded} category={expanded._cat} accessLevel={expanded._access} currentUser={currentUser} onClose={() => setExpanded(null)} />}
+      {deniedState && <AccessDenied onClose={() => setDeniedState(null)} deniedMsg={deniedState.msg} />}
+    </div>
+  );
+}
+
+// ─── ADD USER MODAL ───
+function AddUserModal({ onClose, onSave }) {
+  const [name, setName] = useState(""); const [email, setEmail] = useState(""); const [role, setRole] = useState("guest");
+  const save = () => { if (!name.trim() || !email.trim()) return; const av = name.trim().split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2); onSave({ name: name.trim(), email: email.trim(), role, avatar: av }); onClose(); };
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <h3>New Guest Registration</h3>
+        <div className="form-group"><label className="form-label">Name</label><input className="form-input" value={name} onChange={e => setName(e.target.value)} placeholder="Full name" /></div>
+        <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email@sesametime.com" /></div>
+        <div className="form-group"><label className="form-label">Room Key</label>
+          <select className="form-select" value={role} onChange={e => setRole(e.target.value)}>
+            <option value="guest">🏷️ Guest — View only</option>
+            <option value="concierge">🔑 Concierge — Edit + Config</option>
+            <option value="bellboy">🛎️ Bellboy — Full access</option>
+          </select>
+        </div>
+        <div className="modal-actions"><button className="btn-cancel" onClick={onClose}>Cancel</button><button className="btn-save" onClick={save}>Register</button></div>
+      </div>
+    </div>
+  );
+}
+
+// ─── UPLOAD PLATFORM SECTION ───
+function UploadPlatform({ users, currentUser, onPublish, nextRooms }) {
+  const [step, setStep] = useState(1);
+  const [dragOver, setDragOver] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [urlInput, setUrlInput] = useState("");
+  const [platformUrl, setPlatformUrl] = useState("");
+
+  // Form fields
+  const [name, setName] = useState("");
+  const [cat, setCat] = useState("tools");
+  const [desc, setDesc] = useState("");
+  const [lines, setLines] = useState("");
+  const [features, setFeatures] = useState("");
+  const [authorId, setAuthorId] = useState(currentUser.id);
+  const [screenshotUrl, setScreenshotUrl] = useState("");
+
+  // Access: bellboy always has access (locked), others toggleable
+  const [accessGuest, setAccessGuest] = useState(true);
+  const [accessConcierge, setAccessConcierge] = useState(true);
+
+  const conciergesAndBellboys = users.filter(u => u.role === "concierge" || u.role === "bellboy");
+  const selectedAuthor = users.find(u => u.id === authorId) || currentUser;
+
+  const fileTypeMap = {
+    'text/html': { icon: '🌐', label: 'HTML Platform' },
+    'application/javascript': { icon: '⚡', label: 'JavaScript App' },
+    'text/javascript': { icon: '⚡', label: 'JavaScript App' },
+    'application/json': { icon: '📋', label: 'JSON Config' },
+    'text/css': { icon: '🎨', label: 'Stylesheet' },
+    'application/zip': { icon: '📦', label: 'Compressed Archive' },
+    'text/plain': { icon: '📄', label: 'Text File' },
+  };
+
+  const getFileInfo = (file) => {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (ext === 'html' || ext === 'htm') return { icon: '🌐', label: 'HTML Platform' };
+    if (ext === 'jsx' || ext === 'tsx') return { icon: '⚛️', label: 'React Component' };
+    if (ext === 'vue') return { icon: '💚', label: 'Vue Component' };
+    if (ext === 'py') return { icon: '🐍', label: 'Python App' };
+    if (ext === 'zip' || ext === 'rar') return { icon: '📦', label: 'Archive' };
+    return fileTypeMap[file.type] || { icon: '📁', label: file.type || 'File' };
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault(); setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setUploadedFile(file);
+      if (!name) setName(file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+      setStep(2);
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+      if (!name) setName(file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+      setStep(2);
+    }
+  };
+
+  const handleUrlAdd = () => {
+    if (!urlInput.trim()) return;
+    let url = urlInput.trim();
+    if (!url.startsWith('http')) url = 'https://' + url;
+    setPlatformUrl(url);
+    if (!name) {
+      try { const u = new URL(url); setName(u.hostname.replace('www.','').split('.')[0].replace(/\b\w/g, l => l.toUpperCase())); } catch(e) {}
+    }
+    setStep(2);
+  };
+
+  const computeAccess = () => {
+    if (accessGuest && accessConcierge) return "all";
+    if (accessConcierge) return "concierge";
+    return "concierge"; // minimum is concierge
+  };
+
+  const handlePublish = () => {
+    if (!name.trim()) return;
+    const author = users.find(u => u.id === authorId) || currentUser;
+    onPublish({
+      name: name.trim(),
+      room: nextRooms[cat],
+      category: cat,
+      description: desc.trim() || "No description provided.",
+      author: author.name,
+      authorId: author.id,
+      url: platformUrl || "#",
+      complexity: Math.min(100, Math.max(10, Math.round((parseInt(lines)||100)/25 + (parseInt(features)||1)*5))),
+      lines: parseInt(lines) || 100,
+      features: parseInt(features) || 1,
+      accessLevel: computeAccess(),
+      fileName: uploadedFile ? uploadedFile.name : null,
+      screenshot: screenshotUrl || null,
+    });
+    // Reset
+    setStep(1); setUploadedFile(null); setUrlInput(""); setPlatformUrl("");
+    setName(""); setCat("tools"); setDesc(""); setLines(""); setFeatures("");
+    setAuthorId(currentUser.id); setScreenshotUrl(""); setAccessGuest(true); setAccessConcierge(true);
+  };
+
+  const resetAll = () => {
+    setStep(1); setUploadedFile(null); setUrlInput(""); setPlatformUrl("");
+    setName(""); setCat("tools"); setDesc(""); setLines(""); setFeatures("");
+    setAuthorId(currentUser.id); setScreenshotUrl(""); setAccessGuest(true); setAccessConcierge(true);
+  };
+
+  const hasSource = uploadedFile || platformUrl;
+
+  return (
+    <div className="config-section">
+      <div className="upload-section">
+        <div className="upload-header">
+          <div className="upload-header-icon">📤</div>
+          <div className="upload-header-text">
+            <div className="upload-title">Upload Platform</div>
+            <div className="upload-subtitle">Register a new room in the hotel</div>
+          </div>
+        </div>
+        <div className="upload-body">
+          {/* Step indicator */}
+          <div className="upload-step-indicator">
+            <div className={`step-dot ${step >= 1 ? (step > 1 ? 'done' : 'active') : ''}`}>{step > 1 ? '✓' : '1'}</div>
+            <div className="step-label">Source</div>
+            <div className={`step-line ${step > 1 ? 'done' : ''}`} />
+            <div className={`step-dot ${step >= 2 ? (step > 2 ? 'done' : 'active') : ''}`}>{step > 2 ? '✓' : '2'}</div>
+            <div className="step-label">Details</div>
+            <div className={`step-line ${step > 2 ? 'done' : ''}`} />
+            <div className={`step-dot ${step >= 3 ? 'active' : ''}`}>3</div>
+            <div className="step-label">Publish</div>
+          </div>
+
+          {/* STEP 1: Upload / URL */}
+          {step === 1 && (
+            <div
+              className={`drop-zone ${dragOver ? 'drag-over' : ''}`}
+              onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+              onClick={() => document.getElementById('file-upload-input').click()}
+            >
+              <input id="file-upload-input" type="file" style={{ display: 'none' }} onChange={handleFileSelect}
+                accept=".html,.htm,.jsx,.tsx,.vue,.py,.js,.ts,.json,.zip,.rar,.css,.txt" />
+              <span className="drop-icon">🚪</span>
+              <div className="drop-title">Drag & drop your platform file here</div>
+              <div className="drop-hint">
+                Accepted: HTML, JSX, Vue, Python, JavaScript, JSON, ZIP archives<br />
+                or click to browse your files
+              </div>
+              <div className="drop-or">or paste a URL</div>
+              <div className="url-input-row" onClick={e => e.stopPropagation()}>
+                <input
+                  className="form-input"
+                  value={urlInput}
+                  onChange={e => setUrlInput(e.target.value)}
+                  placeholder="https://your-platform-url.com"
+                  onKeyDown={e => { if (e.key === 'Enter') handleUrlAdd(); }}
+                />
+                <button className="btn-url-add" onClick={handleUrlAdd}>Add URL →</button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: Details form */}
+          {step === 2 && (
+            <div className="upload-form">
+              {/* Show accepted file/url */}
+              {(uploadedFile || platformUrl) && (
+                <div style={{ marginBottom: 20 }}>
+                  <div className={`drop-zone has-file`} style={{ padding: '18px 24px', cursor: 'default' }}>
+                    <div className="file-accepted">
+                      <div className="file-accepted-icon">
+                        {uploadedFile ? getFileInfo(uploadedFile).icon : '🔗'}
+                      </div>
+                      <div className="file-accepted-info">
+                        <div className="file-accepted-name">
+                          {uploadedFile ? uploadedFile.name : platformUrl}
+                        </div>
+                        <div className="file-accepted-type">
+                          {uploadedFile
+                            ? `${getFileInfo(uploadedFile).label} · ${(uploadedFile.size / 1024).toFixed(1)} KB`
+                            : 'External URL'
+                          }
+                        </div>
+                      </div>
+                      <button className="file-remove" onClick={() => { setUploadedFile(null); setPlatformUrl(""); setStep(1); }}>✕</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="upload-form-grid">
+                <div className="form-group upload-form-full">
+                  <label className="form-label">Platform Name</label>
+                  <input className="form-input" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Pipeline Radar, Deal Autopsy..." />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Uploaded By</label>
+                  <select className="form-select" value={authorId} onChange={e => setAuthorId(parseInt(e.target.value))}>
+                    {conciergesAndBellboys.map(u => (
+                      <option key={u.id} value={u.id}>{roleConfig[u.role].icon} {u.name} ({roleConfig[u.role].label})</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Floor (Section)</label>
+                  <select className="form-select" value={cat} onChange={e => setCat(e.target.value)}>
+                    <option value="tools">🛠️ Tools — Floor 1</option>
+                    <option value="analysis">📊 Analysis — Floor 2</option>
+                    <option value="strategy">🚀 Strategy — Floor 3</option>
+                  </select>
+                </div>
+
+                <div className="form-group upload-form-full">
+                  <label className="form-label">Description</label>
+                  <input className="form-input" value={desc} onChange={e => setDesc(e.target.value)} placeholder="What does this platform do?" />
+                </div>
+
+                {!platformUrl && (
+                  <div className="form-group upload-form-full">
+                    <label className="form-label">Platform URL (if hosted externally)</label>
+                    <input className="form-input" value={platformUrl} onChange={e => setPlatformUrl(e.target.value)} placeholder="https://..." />
+                  </div>
+                )}
+
+                <div className="form-group">
+                  <label className="form-label">Lines of Code (est.)</label>
+                  <input className="form-input" type="number" value={lines} onChange={e => setLines(e.target.value)} placeholder="0" />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Number of Features</label>
+                  <input className="form-input" type="number" value={features} onChange={e => setFeatures(e.target.value)} placeholder="0" />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Screenshot URL (optional)</label>
+                  <input className="form-input" value={screenshotUrl} onChange={e => setScreenshotUrl(e.target.value)} placeholder="https://i.imgur.com/..." />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Room Number</label>
+                  <div className="form-input" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--gb-red-deep)', fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 18 }}>
+                    🚪 {nextRooms[cat]}
+                  </div>
+                </div>
+              </div>
+
+              {/* Access levels */}
+              <div className="form-group" style={{ marginTop: 4 }}>
+                <label className="form-label">Who Can Access This Room?</label>
+                <div className="access-checkboxes">
+                  <div className="access-check-item locked">
+                    <div className="access-check-box">✓</div>
+                    <span>🛎️ Bellboy</span>
+                    <span style={{ fontSize: 10, opacity: 0.6, marginLeft: 4 }}>always</span>
+                  </div>
+                  <div className={`access-check-item ${accessConcierge ? 'checked' : ''}`} onClick={() => setAccessConcierge(!accessConcierge)}>
+                    <div className="access-check-box">{accessConcierge ? '✓' : ''}</div>
+                    <span>🔑 Concierge</span>
+                  </div>
+                  <div className={`access-check-item ${accessGuest ? 'checked' : ''}`} onClick={() => { setAccessGuest(!accessGuest); if (!accessGuest) setAccessConcierge(true); }}>
+                    <div className="access-check-box">{accessGuest ? '✓' : ''}</div>
+                    <span>🏷️ Guest</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="upload-actions">
+                <button className="btn-reset-upload" onClick={resetAll}>Cancel</button>
+                <button className="btn-publish" onClick={() => setStep(3)} disabled={!name.trim()}>
+                  Review →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: Review & Publish */}
+          {step === 3 && (
+            <div className="upload-form">
+              <div style={{
+                background: 'var(--gb-cream)',
+                border: '1.5px solid var(--gb-border)',
+                borderRadius: 10,
+                padding: 24,
+                marginBottom: 20,
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                  <div>
+                    <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gb-text-light)', fontStyle: 'italic', marginBottom: 4 }}>
+                      {catIcon[cat]} Room {nextRooms[cat]} — {catLabel[cat]}
+                    </div>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 800, color: 'var(--gb-red-deep)' }}>
+                      {name}
+                    </div>
+                  </div>
+                  <button className="close-btn" onClick={() => setStep(2)} style={{ flexShrink: 0 }}>←</button>
+                </div>
+
+                {desc && (
+                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, color: 'var(--gb-text-light)', fontStyle: 'italic', lineHeight: 1.7, marginBottom: 16 }}>
+                    {desc}
+                  </div>
+                )}
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                  <div>
+                    <div className="meta-label">Uploaded by</div>
+                    <div style={{ fontSize: 13, fontWeight: 500 }}>{selectedAuthor.name}</div>
+                  </div>
+                  <div>
+                    <div className="meta-label">Source</div>
+                    <div style={{ fontSize: 13, fontWeight: 500 }}>{uploadedFile ? '📁 File' : '🔗 URL'}</div>
+                  </div>
+                  <div>
+                    <div className="meta-label">Lines / Features</div>
+                    <div style={{ fontSize: 13, fontWeight: 500 }}>{lines || '—'} / {features || '—'}</div>
+                  </div>
+                  <div>
+                    <div className="meta-label">Access</div>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <span className="access-pill active">🛎️</span>
+                      {accessConcierge && <span className="access-pill active">🔑</span>}
+                      {accessGuest && <span className="access-pill active">🏷️</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="upload-actions">
+                <button className="btn-reset-upload" onClick={() => setStep(2)}>← Back</button>
+                <button className="btn-publish" onClick={handlePublish}>
+                  🚪 Open Room {nextRooms[cat]} →
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── AI CONCIERGE SECTION ───
+function AIConcierge({ platforms, scores }) {
+  const [aiTab, setAiTab] = useState("discrepancies");
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const runAnalysis = (type) => {
+    setLoading(true);
+    setTimeout(() => {
+      if (type === "discrepancies") {
+        setResults({
+          title: "Numerical Discrepancy Scan",
+          findings: [
+            { type: "warn", title: "KPI Mismatch: New Weekly vs Pipeline Radar", text: "Room 201 (New Weekly) reports total pipeline value of $2.4M using a SUM formula across deal_amount column, while Room 102 (Pipeline Radar) shows $2.1M by aggregating weighted_value with probability multiplier. The $300K gap comes from Pipeline Radar applying a 0.85 weight factor on Stage 3 deals that New Weekly counts at full value." },
+            { type: "warn", title: "Conversion Rate Calculation Difference", text: "Room 201 calculates conversion rate as (closed_won / total_created) = 23%, while Room 202 (Deal Autopsy) uses (closed_won / qualified_only) = 31%. Both are valid but measure different funnels — recommend standardizing the denominator." },
+            { type: "info", title: "Date Range Alignment", text: "All platforms are currently aligned on the same fiscal calendar (Q1 = Jan-Mar). No temporal discrepancies detected in reporting periods." },
+          ]
+        });
+      } else if (type === "overlap") {
+        setResults({
+          title: "Overlap & Unification Analysis",
+          findings: [
+            { type: "warn", title: "High Overlap: Pipeline Radar ↔ Beaver's Dam", text: "Room 102 and Room 101 share 67% of their data sources (HubSpot deals, contact activities). Pipeline Radar's visualization module could be integrated as a tab within Beaver's Dam, reducing maintenance overhead by ~40%. Both maintained by Carlos Méndez." },
+            { type: "info", title: "Complementary: New Weekly + Deal Autopsy", text: "Room 201 and Room 202 serve different time horizons (weekly vs. historical) but share the same underlying deal data. Consider creating a shared data layer to ensure metric consistency and reduce redundant API calls." },
+            { type: "success", title: "Independent: Competitor Intel & Launch Pad", text: "Room 301 and Room 302 have minimal code overlap (<8%). They serve distinct purposes and don't need unification. Both are well-scoped for their strategic functions." },
+          ]
+        });
+      } else {
+        setResults({
+          title: "Manager Leaderboard Intelligence",
+          findings: [
+            { type: "success", title: "Top Builder: Carlos Méndez — Avg Score 79", text: "3 platforms created (Rooms 101, 102, 202). Highest code complexity, most features per platform. Beaver's Dam (Room 101) is the benchmark at score 100. Strong focus on Tools category — consider diversifying into Strategy." },
+            { type: "info", title: "Quality Focus: Laura García — Avg Score 72", text: "2 platforms (Rooms 201, 301). Excellent documentation quality and UX polish. New Weekly scores 93 — nearly matching the benchmark. Analysis and Strategy categories covered well." },
+            { type: "info", title: "Emerging: Rafa Vázquez — Score 63", text: "1 platform (Room 302). Launch Pad shows solid architecture. Opportunity to increase feature count and code depth to climb the leaderboard. Consider pairing with Carlos for mentorship sprints." },
+          ]
+        });
+      }
+      setLoading(false);
+    }, 1200);
+  };
+
+  return (
+    <div className="config-section">
+      <div className="ai-section">
+        <div className="ai-header">
+          <div className="ai-icon-wrap">🤖</div>
+          <div className="ai-header-text">
+            <div className="ai-title">AI Concierge</div>
+            <div className="ai-subtitle">Intelligent platform analysis & recommendations</div>
+          </div>
+        </div>
+        <div className="ai-body">
+          <div className="ai-tabs">
+            <button className={`ai-tab ${aiTab === 'discrepancies' ? 'active' : ''}`} onClick={() => setAiTab('discrepancies')}>🔍 Discrepancies</button>
+            <button className={`ai-tab ${aiTab === 'overlap' ? 'active' : ''}`} onClick={() => setAiTab('overlap')}>🔗 Overlap & Unify</button>
+            <button className={`ai-tab ${aiTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setAiTab('leaderboard')}>🏆 Leaderboard</button>
+          </div>
+          <div className="ai-prompt-area">
+            <textarea className="ai-prompt-input" value={query} onChange={e => setQuery(e.target.value)} placeholder={
+              aiTab === 'discrepancies' ? "Ask about numerical differences between reports... e.g. 'Why does pipeline value differ between New Weekly and Pipeline Radar?'" :
+              aiTab === 'overlap' ? "Ask about platform overlap... e.g. 'Which platforms could be merged?'" :
+              "Ask about builder performance... e.g. 'Who is building the most complete platforms?'"
+            } rows={2} />
+            <div className="ai-prompt-actions">
+              <div className="ai-quick-tags">
+                {aiTab === 'discrepancies' && <>
+                  <button className="ai-quick-tag" onClick={() => { setQuery("Scan all rooms for KPI mismatches"); runAnalysis('discrepancies'); }}>Scan all KPIs</button>
+                  <button className="ai-quick-tag" onClick={() => { setQuery("Compare formulas across reports"); runAnalysis('discrepancies'); }}>Compare formulas</button>
+                </>}
+                {aiTab === 'overlap' && <>
+                  <button className="ai-quick-tag" onClick={() => { setQuery("Find platforms that should be unified"); runAnalysis('overlap'); }}>Find duplicates</button>
+                  <button className="ai-quick-tag" onClick={() => { setQuery("Who is building similar things?"); runAnalysis('overlap'); }}>Team overlap</button>
+                </>}
+                {aiTab === 'leaderboard' && <>
+                  <button className="ai-quick-tag" onClick={() => { setQuery("Rank managers by platform quality"); runAnalysis('leaderboard'); }}>Full ranking</button>
+                  <button className="ai-quick-tag" onClick={() => { setQuery("Who needs coaching?"); runAnalysis('leaderboard'); }}>Growth areas</button>
+                </>}
+              </div>
+              <button className="btn-analyze" onClick={() => runAnalysis(aiTab)} disabled={loading}>
+                {loading ? "Analyzing..." : "Analyze →"}
+              </button>
+            </div>
+          </div>
+          {results && (
+            <div className="ai-results">
+              <div className="ai-result-header">✨ {results.title}</div>
+              <div className="ai-result-body">
+                {results.findings.map((f, i) => (
+                  <div key={i} className={`ai-finding ${f.type}`}>
+                    <div className="ai-finding-title">{f.title}</div>
+                    <div className="ai-finding-text">{f.text}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── WELCOME POPUP ───
+const hotelPhrases = [
+  "Good evening. How may we be of service today?",
+  "Welcome back to the Grand Intelligence Hotel.",
+  "Your suite has been prepared, and the staff is at your disposal.",
+  "The concierge desk is open. What shall we arrange for you?",
+  "Ah, wonderful to see you again. Right this way.",
+  "Every great stay begins at the front desk.",
+  "The bellboy has your luggage. Shall we proceed?",
+];
+
+function WelcomePopup({ currentUser, onClose }) {
+  const phrase = useMemo(() => hotelPhrases[Math.floor(Math.random() * hotelPhrases.length)], []);
+  const rc = roleConfig[currentUser.role];
+
+  return (
+    <div className="welcome-overlay" onClick={onClose}>
+      <div className="welcome-popup" onClick={e => e.stopPropagation()}>
+        <div className="welcome-popup-bar" />
+        <div className="welcome-popup-body">
+          <span className="welcome-bell">🛎️</span>
+          <div className="welcome-greeting">Welcome to the Back Office</div>
+          <div className="welcome-phrase">"{phrase}"</div>
+
+          <div className="welcome-divider">How to register a new platform</div>
+
+          <div className="welcome-instructions">
+            <div className="welcome-step">
+              <div className="welcome-step-num">1</div>
+              <div className="welcome-step-text">
+                <strong>Upload your source</strong> — Drag & drop your platform file (HTML, JSX, Python, ZIP) into the upload zone, or paste the URL where it's hosted.<br />
+                <em>The platform name will auto-fill from the file name.</em>
+              </div>
+            </div>
+            <div className="welcome-step">
+              <div className="welcome-step-num">2</div>
+              <div className="welcome-step-text">
+                <strong>Fill in the details</strong> — Select who uploads it, which floor it belongs to (Tools, Analysis, or Strategy), add a description, and set the estimated lines of code & features.
+              </div>
+            </div>
+            <div className="welcome-step">
+              <div className="welcome-step-num">3</div>
+              <div className="welcome-step-text">
+                <strong>Set access levels</strong> — Choose who can enter the room. Bellboys always have access. Toggle Concierge and Guest permissions as needed.
+              </div>
+            </div>
+            <div className="welcome-step">
+              <div className="welcome-step-num">4</div>
+              <div className="welcome-step-text">
+                <strong>Review & publish</strong> — Confirm everything looks right, then open the room. It will appear immediately in the Lobby for authorized users.
+              </div>
+            </div>
+          </div>
+
+          <button className="btn-welcome-enter" onClick={onClose}>
+            Proceed to Back Office →
+          </button>
+
+          <div className="welcome-footnote">
+            Logged in as {rc.icon} {currentUser.name} · {rc.label}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CONFIG SCREEN ───
+function ConfigScreen({ users, setUsers, platforms, setPlatforms, currentUser, scores, setToast }) {
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
+
+  const canManageUsers = currentUser.role === "bellboy";
+  const canAdd = currentUser.role !== "guest";
+
+  const nextRooms = useMemo(() => {
+    const cats = { tools: 100, analysis: 200, strategy: 300 };
+    const result = {};
+    Object.keys(cats).forEach(cat => {
+      const nums = platforms.filter(p => p.category === cat).map(p => parseInt(p.room)).filter(n => !isNaN(n));
+      result[cat] = String((nums.length ? Math.max(...nums) : cats[cat]) + 1);
+    });
+    return result;
+  }, [platforms]);
+
+  const handlePublishPlatform = (d) => {
+    setPlatforms(prev => [...prev, { ...d, id: Date.now() }]);
+    setToast(`${d.name} opened in Room ${d.room}`);
+  };
+
+  return (
+    <div className="config-screen">
+      {/* Upload Platform — FIRST for visibility */}
+      {canAdd && (
+        <UploadPlatform
+          users={users}
+          currentUser={currentUser}
+          onPublish={handlePublishPlatform}
+          nextRooms={nextRooms}
+        />
+      )}
+
+      {/* Users */}
+      <div className="config-section">
+        <div className="section-header">
+          <div className="section-title-group">
+            <div className="section-icon">👥</div>
+            <div><div className="section-title">Guest Registry</div><div className="section-subtitle">Who holds the keys</div></div>
+          </div>
+          {canManageUsers && <button className="btn-add" onClick={() => setShowAddUser(true)}>+ New Guest</button>}
+        </div>
+        <table className="config-table">
+          <thead><tr><th>Guest</th><th>Email</th><th>Key Type</th><th>Access</th>{canManageUsers && <th style={{width:44}}></th>}</tr></thead>
+          <tbody>
+            {users.map(u => {
+              const rc = roleConfig[u.role];
+              return (
+                <tr key={u.id}>
+                  <td><span className="tbl-avatar" style={{ background: rc.bg, color: rc.color, borderColor: rc.border }}>{u.avatar}</span>{u.name}</td>
+                  <td style={{ color: 'var(--gb-text-light)', fontSize: 12 }}>{u.email}</td>
+                  <td><span className={`role-badge role-${u.role}`}>{rc.icon} {rc.label}</span></td>
+                  <td>
+                    <div className="access-pills">
+                      <span className="access-pill active">Lobby</span>
+                      <span className={`access-pill ${u.role !== 'guest' ? 'active' : ''}`}>Config</span>
+                      <span className={`access-pill ${u.role === 'bellboy' ? 'active' : ''}`}>Admin</span>
+                    </div>
+                  </td>
+                  {canManageUsers && <td>{u.id !== currentUser.id && <button className="delete-btn" onClick={() => { setUsers(prev => prev.filter(x => x.id !== u.id)); setToast("Guest removed"); }}>✕</button>}</td>}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Platforms */}
+      <div className="config-section">
+        <div className="section-header">
+          <div className="section-title-group">
+            <div className="section-icon">🚪</div>
+            <div><div className="section-title">Room Directory</div><div className="section-subtitle">All registered platforms & their scores</div></div>
+          </div>
+        </div>
+        <table className="config-table">
+          <thead><tr><th>Room</th><th>Platform</th><th>Builder</th><th>Floor</th><th>Score</th>{canAdd && <th style={{width:44}}></th>}</tr></thead>
+          <tbody>
+            {[...platforms].sort((a,b) => (scores[b.id]||0) - (scores[a.id]||0)).map(p => (
+              <tr key={p.id}>
+                <td style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: 'var(--gb-red-deep)' }}>{p.room}</td>
+                <td style={{ fontWeight: 500 }}>{p.name}</td>
+                <td style={{ color: 'var(--gb-text-light)', fontSize: 12 }}>{p.author}</td>
+                <td><span className="space-tag"><span className={`space-dot ${p.category}`}></span>{catLabel[p.category]}</span></td>
+                <td>
+                  <div className="score-bar-wrap">
+                    <div className="score-track"><div className="score-fill" style={{ width: `${scores[p.id]||0}%`, background: scoreColor(scores[p.id]||0) }} /></div>
+                    <span className="score-num" style={{ color: scoreColor(scores[p.id]||0) }}>{scores[p.id]||0}</span>
+                  </div>
+                </td>
+                {canAdd && <td><button className="delete-btn" onClick={() => { setPlatforms(prev => prev.filter(x => x.id !== p.id)); setToast("Room closed"); }}>✕</button></td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* AI Concierge */}
+      <AIConcierge platforms={platforms} scores={scores} />
+
+      {showAddUser && <AddUserModal onClose={() => setShowAddUser(false)} onSave={(d) => { setUsers(prev => [...prev, { ...d, id: Date.now() }]); setToast(`${d.name} registered as ${roleConfig[d.role].label}`); }} />}
+      {showWelcome && <WelcomePopup currentUser={currentUser} onClose={() => setShowWelcome(false)} />}
+    </div>
+  );
+}
+
+// ─── APP ───
+function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [tab, setTab] = useState("lobby");
+  const [users, setUsers] = useState(initialUsers);
+  const [platforms, setPlatforms] = useState(initialPlatforms);
+  const [toast, setToast] = useState(null);
+
+  const scores = useMemo(() => calcScores(platforms), [platforms]);
+  const rc = currentUser ? roleConfig[currentUser.role] : null;
+  const canConfig = currentUser && currentUser.role !== "guest";
+
+  if (!currentUser) return <LoginScreen users={users} onLogin={setCurrentUser} />;
+
+  return (
+    <div>
+      <header className="header">
+        <div className="header-left">
+          <div className="logo-frame">🏨</div>
+          <div><div className="logo-text">AI LOBBY</div><div className="logo-sub">The Grand Intelligence Hotel</div></div>
+        </div>
+        <nav className="nav-tabs">
+          <button className={`nav-tab ${tab === 'lobby' ? 'active' : ''}`} onClick={() => setTab("lobby")}>🏛️ Lobby</button>
+          <button className={`nav-tab ${tab === 'config' ? 'active' : ''}`} onClick={() => canConfig && setTab("config")} disabled={!canConfig} title={!canConfig ? "Concierge & Bellboy only" : ""}>⚙️ Back Office</button>
+        </nav>
+        <div className="header-right">
+          <div className="user-badge">{rc.icon} {currentUser.name} · {rc.label}</div>
+          <button className="btn-logout" onClick={() => { setCurrentUser(null); setTab("lobby"); }}>Check Out</button>
+        </div>
+      </header>
+      {tab === "lobby" && <LobbyScreen platforms={platforms} currentUser={currentUser} />}
+      {tab === "config" && canConfig && <ConfigScreen users={users} setUsers={setUsers} platforms={platforms} setPlatforms={setPlatforms} currentUser={currentUser} scores={scores} setToast={setToast} />}
+      {toast && <Toast msg={toast} onClose={() => setToast(null)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
