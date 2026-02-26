@@ -1525,15 +1525,22 @@ const initialUsers = [
   { id: 6, name: "Sofía Ruiz", email: "s.ruiz@sesametime.com", role: "guest", avatar: "SR" },
 ];
 
-const initialPlatforms = [
-  { id: 1, name: "Beaver's Dam", room: "101", category: "tools", description: "Productivity suite for AEs featuring AI-powered task automation, pipeline tracking, and smart report generation. Includes personalized dashboards and intelligent alerts for deal movement.", author: "Carlos Méndez", authorId: 2, url: "#", complexity: 95, lines: 2400, features: 18, accessLevel: "all" },
-  { id: 2, name: "New Weekly", room: "201", category: "analysis", description: "Interactive weekly report consolidating sales KPIs, SDR activity metrics, and conversion funnels. Concierges fill in strategic insights while Guests review the compiled intelligence.", author: "Laura García", authorId: 3, url: "#", complexity: 88, lines: 1800, features: 14, accessLevel: "all" },
-  { id: 3, name: "Pipeline Radar", room: "102", category: "tools", description: "Real-time pipeline visualization with AI-powered close predictions and next-best-action recommendations for each opportunity in the funnel.", author: "Carlos Méndez", authorId: 2, url: "#", complexity: 78, lines: 1500, features: 11, accessLevel: "all" },
-  { id: 4, name: "Competitor Intel", room: "301", category: "strategy", description: "Competitive comparison matrix featuring dynamic battle cards, market positioning analysis, and real-time alerts on competitor movements and pricing changes.", author: "Laura García", authorId: 3, url: "#", complexity: 72, lines: 1200, features: 9, accessLevel: "concierge" },
-  { id: 5, name: "Deal Autopsy", room: "202", category: "analysis", description: "Post-mortem analysis engine for won and lost deals. AI identifies behavioral patterns, timing issues, and stakeholder dynamics to improve future win rates.", author: "Carlos Méndez", authorId: 2, url: "#", complexity: 65, lines: 980, features: 8, accessLevel: "all" },
-  { id: 6, name: "Launch Pad", room: "302", category: "strategy", description: "New product launch project management with go-to-market timelines, resource allocation, milestone tracking, and cross-team collaboration workflows.", author: "Rafa Vázquez", authorId: 1, url: "#", complexity: 60, lines: 850, features: 7, accessLevel: "concierge" },
-  { id: 7, name: "Quota Compass", room: "103", category: "tools", description: "Quota attainment tracker with forecasting models, territory balancing tools, and incentive scenario planning for sales managers.", author: "Laura García", authorId: 3, url: "#", complexity: 55, lines: 720, features: 6, accessLevel: "all" },
-];
+const initialPlatforms = [];
+
+// ─── LOCALSTORAGE HELPERS ───
+const STORAGE_KEYS = { users: 'ailobby_users', platforms: 'ailobby_platforms' };
+
+function loadFromStorage(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return fallback;
+}
+
+function saveToStorage(key, data) {
+  try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
+}
 
 const roleConfig = {
   guest: { label: "Guest", icon: "🏷️", color: "var(--analysis-color)", bg: "rgba(212,85,107,0.1)", border: "var(--analysis-color)" },
@@ -2515,9 +2522,13 @@ function ConfigScreen({ users, setUsers, platforms, setPlatforms, currentUser, s
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [tab, setTab] = useState("lobby");
-  const [users, setUsers] = useState(initialUsers);
-  const [platforms, setPlatforms] = useState(initialPlatforms);
+  const [users, setUsers] = useState(() => loadFromStorage(STORAGE_KEYS.users, initialUsers));
+  const [platforms, setPlatforms] = useState(() => loadFromStorage(STORAGE_KEYS.platforms, initialPlatforms));
   const [toast, setToast] = useState(null);
+
+  // Persist to localStorage whenever users or platforms change
+  useEffect(() => { saveToStorage(STORAGE_KEYS.users, users); }, [users]);
+  useEffect(() => { saveToStorage(STORAGE_KEYS.platforms, platforms); }, [platforms]);
 
   const scores = useMemo(() => calcScores(platforms), [platforms]);
   const rc = currentUser ? roleConfig[currentUser.role] : null;
