@@ -10,36 +10,18 @@
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --wine:#9B2335;--burgundy:#5A1A2A;--gold:#D4A843;--cream:#FAF0E4;
-  --dark:#1A0A0E;--brown:#3E1C11;--rose:#C7959B;--ivory:#FFF8F0;
-  --green:#2A5A3A;--shadow:rgba(26,10,14,0.3);
-}
+:root{--wine:#9B2335;--burgundy:#5A1A2A;--gold:#D4A843;--cream:#FAF0E4;--dark:#1A0A0E;--brown:#3E1C11;--rose:#C7959B;--ivory:#FFF8F0;--green:#2A5A3A;--shadow:rgba(26,10,14,0.3)}
 body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--cream);min-height:100vh;overflow-x:hidden}
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .subtitle{font-family:'Cormorant Garamond',serif;font-style:italic}
-
-/* Ornamental borders */
 .ornament{position:relative;text-align:center;margin:16px 0}
 .ornament::before,.ornament::after{content:'';display:inline-block;width:60px;height:1px;background:var(--gold);vertical-align:middle}
 .ornament span{padding:0 16px;color:var(--gold);font-size:14px;letter-spacing:4px;text-transform:uppercase;font-family:'Cormorant Garamond',serif}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:var(--dark)}
-::-webkit-scrollbar-thumb{background:var(--burgundy);border-radius:4px}
-
-/* Animations */
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--burgundy);border-radius:4px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
-@keyframes doorOpen{from{transform:perspective(800px) rotateY(0)}to{transform:perspective(800px) rotateY(-25deg)}}
-
 .fade-in{animation:fadeIn 0.5s ease}
-
-/* Login */
 .login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark) 0%,var(--burgundy) 50%,var(--dark) 100%);position:relative;overflow:hidden}
 .login-bg::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L55 30L30 55L5 30Z' fill='none' stroke='%23D4A84320' stroke-width='0.5'/%3E%3C/svg%3E");opacity:0.3}
 .login-card{background:linear-gradient(145deg,rgba(90,26,42,0.9),rgba(26,10,14,0.95));border:2px solid var(--gold);border-radius:16px;padding:48px;width:420px;max-width:90vw;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:fadeIn 0.8s ease}
@@ -51,27 +33,23 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .login-btn{width:100%;padding:14px;border:none;background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);font-family:'Playfair Display',serif;font-size:18px;font-weight:700;border-radius:8px;cursor:pointer;margin-top:16px;transition:all 0.3s;letter-spacing:1px}
 .login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,168,67,0.3)}
 .login-error{color:#FF6B6B;font-size:14px;margin-top:12px;animation:fadeIn 0.3s}
-
-/* Top bar */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:linear-gradient(90deg,var(--dark),var(--burgundy),var(--dark));border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:50}
 .topbar h1{font-size:22px;color:var(--gold);letter-spacing:2px}
-.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .topbar-user{display:flex;align-items:center;gap:8px;color:var(--rose);font-size:14px}
 .topbar-avatar{width:36px;height:36px;border-radius:50%;background:var(--wine);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold);border:1px solid var(--gold)}
 .tab-btn{padding:8px 20px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:15px;cursor:pointer;transition:all 0.3s;border-radius:6px;letter-spacing:1px}
 .tab-btn.active,.tab-btn:hover{background:var(--gold);color:var(--dark);font-weight:600}
 .logout-btn{padding:8px 16px;border:1px solid var(--rose);background:transparent;color:var(--rose);border-radius:6px;cursor:pointer;font-size:13px;transition:all 0.3s}
 .logout-btn:hover{background:var(--rose);color:var(--dark)}
-
-/* Lobby */
+.lang-btn{padding:6px 14px;border:1px solid var(--gold);background:rgba(212,168,67,0.15);color:var(--gold);border-radius:16px;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.3s;letter-spacing:1px}
+.lang-btn:hover{background:var(--gold);color:var(--dark)}
 .lobby{padding:32px;max-width:1400px;margin:0 auto}
 .lobby-title{text-align:center;font-size:28px;color:var(--gold);margin-bottom:8px}
 .columns{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:24px}
 .column{background:linear-gradient(180deg,rgba(90,26,42,0.3),rgba(26,10,14,0.5));border:1px solid rgba(212,168,67,0.2);border-radius:12px;padding:24px;min-height:400px}
 .column-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);text-align:center;padding-bottom:12px;border-bottom:1px solid rgba(212,168,67,0.2);margin-bottom:16px;letter-spacing:2px}
 .empty-col{text-align:center;padding:40px 20px;color:var(--rose);opacity:0.5;font-style:italic;font-family:'Cormorant Garamond',serif}
-
-/* Room Door Card — Videogame Level Style */
 .room-door{position:relative;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.4s;margin-bottom:16px;border:2px solid rgba(212,168,67,0.3);min-height:180px}
 .room-door:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.4);border-color:var(--gold)}
 .room-preview{width:100%;height:140px;position:relative;overflow:hidden}
@@ -81,8 +59,6 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .room-name{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);margin-top:2px}
 .room-score-badge{position:absolute;top:10px;right:10px;background:rgba(26,10,14,0.85);border:1px solid var(--gold);border-radius:20px;padding:4px 12px;font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);font-weight:700;z-index:2}
 .room-category-badge{position:absolute;top:10px;left:10px;background:rgba(212,168,67,0.9);color:var(--dark);border-radius:12px;padding:3px 10px;font-size:11px;font-weight:600;z-index:2;letter-spacing:1px;text-transform:uppercase}
-
-/* Expanded Room Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.3s}
 .modal-content{background:linear-gradient(145deg,var(--burgundy),var(--dark));border:2px solid var(--gold);border-radius:16px;padding:0;width:560px;max-width:92vw;max-height:85vh;overflow-y:auto;position:relative;animation:slideDown 0.4s ease}
 .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--gold);font-size:24px;cursor:pointer;z-index:5;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.3s}
@@ -97,8 +73,7 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .modal-desc{color:var(--cream);line-height:1.7;font-size:15px;margin-bottom:20px;opacity:0.9}
 .modal-score{display:flex;align-items:center;gap:16px;padding:16px;background:rgba(0,0,0,0.2);border-radius:10px;margin-bottom:20px}
 .score-circle{width:60px;height:60px;border-radius:50%;border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold);flex-shrink:0}
-.score-bar{flex:1}
-.score-bar-track{height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+.score-bar{flex:1}.score-bar-track{height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
 .score-bar-fill{height:100%;background:linear-gradient(90deg,var(--wine),var(--gold));border-radius:4px;transition:width 0.8s ease}
 .score-label{font-size:13px;color:var(--rose);margin-top:4px}
 .access-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:500;margin-bottom:20px}
@@ -109,16 +84,12 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .enter-btn{width:100%;padding:14px;border:none;background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);font-family:'Playfair Display',serif;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:all 0.3s;letter-spacing:1px}
 .enter-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,67,0.3)}
 .enter-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
-
-/* Access Denied */
 .denied-modal{text-align:center;padding:40px 32px}
 .denied-bell{font-size:64px;display:block;margin-bottom:16px;animation:float 2s ease infinite}
 .denied-title{font-size:24px;color:var(--gold);margin-bottom:8px}
 .denied-text{color:var(--rose);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px}
 .denied-close{margin-top:24px;padding:10px 32px;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:8px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:16px;transition:all 0.3s}
 .denied-close:hover{background:var(--gold);color:var(--dark)}
-
-/* Config / Back Office */
 .config{padding:32px;max-width:1200px;margin:0 auto}
 .config-section{background:linear-gradient(145deg,rgba(90,26,42,0.2),rgba(26,10,14,0.4));border:1px solid rgba(212,168,67,0.2);border-radius:12px;padding:28px;margin-bottom:28px}
 .config-section h3{font-size:20px;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px}
@@ -129,36 +100,27 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .role-bellboy{background:rgba(212,168,67,0.2);color:var(--gold);border:1px solid var(--gold)}
 .role-concierge{background:rgba(42,90,58,0.2);color:#6FCF97;border:1px solid #6FCF97}
 .role-guest{background:rgba(199,149,155,0.2);color:var(--rose);border:1px solid var(--rose)}
-
-/* Upload Section */
 .upload-steps{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px}
 .upload-step{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--rose);opacity:0.5;transition:all 0.3s}
-.upload-step.active{opacity:1;color:var(--gold)}
-.upload-step.done{opacity:0.7;color:#6FCF97}
+.upload-step.active{opacity:1;color:var(--gold)}.upload-step.done{opacity:0.7;color:#6FCF97}
 .step-num{width:28px;height:28px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
 .step-line{width:40px;height:1px;background:rgba(212,168,67,0.3)}
 .dropzone{border:2px dashed rgba(212,168,67,0.4);border-radius:12px;padding:48px;text-align:center;cursor:pointer;transition:all 0.3s;background:rgba(255,248,240,0.02)}
 .dropzone:hover,.dropzone.active{border-color:var(--gold);background:rgba(212,168,67,0.06)}
-.dropzone-icon{font-size:48px;margin-bottom:12px}
-.dropzone-text{color:var(--rose);font-size:15px;margin-bottom:8px}
-.dropzone-sub{color:var(--rose);font-size:13px;opacity:0.6}
+.dropzone-icon{font-size:48px;margin-bottom:12px}.dropzone-text{color:var(--rose);font-size:15px;margin-bottom:8px}.dropzone-sub{color:var(--rose);font-size:13px;opacity:0.6}
 .url-input{width:100%;padding:12px 16px;border:1px solid rgba(212,168,67,0.3);background:rgba(255,248,240,0.06);color:var(--cream);border-radius:8px;font-size:14px;margin-top:16px;font-family:'Inter',sans-serif}
-.url-input:focus{outline:none;border-color:var(--gold)}
-.url-input::placeholder{color:var(--rose);opacity:0.5}
+.url-input:focus{outline:none;border-color:var(--gold)}.url-input::placeholder{color:var(--rose);opacity:0.5}
 .upload-form{display:grid;gap:16px}
 .form-group{display:flex;flex-direction:column;gap:6px}
 .form-group label{font-size:13px;color:var(--gold);font-family:'Cormorant Garamond',serif;letter-spacing:1px}
 .form-input,.form-select,.form-textarea{padding:10px 14px;border:1px solid rgba(212,168,67,0.3);background:rgba(255,248,240,0.06);color:var(--cream);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif}
 .form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--gold)}
-.form-select{cursor:pointer}
-.form-select option{background:var(--dark);color:var(--cream)}
+.form-select{cursor:pointer}.form-select option{background:var(--dark);color:var(--cream)}
 .form-textarea{resize:vertical;min-height:80px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .checkbox-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
 .checkbox-label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--cream);cursor:pointer;padding:6px 12px;border:1px solid rgba(212,168,67,0.2);border-radius:6px;transition:all 0.3s}
-.checkbox-label:hover{border-color:var(--gold)}
-.checkbox-label input{accent-color:var(--gold)}
-.checkbox-label.locked{opacity:0.7;cursor:default}
+.checkbox-label:hover{border-color:var(--gold)}.checkbox-label input{accent-color:var(--gold)}.checkbox-label.locked{opacity:0.7;cursor:default}
 .upload-nav{display:flex;justify-content:space-between;margin-top:24px}
 .nav-btn{padding:10px 24px;border-radius:8px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;transition:all 0.3s;letter-spacing:1px}
 .nav-btn.primary{background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);border:none;font-weight:600}
@@ -166,27 +128,20 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .nav-btn.secondary{background:transparent;border:1px solid var(--gold);color:var(--gold)}
 .nav-btn.secondary:hover{background:rgba(212,168,67,0.1)}
 .nav-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
-
-/* Review card */
 .review-card{background:rgba(0,0,0,0.2);border:1px solid rgba(212,168,67,0.2);border-radius:10px;padding:20px}
 .review-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px}
 .review-row:last-child{border-bottom:none}
-.review-label{color:var(--rose);font-family:'Cormorant Garamond',serif}
-.review-value{color:var(--cream);font-weight:500}
-
-/* AI Concierge */
+.review-label{color:var(--rose);font-family:'Cormorant Garamond',serif}.review-value{color:var(--cream);font-weight:500}
 .ai-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
 .ai-tab{padding:8px 18px;border:1px solid rgba(212,168,67,0.3);background:transparent;color:var(--rose);border-radius:20px;cursor:pointer;font-size:13px;transition:all 0.3s}
 .ai-tab.active{background:var(--gold);color:var(--dark);font-weight:600;border-color:var(--gold)}
 .ai-card{background:rgba(0,0,0,0.2);border:1px solid rgba(212,168,67,0.15);border-radius:10px;padding:16px;margin-bottom:12px}
 .ai-card h4{color:var(--gold);font-size:15px;margin-bottom:8px}
 .ai-card p{color:var(--cream);font-size:14px;line-height:1.6;opacity:0.85}
-.ai-status{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600}
+.ai-status{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:8px}
 .ai-status.warn{background:rgba(255,193,7,0.2);color:#FFD54F}
 .ai-status.ok{background:rgba(76,175,80,0.2);color:#81C784}
 .ai-status.info{background:rgba(33,150,243,0.2);color:#64B5F6}
-
-/* Welcome popup */
 .welcome-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:200;animation:fadeIn 0.3s}
 .welcome-card{background:linear-gradient(145deg,var(--burgundy),var(--dark));border:2px solid var(--gold);border-radius:16px;padding:40px 32px;width:480px;max-width:90vw;text-align:center;animation:slideDown 0.5s ease}
 .welcome-bell{font-size:56px;display:block;margin-bottom:12px;animation:float 2s ease infinite}
@@ -197,913 +152,418 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .welcome-instructions li::before{content:'🔑';position:absolute;left:0;font-size:12px}
 .welcome-ok{padding:12px 40px;border:none;background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);font-family:'Playfair Display',serif;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:all 0.3s}
 .welcome-ok:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,67,0.3)}
-
-/* Add User Modal */
 .add-user-form{display:grid;gap:16px}
 .add-btn{padding:8px 18px;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:8px;cursor:pointer;font-size:14px;transition:all 0.3s;display:flex;align-items:center;gap:6px}
 .add-btn:hover{background:rgba(212,168,67,0.1)}
-
-/* Toast */
+.del-btn{background:none;border:1px solid #FF6B6B;color:#FF6B6B;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;transition:all 0.3s}
+.del-btn:hover{background:#FF6B6B;color:var(--dark)}
 .toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,var(--burgundy),var(--dark));border:1px solid var(--gold);border-radius:10px;padding:14px 24px;color:var(--cream);font-size:14px;z-index:300;animation:slideDown 0.3s ease;box-shadow:0 8px 24px rgba(0,0,0,0.4);display:flex;align-items:center;gap:10px}
 .toast-icon{font-size:20px}
-
-/* Platform file info */
 .file-info{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(42,90,58,0.15);border:1px solid rgba(42,90,58,0.3);border-radius:8px;margin-top:12px}
-.file-info-icon{font-size:24px}
-.file-info-name{color:#6FCF97;font-size:14px;font-weight:500}
-.file-info-size{color:var(--rose);font-size:12px}
+.file-info-icon{font-size:24px}.file-info-name{color:#6FCF97;font-size:14px;font-weight:500}.file-info-size{color:var(--rose);font-size:12px}
 .file-info-remove{margin-left:auto;background:none;border:none;color:#FF6B6B;cursor:pointer;font-size:18px}
-
-/* Responsive */
-@media(max-width:900px){
-  .columns{grid-template-columns:1fr}
-  .form-row{grid-template-columns:1fr}
-}
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:250;animation:fadeIn 0.2s}
+.confirm-card{background:linear-gradient(145deg,var(--burgundy),var(--dark));border:2px solid var(--gold);border-radius:12px;padding:28px;width:380px;max-width:90vw;text-align:center;animation:slideDown 0.3s}
+.confirm-card h4{color:var(--gold);margin-bottom:12px;font-size:18px}
+.confirm-card p{color:var(--cream);font-size:14px;margin-bottom:20px;opacity:0.85}
+.confirm-btns{display:flex;gap:12px;justify-content:center}
+.confirm-btns button{padding:10px 24px;border-radius:8px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;transition:all 0.3s}
+.confirm-cancel{background:transparent;border:1px solid var(--rose);color:var(--rose)}
+.confirm-cancel:hover{background:var(--rose);color:var(--dark)}
+.confirm-delete{background:#FF6B6B;border:none;color:var(--dark);font-weight:600}
+.confirm-delete:hover{background:#FF4444}
+@media(max-width:900px){.columns{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.topbar{padding:12px 16px;flex-wrap:wrap;gap:8px}}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useRef, useCallback, useMemo } = React;
+const { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } = React;
 
-// ─── Storage ───
-const STORAGE_KEYS = { users: 'ailobby_users', platforms: 'ailobby_platforms' };
-function loadFromStorage(key, fallback) {
-  try { const raw = localStorage.getItem(key); if (raw) return JSON.parse(raw); } catch(e) {}
-  return fallback;
-}
-function saveToStorage(key, data) {
-  try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
-}
-
-// ─── Initial Data ───
-const initialUsers = [
-  { id: 1, name: "Rafa Vázquez", email: "r.vazquez@sesametime.com", role: "bellboy", avatar: "RV" },
-  { id: 2, name: "Carlos Méndez", email: "c.mendez@sesametime.com", role: "concierge", avatar: "CM" },
-  { id: 3, name: "Laura García", email: "l.garcia@sesametime.com", role: "concierge", avatar: "LG" },
-  { id: 4, name: "Ana López", email: "a.lopez@sesametime.com", role: "guest", avatar: "AL" },
-  { id: 5, name: "Miguel Torres", email: "m.torres@sesametime.com", role: "guest", avatar: "MT" },
-  { id: 6, name: "Sofía Ruiz", email: "s.ruiz@sesametime.com", role: "guest", avatar: "SR" },
-];
-const initialPlatforms = [];
-
-// ─── Access Matrix ───
-function getAccessLevel(user, category) {
-  if (!user) return 'no-access';
-  const r = user.role;
-  if (r === 'bellboy') return 'full';
-  if (r === 'concierge') {
-    if (category === 'strategy') return 'view-only';
-    return 'full';
+// ─── i18n ───
+const translations = {
+  en: {
+    title: 'AI LOBBY', subtitle: 'The Grand Intelligence Hotel', checkIn: 'CHECK IN',
+    emailPlaceholder: 'Enter your email address...', enterLobby: 'Enter the Lobby',
+    loginError: 'This email is not registered. Please contact your concierge.',
+    tagline: '"Where intelligence meets elegance"',
+    lobby: 'Lobby', backOffice: 'Back Office', checkOut: 'Check Out',
+    grandLobby: 'The Grand Lobby', exploreRooms: 'EXPLORE OUR ROOMS',
+    tools: 'Tools', analysis: 'Analysis', strategy: 'Strategy',
+    noTools: 'No tools checked in yet', noAnalysis: 'No analysis platforms yet', noStrategy: 'No strategy platforms yet',
+    room: 'Room', management: 'MANAGEMENT',
+    oops: 'Oops!', noKey: "We're sorry, but you don't have a key to this room. Please contact the concierge for access.",
+    returnLobby: 'Return to Lobby',
+    fullAccess: 'Full Access', viewOnly: 'View Only', use: 'Use', noAccess: 'No Access',
+    scoreLabel: 'Complexity Score — auto-analyzed from source code',
+    viewRoom: '👁 View Room', usePlatform: '🔑 Use Platform', enterRoom: '🚪 Enter Room', restricted: '🔒 Access Restricted',
+    uploadTitle: '📦 Upload New Platform', source: 'Source', details: 'Details', review: 'Review',
+    dropFile: 'Drag & drop your platform file', dropActive: 'Drop your file here!',
+    dropSub: 'HTML, JS, Python, or any code file', or: 'OR',
+    urlPlaceholder: 'Paste platform URL (https://...)',
+    next: 'Next →', back: '← Back', publish: '🔔 Publish to Lobby',
+    platformName: 'Platform Name *', namePlaceholder: "e.g. Beaver's Dam",
+    section: 'Section', uploadedBy: 'Uploaded By', description: 'Description',
+    descPlaceholder: 'What does this platform do?',
+    accessLevels: 'Access Levels', bellboyAlways: 'Bellboy (always)', concierge: 'Concierge', guest: 'Guest',
+    name: 'Name', fileSize: 'File Size', complexityAuto: 'Complexity (auto)',
+    guestRegistry: '📋 Guest Registry', register: '+ Register',
+    email: 'Email', role: 'Role',
+    roomDirectory: '🚪 Room Directory', noPlatforms: 'No platforms checked in yet. Use the upload section above!',
+    score: 'Score', remove: 'Remove',
+    aiConcierge: '🤖 AI Concierge — Intelligence Analysis',
+    discrepancies: '⚠ Discrepancies', overlapUnify: '🔄 Overlap & Unify', leaderboard: '🏆 Leaderboard',
+    notEnough: 'Not enough data', upload2: 'Upload at least 2 platforms to detect discrepancies.',
+    uploadMore: 'Upload more platforms to detect overlaps.',
+    allClear: 'All clear', noDiscrep: 'No significant discrepancies found.',
+    scoreGap: 'Score gap in', gapText: 'point gap between platforms in',
+    considerImprove: 'Consider improving lower-scored entries.',
+    platformsIn: 'platforms in', considerUnify: 'Consider whether any can be unified.',
+    noOverlaps: 'No overlaps', uniquePlatforms: 'Each section has unique platforms.',
+    noPlatformsYet: 'No platforms uploaded yet.',
+    registerGuest: 'Register New Guest', addMember: 'Add a new member to the hotel registry',
+    fullName: 'Full Name', registerBtn: '🔑 Register Guest',
+    guestRole: 'Guest (AE / SDR / KAM)', conciergeRole: 'Concierge (Manager)', bellboyRole: 'Bellboy (Admin)',
+    checkOutGuest: 'Check Out Guest?', confirmRemoveUser: 'Are you sure you want to remove',
+    fromRegistry: 'from the registry? This cannot be undone.',
+    removePlatform: 'Remove Platform?', confirmRemovePlatform: 'Are you sure you want to remove',
+    fromLobby: 'from the lobby?', cancel: 'Cancel', confirm: 'Confirm',
+    checkedIn: 'has been checked in!', registered: 'has been registered!',
+    checkedOut: 'has been checked out.', platformOut: 'Platform checked out.',
+    congrats: 'Congratulations!', nowLive: 'is now live in the lobby.', cheers: 'Cheers! 🍷',
+    entering: 'Entering',
+    welcomeBack: 'Welcome to the Back Office — the engine room of our grand hotel.',
+    welcomeI1: 'Drag & drop or paste a URL to register a new platform',
+    welcomeI2: 'Fill in the details: name, section, access level',
+    welcomeI3: 'Review and publish — your platform will appear in the lobby!',
+    begin: 'Begin', platforms: 'Platforms',
+    hotelPhrases: [
+      "Welcome to the Grand Intelligence Hotel!","Your suite awaits, esteemed guest.",
+      "The concierge is at your service.","A five-star experience for your AI needs.",
+      "Step into luxury. Step into intelligence.","Room service? We serve insights.","Check in. Power up. Excel."
+    ],
+    celebrationPhrases: [
+      "You just made this lobby a lot more interesting... 🍷",
+      "A platform this good deserves a toast. Cheers to you! 🥂",
+      "The lobby just got hotter. Must be you. 🍷",
+      "That upload? Flawless. Just like your taste. 🥂",
+      "You didn't just upload a platform — you made an entrance. 🍷",
+      "If platforms were people, this one would be a 10. Just like you. 🥂",
+      "The hotel bar is pouring one in your honor tonight. 🍷",
+      "Smooth upload. Smoother operator. Cheers! 🥂",
+      "The Grand Lobby just leveled up — and so did you. 🥂",
+    ],
+  },
+  es: {
+    title: 'AI LOBBY', subtitle: 'El Gran Hotel de la Inteligencia', checkIn: 'REGISTRO',
+    emailPlaceholder: 'Ingresa tu correo electrónico...', enterLobby: 'Entrar al Lobby',
+    loginError: 'Este correo no está registrado. Contacta al concierge.',
+    tagline: '"Donde la inteligencia se encuentra con la elegancia"',
+    lobby: 'Lobby', backOffice: 'Back Office', checkOut: 'Salir',
+    grandLobby: 'El Gran Lobby', exploreRooms: 'EXPLORA NUESTRAS SALAS',
+    tools: 'Herramientas', analysis: 'Análisis', strategy: 'Estrategia',
+    noTools: 'Sin herramientas registradas aún', noAnalysis: 'Sin plataformas de análisis aún', noStrategy: 'Sin plataformas de estrategia aún',
+    room: 'Sala', management: 'GESTIÓN',
+    oops: '¡Oops!', noKey: 'Lo sentimos, no tienes llave para esta sala. Contacta al concierge para acceso.',
+    returnLobby: 'Volver al Lobby',
+    fullAccess: 'Acceso Total', viewOnly: 'Solo Lectura', use: 'Uso', noAccess: 'Sin Acceso',
+    scoreLabel: 'Puntuación de Complejidad — analizada automáticamente del código fuente',
+    viewRoom: '👁 Ver Sala', usePlatform: '🔑 Usar Plataforma', enterRoom: '🚪 Entrar a la Sala', restricted: '🔒 Acceso Restringido',
+    uploadTitle: '📦 Subir Nueva Plataforma', source: 'Fuente', details: 'Detalles', review: 'Revisión',
+    dropFile: 'Arrastra y suelta tu archivo de plataforma', dropActive: '¡Suelta tu archivo aquí!',
+    dropSub: 'HTML, JS, Python, o cualquier archivo de código', or: 'O',
+    urlPlaceholder: 'Pega la URL de la plataforma (https://...)',
+    next: 'Siguiente →', back: '← Atrás', publish: '🔔 Publicar en el Lobby',
+    platformName: 'Nombre de Plataforma *', namePlaceholder: "ej. Beaver's Dam",
+    section: 'Sección', uploadedBy: 'Subido por', description: 'Descripción',
+    descPlaceholder: '¿Qué hace esta plataforma?',
+    accessLevels: 'Niveles de Acceso', bellboyAlways: 'Bellboy (siempre)', concierge: 'Concierge', guest: 'Guest',
+    name: 'Nombre', fileSize: 'Tamaño', complexityAuto: 'Complejidad (auto)',
+    guestRegistry: '📋 Registro de Huéspedes', register: '+ Registrar',
+    email: 'Correo', role: 'Rol',
+    roomDirectory: '🚪 Directorio de Salas', noPlatforms: '¡No hay plataformas registradas aún! Usa la sección de subida arriba.',
+    score: 'Puntaje', remove: 'Eliminar',
+    aiConcierge: '🤖 AI Concierge — Análisis de Inteligencia',
+    discrepancies: '⚠ Discrepancias', overlapUnify: '🔄 Solapamiento y Unificación', leaderboard: '🏆 Tabla de Posiciones',
+    notEnough: 'Datos insuficientes', upload2: 'Sube al menos 2 plataformas para detectar discrepancias.',
+    uploadMore: 'Sube más plataformas para detectar solapamientos.',
+    allClear: 'Todo en orden', noDiscrep: 'No se encontraron discrepancias significativas.',
+    scoreGap: 'Brecha de puntaje en', gapText: 'puntos de diferencia entre plataformas en',
+    considerImprove: 'Considera mejorar las de menor puntaje.',
+    platformsIn: 'plataformas en', considerUnify: 'Considera si alguna puede unificarse.',
+    noOverlaps: 'Sin solapamientos', uniquePlatforms: 'Cada sección tiene plataformas únicas.',
+    noPlatformsYet: 'Aún no se han subido plataformas.',
+    registerGuest: 'Registrar Nuevo Huésped', addMember: 'Agrega un nuevo miembro al registro del hotel',
+    fullName: 'Nombre Completo', registerBtn: '🔑 Registrar Huésped',
+    guestRole: 'Guest (AE / SDR / KAM)', conciergeRole: 'Concierge (Gerente)', bellboyRole: 'Bellboy (Admin)',
+    checkOutGuest: '¿Dar de baja al huésped?', confirmRemoveUser: '¿Estás seguro de que quieres eliminar a',
+    fromRegistry: 'del registro? Esta acción no se puede deshacer.',
+    removePlatform: '¿Eliminar Plataforma?', confirmRemovePlatform: '¿Estás seguro de que quieres eliminar',
+    fromLobby: 'del lobby?', cancel: 'Cancelar', confirm: 'Confirmar',
+    checkedIn: '¡se registró en el lobby!', registered: '¡ha sido registrado!',
+    checkedOut: 'ha sido dado de baja.', platformOut: 'Plataforma eliminada.',
+    congrats: '¡Felicidades!', nowLive: 'ya está en vivo en el lobby.', cheers: '¡Salud! 🍷',
+    entering: 'Entrando a',
+    welcomeBack: 'Bienvenido al Back Office — la sala de máquinas de nuestro gran hotel.',
+    welcomeI1: 'Arrastra y suelta o pega una URL para registrar una nueva plataforma',
+    welcomeI2: 'Llena los detalles: nombre, sección, nivel de acceso',
+    welcomeI3: 'Revisa y publica — ¡tu plataforma aparecerá en el lobby!',
+    begin: 'Comenzar', platforms: 'Plataformas',
+    hotelPhrases: [
+      "¡Bienvenido al Gran Hotel de la Inteligencia!","Tu suite te espera, estimado huésped.",
+      "El concierge está a tu servicio.","Una experiencia cinco estrellas para tus necesidades de IA.",
+      "Entra al lujo. Entra a la inteligencia.","¿Servicio a la habitación? Servimos insights.","Regístrate. Enciende. Destaca."
+    ],
+    celebrationPhrases: [
+      "Acabas de hacer este lobby mucho más interesante... 🍷",
+      "Una plataforma así merece un brindis. ¡Salud! 🥂",
+      "El lobby se acaba de poner más caliente. Seguro eres tú. 🍷",
+      "¿Esa subida? Impecable. Igual que tu gusto. 🥂",
+      "No solo subiste una plataforma — hiciste una entrada triunfal. 🍷",
+      "Si las plataformas fueran personas, esta sería un 10. Igual que tú. 🥂",
+      "El bar del hotel está sirviendo una en tu honor esta noche. 🍷",
+      "Subida suave. Operador más suave aún. ¡Salud! 🥂",
+      "¡El Gran Lobby acaba de subir de nivel — y tú también! 🥂",
+    ],
   }
-  // guest
-  if (category === 'tools') return 'use';
-  if (category === 'analysis') return 'view-only';
-  return 'no-access';
-}
-
-function canAccessConfig(user) {
-  return user && (user.role === 'bellboy' || user.role === 'concierge');
-}
-
-// ─── Code Complexity Analysis ───
-function analyzeCodeComplexity(content, fileName) {
-  if (!content) return 10;
-  const text = typeof content === 'string' ? content : '';
-  const len = text.length;
-
-  // Count various code indicators
-  const functionCount = (text.match(/function\s+\w+|=>\s*[{(]|\.prototype\.|class\s+\w+|def\s+\w+|const\s+\w+\s*=\s*\(/g) || []).length;
-  const htmlTags = (text.match(/<[a-zA-Z][^>]*>/g) || []).length;
-  const cssRules = (text.match(/[{][^}]*[}]/g) || []).length;
-  const imports = (text.match(/import\s+|require\s*\(|from\s+['"]/g) || []).length;
-  const conditionals = (text.match(/\bif\b|\belse\b|\bswitch\b|\bcase\b|\?\s*.*:/g) || []).length;
-  const loops = (text.match(/\bfor\b|\bwhile\b|\b\.map\b|\b\.forEach\b|\b\.reduce\b|\b\.filter\b/g) || []).length;
-  const stateHooks = (text.match(/useState|useEffect|useRef|useCallback|useMemo|useReducer|useContext/g) || []).length;
-  const apiCalls = (text.match(/fetch\s*\(|axios\.|XMLHttpRequest|\.ajax\(/g) || []).length;
-  const eventHandlers = (text.match(/onClick|onChange|onSubmit|addEventListener|on[A-Z]\w+=/g) || []).length;
-  const comments = (text.match(/\/\/|\/\*|\*\/|#\s+\w/g) || []).length;
-  const errorHandling = (text.match(/try\s*{|catch\s*\(|\.catch\(|throw\s+/g) || []).length;
-
-  // Weighted score
-  let score = 0;
-  score += Math.min(len / 500, 30); // Size: up to 30 pts
-  score += Math.min(functionCount * 3, 20); // Functions: up to 20 pts
-  score += Math.min(htmlTags * 0.3, 10); // HTML: up to 10 pts
-  score += Math.min(cssRules * 0.5, 8); // CSS: up to 8 pts
-  score += Math.min(imports * 2, 8); // Imports: up to 8 pts
-  score += Math.min(conditionals * 1.5, 8); // Conditionals: up to 8 pts
-  score += Math.min(loops * 2, 6); // Loops: up to 6 pts
-  score += Math.min(stateHooks * 3, 6); // Hooks: up to 6 pts
-  score += Math.min(apiCalls * 3, 4); // API: up to 4 pts
-  score += Math.min(eventHandlers * 1.5, 5); // Events: up to 5 pts
-  score += Math.min(comments * 0.5, 3); // Comments: up to 3 pts
-  score += Math.min(errorHandling * 2, 4); // Error handling: up to 4 pts
-
-  return Math.max(1, Math.round(score));
-}
-
-function calcScores(platforms) {
-  if (!platforms.length) return {};
-  const maxRaw = Math.max(...platforms.map(p => p.complexity || 1));
-  const s = {};
-  platforms.forEach(p => {
-    const raw = p.complexity || 1;
-    s[p.id] = maxRaw > 0 ? Math.round((raw / maxRaw) * 100) : 50;
-  });
-  return s;
-}
-
-// ─── Visual Preview Generator ───
-const CATEGORY_PALETTES = {
-  tools: { bg: '#1a2744', accent: '#4A90D9', secondary: '#2E5C8A', highlight: '#7BB8F5', ground: '#0D1B30' },
-  analysis: { bg: '#1E2A1A', accent: '#5CB85C', secondary: '#2E7D32', highlight: '#A5D6A7', ground: '#0D1A0D' },
-  strategy: { bg: '#2A1A2E', accent: '#9B59B6', secondary: '#6C3483', highlight: '#CE93D8', ground: '#1A0D1E' }
 };
 
-function generatePlatformVisual(canvas, platform, score) {
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width = canvas.offsetWidth * 2 || 600;
-  const H = canvas.height = canvas.offsetHeight * 2 || 280;
-  ctx.imageSmoothingEnabled = true;
+const LangContext = createContext('en');
+function useLang() { return useContext(LangContext); }
+function useT() { const lang = useLang(); return (key) => translations[lang]?.[key] || translations.en[key] || key; }
 
-  const palette = CATEGORY_PALETTES[platform.section] || CATEGORY_PALETTES.tools;
-  const seed = hashString(platform.name + platform.id);
-  const rng = seededRandom(seed);
+// ─── Storage ───
+const STORAGE_KEYS = { users:'ailobby_users', platforms:'ailobby_platforms', lang:'ailobby_lang' };
+function loadFromStorage(key,fallback){try{const r=localStorage.getItem(key);if(r)return JSON.parse(r);}catch(e){}return fallback;}
+function saveToStorage(key,data){try{localStorage.setItem(key,JSON.stringify(data));}catch(e){}}
 
-  // Sky gradient
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.7);
-  skyGrad.addColorStop(0, darken(palette.bg, 20));
-  skyGrad.addColorStop(1, palette.bg);
-  ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, W, H);
-
-  // Stars
-  for (let i = 0; i < 30; i++) {
-    const x = rng() * W, y = rng() * H * 0.5;
-    const s = rng() * 2 + 0.5;
-    ctx.beginPath();
-    ctx.arc(x, y, s, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${rng() * 0.5 + 0.2})`;
-    ctx.fill();
-  }
-
-  // Ground
-  const groundY = H * 0.68;
-  const groundGrad = ctx.createLinearGradient(0, groundY, 0, H);
-  groundGrad.addColorStop(0, palette.ground);
-  groundGrad.addColorStop(1, darken(palette.ground, 30));
-  ctx.fillStyle = groundGrad;
-  ctx.beginPath();
-  ctx.moveTo(0, groundY);
-  for (let x = 0; x <= W; x += 20) {
-    ctx.lineTo(x, groundY + Math.sin(x * 0.02 + seed) * 8);
-  }
-  ctx.lineTo(W, H);
-  ctx.lineTo(0, H);
-  ctx.fill();
-
-  // Grid lines on ground (perspective)
-  ctx.strokeStyle = `${palette.accent}22`;
-  ctx.lineWidth = 1;
-  for (let i = 0; i < 8; i++) {
-    const y = groundY + i * 12 + 10;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(W, y);
-    ctx.stroke();
-  }
-  for (let i = 0; i < 12; i++) {
-    const x = (W / 12) * i + (seed % 30);
-    ctx.beginPath();
-    ctx.moveTo(x, groundY);
-    ctx.lineTo(W / 2 + (x - W / 2) * 2, H);
-    ctx.stroke();
-  }
-
-  // Platform-specific buildings/structures
-  const numBuildings = 3 + Math.floor(rng() * 3);
-  for (let i = 0; i < numBuildings; i++) {
-    const bx = (W / (numBuildings + 1)) * (i + 1) + (rng() - 0.5) * 40;
-    const bw = 30 + rng() * 50;
-    const bh = 40 + rng() * (H * 0.3);
-    const by = groundY - bh;
-
-    // Building body
-    const bGrad = ctx.createLinearGradient(bx - bw/2, by, bx + bw/2, by);
-    bGrad.addColorStop(0, palette.secondary);
-    bGrad.addColorStop(1, darken(palette.secondary, 20));
-    ctx.fillStyle = bGrad;
-    roundRect(ctx, bx - bw/2, by, bw, bh, 4);
-
-    // Windows
-    const rows = Math.floor(bh / 20);
-    const cols = Math.floor(bw / 18);
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const wx = bx - bw/2 + 8 + c * 18;
-        const wy = by + 8 + r * 20;
-        const lit = rng() > 0.4;
-        ctx.fillStyle = lit ? `${palette.highlight}BB` : `${palette.ground}88`;
-        ctx.fillRect(wx, wy, 10, 12);
-      }
-    }
-
-    // Roof accent
-    ctx.fillStyle = palette.accent;
-    ctx.fillRect(bx - bw/2 - 2, by - 3, bw + 4, 6);
-  }
-
-  // Central icon/monument
-  const cx = W / 2, cy = groundY - 20;
-  ctx.beginPath();
-  ctx.arc(cx, cy - 40, 25, 0, Math.PI * 2);
-  ctx.fillStyle = `${palette.accent}44`;
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(cx, cy - 40, 18, 0, Math.PI * 2);
-  ctx.fillStyle = `${palette.accent}88`;
-  ctx.fill();
-
-  // Category icon in center
-  ctx.font = `bold ${28}px sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#fff';
-  const icons = { tools: '⚙', analysis: '📊', strategy: '♟' };
-  ctx.fillText(icons[platform.section] || '🏨', cx, cy - 40);
-
-  // Floating particles
-  for (let i = 0; i < 15; i++) {
-    const px = rng() * W;
-    const py = rng() * groundY;
-    const ps = 1 + rng() * 3;
-    ctx.beginPath();
-    ctx.arc(px, py, ps, 0, Math.PI * 2);
-    ctx.fillStyle = `${palette.accent}${Math.floor(rng() * 60 + 20).toString(16).padStart(2,'0')}`;
-    ctx.fill();
-  }
-
-  // Score indicator bar at bottom
-  if (score !== undefined) {
-    const barH = 4;
-    const barY = H - barH;
-    ctx.fillStyle = `${palette.ground}CC`;
-    ctx.fillRect(0, barY, W, barH);
-    const fillW = (score / 100) * W;
-    const barGrad = ctx.createLinearGradient(0, barY, fillW, barY);
-    barGrad.addColorStop(0, palette.accent);
-    barGrad.addColorStop(1, palette.highlight);
-    ctx.fillStyle = barGrad;
-    ctx.fillRect(0, barY, fillW, barH);
-  }
-
-  // Platform name overlay
-  ctx.font = `bold ${Math.round(W * 0.04)}px 'Playfair Display', serif`;
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#ffffffDD';
-  ctx.shadowColor = 'rgba(0,0,0,0.8)';
-  ctx.shadowBlur = 10;
-  ctx.fillText(platform.name.toUpperCase(), W / 2, H * 0.88);
-  ctx.shadowBlur = 0;
-}
-
-function hashString(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0; }
-  return Math.abs(h);
-}
-function seededRandom(seed) {
-  let s = seed;
-  return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
-}
-function darken(hex, pct) {
-  const num = parseInt(hex.replace('#', ''), 16);
-  const r = Math.max(0, (num >> 16) - pct);
-  const g = Math.max(0, ((num >> 8) & 0xFF) - pct);
-  const b = Math.max(0, (num & 0xFF) - pct);
-  return `rgb(${r},${g},${b})`;
-}
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.fill();
-}
-
-// ─── Room Preview Component ───
-function RoomPreview({ platform, score, height }) {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    if (canvasRef.current && platform) {
-      generatePlatformVisual(canvasRef.current, platform, score);
-    }
-  }, [platform, score]);
-  return <canvas ref={canvasRef} style={{ width: '100%', height: height || 140, display: 'block' }} />;
-}
-
-// ─── Hotel Phrases ───
-const hotelPhrases = [
-  "Welcome to the Grand Intelligence Hotel!",
-  "Your suite awaits, esteemed guest.",
-  "The concierge is at your service.",
-  "A five-star experience for your AI needs.",
-  "Step into luxury. Step into intelligence.",
-  "Room service? We serve insights.",
-  "Check in. Power up. Excel.",
+const initialUsers=[
+  {id:1,name:"Rafa Vázquez",email:"r.vazquez@sesametime.com",role:"bellboy",avatar:"RV"},
+  {id:2,name:"Carlos Méndez",email:"c.mendez@sesametime.com",role:"concierge",avatar:"CM"},
+  {id:3,name:"Laura García",email:"l.garcia@sesametime.com",role:"concierge",avatar:"LG"},
+  {id:4,name:"Ana López",email:"a.lopez@sesametime.com",role:"guest",avatar:"AL"},
+  {id:5,name:"Miguel Torres",email:"m.torres@sesametime.com",role:"guest",avatar:"MT"},
+  {id:6,name:"Sofía Ruiz",email:"s.ruiz@sesametime.com",role:"guest",avatar:"SR"},
 ];
+const initialPlatforms=[];
 
-// ─── Toast Component ───
-function Toast({ message, onClose }) {
-  useEffect(() => { const t = setTimeout(onClose, 3000); return () => clearTimeout(t); }, []);
-  return <div className="toast"><span className="toast-icon">🔔</span>{message}</div>;
+function getAccessLevel(u,cat){if(!u)return'no-access';const r=u.role;if(r==='bellboy')return'full';if(r==='concierge')return cat==='strategy'?'view-only':'full';if(cat==='tools')return'use';if(cat==='analysis')return'view-only';return'no-access';}
+function canAccessConfig(u){return u&&(u.role==='bellboy'||u.role==='concierge');}
+
+function analyzeCodeComplexity(content){
+  if(!content)return 10;const t=typeof content==='string'?content:'';const l=t.length;
+  const fn=(t.match(/function\s+\w+|=>\s*[{(]|\.prototype\.|class\s+\w+|def\s+\w+|const\s+\w+\s*=\s*\(/g)||[]).length;
+  const html=(t.match(/<[a-zA-Z][^>]*>/g)||[]).length;
+  const css=(t.match(/[{][^}]*[}]/g)||[]).length;
+  const imp=(t.match(/import\s+|require\s*\(|from\s+['"]/g)||[]).length;
+  const cond=(t.match(/\bif\b|\belse\b|\bswitch\b|\bcase\b|\?\s*.*:/g)||[]).length;
+  const loops=(t.match(/\bfor\b|\bwhile\b|\b\.map\b|\b\.forEach\b|\b\.reduce\b|\b\.filter\b/g)||[]).length;
+  const hooks=(t.match(/useState|useEffect|useRef|useCallback|useMemo|useReducer|useContext/g)||[]).length;
+  const api=(t.match(/fetch\s*\(|axios\.|XMLHttpRequest|\.ajax\(/g)||[]).length;
+  const ev=(t.match(/onClick|onChange|onSubmit|addEventListener|on[A-Z]\w+=/g)||[]).length;
+  const com=(t.match(/\/\/|\/\*|\*\/|#\s+\w/g)||[]).length;
+  const err=(t.match(/try\s*{|catch\s*\(|\.catch\(|throw\s+/g)||[]).length;
+  let s=0;s+=Math.min(l/500,30);s+=Math.min(fn*3,20);s+=Math.min(html*0.3,10);s+=Math.min(css*0.5,8);
+  s+=Math.min(imp*2,8);s+=Math.min(cond*1.5,8);s+=Math.min(loops*2,6);s+=Math.min(hooks*3,6);
+  s+=Math.min(api*3,4);s+=Math.min(ev*1.5,5);s+=Math.min(com*0.5,3);s+=Math.min(err*2,4);
+  return Math.max(1,Math.round(s));
+}
+function calcScores(p){if(!p.length)return{};const mx=Math.max(...p.map(x=>x.complexity||1));const s={};p.forEach(x=>{s[x.id]=mx>0?Math.round(((x.complexity||1)/mx)*100):50;});return s;}
+
+// ─── Visual Preview ───
+const PALETTES={tools:{bg:'#1a2744',accent:'#4A90D9',secondary:'#2E5C8A',highlight:'#7BB8F5',ground:'#0D1B30'},analysis:{bg:'#1E2A1A',accent:'#5CB85C',secondary:'#2E7D32',highlight:'#A5D6A7',ground:'#0D1A0D'},strategy:{bg:'#2A1A2E',accent:'#9B59B6',secondary:'#6C3483',highlight:'#CE93D8',ground:'#1A0D1E'}};
+function hsh(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return Math.abs(h);}
+function srng(sd){let s=sd;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
+function dk(hex,p){const n=parseInt(hex.replace('#',''),16);return`rgb(${Math.max(0,(n>>16)-p)},${Math.max(0,((n>>8)&0xFF)-p)},${Math.max(0,(n&0xFF)-p)})`;};
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h);c.lineTo(x,y+h);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.fill();}
+
+function genVisual(cv,pl,sc){
+  if(!cv)return;const c=cv.getContext('2d');const W=cv.width=cv.offsetWidth*2||600;const H=cv.height=cv.offsetHeight*2||280;
+  const pal=PALETTES[pl.section]||PALETTES.tools;const sd=hsh(pl.name+pl.id);const rn=srng(sd);
+  const sg=c.createLinearGradient(0,0,0,H*0.7);sg.addColorStop(0,dk(pal.bg,20));sg.addColorStop(1,pal.bg);c.fillStyle=sg;c.fillRect(0,0,W,H);
+  for(let i=0;i<30;i++){c.beginPath();c.arc(rn()*W,rn()*H*0.5,rn()*2+0.5,0,Math.PI*2);c.fillStyle=`rgba(255,255,255,${rn()*0.5+0.2})`;c.fill();}
+  const gY=H*0.68;const gg=c.createLinearGradient(0,gY,0,H);gg.addColorStop(0,pal.ground);gg.addColorStop(1,dk(pal.ground,30));c.fillStyle=gg;c.beginPath();c.moveTo(0,gY);for(let x=0;x<=W;x+=20)c.lineTo(x,gY+Math.sin(x*0.02+sd)*8);c.lineTo(W,H);c.lineTo(0,H);c.fill();
+  c.strokeStyle=`${pal.accent}22`;c.lineWidth=1;for(let i=0;i<8;i++){c.beginPath();c.moveTo(0,gY+i*12+10);c.lineTo(W,gY+i*12+10);c.stroke();}
+  for(let i=0;i<12;i++){const x=(W/12)*i+(sd%30);c.beginPath();c.moveTo(x,gY);c.lineTo(W/2+(x-W/2)*2,H);c.stroke();}
+  const nB=3+Math.floor(rn()*3);for(let i=0;i<nB;i++){const bx=(W/(nB+1))*(i+1)+(rn()-0.5)*40;const bw=30+rn()*50,bh=40+rn()*(H*0.3),by=gY-bh;const bg=c.createLinearGradient(bx-bw/2,by,bx+bw/2,by);bg.addColorStop(0,pal.secondary);bg.addColorStop(1,dk(pal.secondary,20));c.fillStyle=bg;rr(c,bx-bw/2,by,bw,bh,4);const rs=Math.floor(bh/20),cs=Math.floor(bw/18);for(let r=0;r<rs;r++)for(let cl=0;cl<cs;cl++){c.fillStyle=rn()>0.4?`${pal.highlight}BB`:`${pal.ground}88`;c.fillRect(bx-bw/2+8+cl*18,by+8+r*20,10,12);}c.fillStyle=pal.accent;c.fillRect(bx-bw/2-2,by-3,bw+4,6);}
+  const cx=W/2,cy=gY-20;c.beginPath();c.arc(cx,cy-40,25,0,Math.PI*2);c.fillStyle=`${pal.accent}44`;c.fill();c.beginPath();c.arc(cx,cy-40,18,0,Math.PI*2);c.fillStyle=`${pal.accent}88`;c.fill();c.font='bold 28px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#fff';const ic={tools:'⚙',analysis:'📊',strategy:'♟'};c.fillText(ic[pl.section]||'🏨',cx,cy-40);
+  for(let i=0;i<15;i++){c.beginPath();c.arc(rn()*W,rn()*gY,1+rn()*3,0,Math.PI*2);c.fillStyle=`${pal.accent}${Math.floor(rn()*60+20).toString(16).padStart(2,'0')}`;c.fill();}
+  if(sc!==undefined){const bH=4,bY=H-bH;c.fillStyle=`${pal.ground}CC`;c.fillRect(0,bY,W,bH);const bg2=c.createLinearGradient(0,bY,(sc/100)*W,bY);bg2.addColorStop(0,pal.accent);bg2.addColorStop(1,pal.highlight);c.fillStyle=bg2;c.fillRect(0,bY,(sc/100)*W,bH);}
+  c.font=`bold ${Math.round(W*0.04)}px 'Playfair Display',serif`;c.textAlign='center';c.fillStyle='#ffffffDD';c.shadowColor='rgba(0,0,0,0.8)';c.shadowBlur=10;c.fillText(pl.name.toUpperCase(),W/2,H*0.88);c.shadowBlur=0;
 }
 
-// ─── Login Screen ───
-function LoginScreen({ users, onLogin }) {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const u = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
-    if (u) { onLogin(u); }
-    else { setError('This email is not registered. Please contact your concierge.'); }
-  };
-  return (
-    <div className="login-bg">
-      <form className="login-card" onSubmit={handleSubmit}>
-        <div style={{fontSize:48,marginBottom:8}}>🔔</div>
-        <h1>AI LOBBY</h1>
-        <span className="subtitle">The Grand Intelligence Hotel</span>
-        <div className="ornament"><span>CHECK IN</span></div>
-        <input className="login-input" type="email" placeholder="Enter your email address..." value={email} onChange={e => { setEmail(e.target.value); setError(''); }} autoFocus />
-        <button className="login-btn" type="submit">Enter the Lobby</button>
-        {error && <div className="login-error">{error}</div>}
-        <div style={{marginTop:24,fontSize:12,color:'var(--rose)',opacity:0.5,fontFamily:'Cormorant Garamond, serif',fontStyle:'italic'}}>
-          "Where intelligence meets elegance"
-        </div>
-      </form>
-    </div>
-  );
+function RoomPreview({platform,score,height}){const ref=useRef(null);useEffect(()=>{if(ref.current&&platform)genVisual(ref.current,platform,score);},[platform,score]);return <canvas ref={ref} style={{width:'100%',height:height||140,display:'block'}}/>;}
+function Toast({message,onClose}){useEffect(()=>{const t=setTimeout(onClose,3000);return()=>clearTimeout(t);},[]);return <div className="toast"><span className="toast-icon">🔔</span>{message}</div>;}
+function fmtSize(b){if(!b)return'';if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(1)+' MB';}
+
+function LoginScreen({users,onLogin,lang,setLang}){
+  const t=useT();const[email,setEmail]=useState('');const[error,setError]=useState('');
+  const submit=e=>{e.preventDefault();const u=users.find(u=>u.email.toLowerCase()===email.trim().toLowerCase());if(u)onLogin(u);else setError(t('loginError'));};
+  return(<div className="login-bg"><form className="login-card" onSubmit={submit}>
+    <div style={{position:'absolute',top:16,right:16}}><button type="button" className="lang-btn" onClick={()=>setLang(lang==='en'?'es':'en')}>{lang==='en'?'ES 🇪🇸':'EN 🇬🇧'}</button></div>
+    <div style={{fontSize:48,marginBottom:8}}>🔔</div><h1>{t('title')}</h1><span className="subtitle">{t('subtitle')}</span>
+    <div className="ornament"><span>{t('checkIn')}</span></div>
+    <input className="login-input" type="email" placeholder={t('emailPlaceholder')} value={email} onChange={e=>{setEmail(e.target.value);setError('');}} autoFocus/>
+    <button className="login-btn" type="submit">{t('enterLobby')}</button>
+    {error&&<div className="login-error">{error}</div>}
+    <div style={{marginTop:24,fontSize:12,color:'var(--rose)',opacity:0.5,fontFamily:'Cormorant Garamond,serif',fontStyle:'italic'}}>{t('tagline')}</div>
+  </form></div>);
 }
 
-// ─── Access Denied Modal ───
-function AccessDenied({ onClose }) {
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()} style={{width:400}}>
-        <div className="denied-modal">
-          <span className="denied-bell">🔔</span>
-          <h3 className="denied-title">Oops!</h3>
-          <p className="denied-text">We're sorry, but you don't have a key to this room. Please contact the concierge for access.</p>
-          <button className="denied-close" onClick={onClose}>Return to Lobby</button>
-        </div>
-      </div>
-    </div>
-  );
+function AccessDenied({onClose}){const t=useT();return(<div className="modal-overlay" onClick={onClose}><div className="modal-content" onClick={e=>e.stopPropagation()} style={{width:400}}><div className="denied-modal"><span className="denied-bell">🔔</span><h3 className="denied-title">{t('oops')}</h3><p className="denied-text">{t('noKey')}</p><button className="denied-close" onClick={onClose}>{t('returnLobby')}</button></div></div></div>);}
+
+function WelcomePopup({onClose}){const t=useT();const phrases=t('hotelPhrases');const phrase=phrases[Math.floor(Math.random()*phrases.length)];
+  return(<div className="welcome-overlay" onClick={onClose}><div className="welcome-card" onClick={e=>e.stopPropagation()}><span className="welcome-bell">🔔</span><h3 className="welcome-phrase">{phrase}</h3><p className="welcome-sub">{t('welcomeBack')}</p><ul className="welcome-instructions"><li>{t('welcomeI1')}</li><li>{t('welcomeI2')}</li><li>{t('welcomeI3')}</li></ul><button className="welcome-ok" onClick={onClose}>{t('begin')}</button></div></div>);}
+
+function ConfirmDialog({title,message,onConfirm,onCancel}){const t=useT();return(<div className="confirm-overlay" onClick={onCancel}><div className="confirm-card" onClick={e=>e.stopPropagation()}><h4>{title}</h4><p>{message}</p><div className="confirm-btns"><button className="confirm-cancel" onClick={onCancel}>{t('cancel')}</button><button className="confirm-delete" onClick={onConfirm}>{t('confirm')}</button></div></div></div>);}
+
+function CelebrationPopup({name,phrase,onClose}){const t=useT();useEffect(()=>{const tm=setTimeout(onClose,6000);return()=>clearTimeout(tm);},[]);
+  return(<div className="welcome-overlay" onClick={onClose}><div className="welcome-card" onClick={e=>e.stopPropagation()} style={{maxWidth:420}}><span style={{fontSize:64,display:'block',marginBottom:8,animation:'float 2s ease infinite'}}>🥂</span><h3 className="welcome-phrase">{t('congrats')}</h3><p style={{fontFamily:'Playfair Display,serif',fontSize:17,color:'var(--cream)',marginBottom:8}}><strong>{name}</strong> {t('nowLive')}</p><p style={{fontFamily:'Cormorant Garamond,serif',fontStyle:'italic',color:'var(--rose)',fontSize:18,marginBottom:24,lineHeight:1.5}}>{phrase}</p><button className="welcome-ok" onClick={onClose}>{t('cheers')}</button></div></div>);}
+
+function RoomDoor({platform,index,score,onClick}){const t=useT();return(<div className="room-door fade-in" onClick={onClick} style={{animationDelay:`${index*0.1}s`}}><div className="room-preview"><RoomPreview platform={platform} score={score} height={140}/><span className="room-score-badge">{score??'—'}</span><span className="room-category-badge">{platform.section}</span></div><div className="room-info"><div className="room-number">{t('room')} {platform.roomNumber||(100+index+1)}</div><div className="room-name">{platform.name}</div></div></div>);}
+
+function ExpandedRoom({platform,score,user,onClose,onEnter}){
+  const t=useT();const access=getAccessLevel(user,platform.section);
+  const labels={full:t('fullAccess'),'view-only':t('viewOnly'),use:t('use'),'no-access':t('noAccess')};
+  const cls={full:'access-full','view-only':'access-view',use:'access-use','no-access':'access-no'};
+  const ok=access!=='no-access';
+  return(<div className="modal-overlay" onClick={onClose}><div className="modal-content" onClick={e=>e.stopPropagation()}>
+    <button className="modal-close" onClick={onClose}>✕</button>
+    <div className="modal-preview"><RoomPreview platform={platform} score={score} height={200}/></div>
+    <div className="modal-body"><h2>{platform.name}</h2><span className="subtitle">{t('room')} {platform.roomNumber||'—'} · {platform.section}</span>
+    <div className={`access-badge ${cls[access]}`}>{labels[access]}</div>
+    {platform.description&&<p className="modal-desc">{platform.description}</p>}
+    <div className="modal-meta">{platform.uploadedBy&&<span className="meta-chip">👤 {platform.uploadedBy}</span>}{platform.date&&<span className="meta-chip">📅 {platform.date}</span>}{platform.url&&<span className="meta-chip">🔗 URL</span>}{platform.fileSize&&<span className="meta-chip">📦 {fmtSize(platform.fileSize)}</span>}</div>
+    <div className="modal-score"><div className="score-circle">{score??'—'}</div><div className="score-bar"><div className="score-bar-track"><div className="score-bar-fill" style={{width:`${score||0}%`}}></div></div><div className="score-label">{t('scoreLabel')}</div></div></div>
+    <button className="enter-btn" disabled={!ok} onClick={()=>ok&&onEnter(platform)}>{ok?(access==='view-only'?t('viewRoom'):access==='use'?t('usePlatform'):t('enterRoom')):t('restricted')}</button>
+    </div></div></div>);
 }
 
-// ─── Welcome Popup ───
-function WelcomePopup({ onClose }) {
-  const phrase = hotelPhrases[Math.floor(Math.random() * hotelPhrases.length)];
-  return (
-    <div className="welcome-overlay" onClick={onClose}>
-      <div className="welcome-card" onClick={e => e.stopPropagation()}>
-        <span className="welcome-bell">🔔</span>
-        <h3 className="welcome-phrase">{phrase}</h3>
-        <p className="welcome-sub">Welcome to the Back Office — the engine room of our grand hotel.</p>
-        <ul className="welcome-instructions">
-          <li>Drag & drop or paste a URL to register a new platform</li>
-          <li>Fill in the details: name, section, access level</li>
-          <li>Review and publish — your platform will appear in the lobby!</li>
-        </ul>
-        <button className="welcome-ok" onClick={onClose}>Begin</button>
-      </div>
-    </div>
-  );
+function UploadPlatform({currentUser,onPublish}){
+  const t=useT();const[step,setStep]=useState(1);const[file,setFile]=useState(null);const[fc,setFc]=useState('');const[url,setUrl]=useState('');const[da,setDa]=useState(false);
+  const[fd,setFd]=useState({name:'',section:'tools',description:'',uploadedBy:currentUser.name,aG:true,aC:true,aB:true});const fi=useRef(null);
+  const drop=useCallback(e=>{e.preventDefault();e.stopPropagation();setDa(false);const f=e.dataTransfer?.files?.[0];if(f)rf(f);},[]);
+  const fs=e=>{const f=e.target.files?.[0];if(f)rf(f);};
+  const rf=f=>{setFile(f);const r=new FileReader();r.onload=e=>setFc(e.target.result);r.readAsText(f);};
+  const uf=(k,v)=>setFd(p=>({...p,[k]:v}));const c1=file||url.trim().length>5;const c2=fd.name.trim().length>0;
+  const pub=()=>{const cx=analyzeCodeComplexity(fc);const pl={id:Date.now(),name:fd.name,section:fd.section,description:fd.description,uploadedBy:fd.uploadedBy,url:url||null,fileName:file?.name||null,fileSize:file?.size||null,complexity:cx,roomNumber:100+Math.floor(Math.random()*900),date:new Date().toLocaleDateString('en-US'),fileContent:fc.substring(0,50000)};onPublish(pl);setStep(1);setFile(null);setFc('');setUrl('');setFd({name:'',section:'tools',description:'',uploadedBy:currentUser.name,aG:true,aC:true,aB:true});};
+  return(<div className="config-section"><h3>{t('uploadTitle')}</h3>
+    <div className="upload-steps">{[{n:1,l:t('source')},{n:2,l:t('details')},{n:3,l:t('review')}].map((s,i)=>(<React.Fragment key={s.n}>{i>0&&<div className="step-line"/>}<div className={`upload-step ${step===s.n?'active':step>s.n?'done':''}`}><div className="step-num">{step>s.n?'✓':s.n}</div><span>{s.l}</span></div></React.Fragment>))}</div>
+    {step===1&&(<div><div className={`dropzone ${da?'active':''}`} onDragEnter={e=>{e.preventDefault();setDa(true)}} onDragLeave={e=>{e.preventDefault();setDa(false)}} onDragOver={e=>e.preventDefault()} onDrop={drop} onClick={()=>fi.current?.click()}><div className="dropzone-icon">📁</div><div className="dropzone-text">{da?t('dropActive'):t('dropFile')}</div><div className="dropzone-sub">{t('dropSub')}</div><input ref={fi} type="file" style={{display:'none'}} onChange={fs}/></div>
+    {file&&(<div className="file-info"><span className="file-info-icon">📄</span><div><div className="file-info-name">{file.name}</div><div className="file-info-size">{fmtSize(file.size)}</div></div><button className="file-info-remove" onClick={()=>{setFile(null);setFc('')}}>✕</button></div>)}
+    <div className="ornament"><span>{t('or')}</span></div><input className="url-input" placeholder={t('urlPlaceholder')} value={url} onChange={e=>setUrl(e.target.value)}/>
+    <div className="upload-nav"><div/><button className="nav-btn primary" disabled={!c1} onClick={()=>setStep(2)}>{t('next')}</button></div></div>)}
+    {step===2&&(<div className="upload-form"><div className="form-group"><label>{t('platformName')}</label><input className="form-input" placeholder={t('namePlaceholder')} value={fd.name} onChange={e=>uf('name',e.target.value)}/></div>
+    <div className="form-row"><div className="form-group"><label>{t('section')}</label><select className="form-select" value={fd.section} onChange={e=>uf('section',e.target.value)}><option value="tools">🔧 {t('tools')}</option><option value="analysis">📊 {t('analysis')}</option><option value="strategy">♟ {t('strategy')}</option></select></div>
+    <div className="form-group"><label>{t('uploadedBy')}</label><input className="form-input" value={fd.uploadedBy} onChange={e=>uf('uploadedBy',e.target.value)}/></div></div>
+    <div className="form-group"><label>{t('description')}</label><textarea className="form-textarea" placeholder={t('descPlaceholder')} value={fd.description} onChange={e=>uf('description',e.target.value)}/></div>
+    <div className="form-group"><label>{t('accessLevels')}</label><div className="checkbox-group"><label className="checkbox-label locked"><input type="checkbox" checked disabled/> {t('bellboyAlways')}</label><label className="checkbox-label"><input type="checkbox" checked={fd.aC} onChange={e=>uf('aC',e.target.checked)}/> {t('concierge')}</label><label className="checkbox-label"><input type="checkbox" checked={fd.aG} onChange={e=>uf('aG',e.target.checked)}/> {t('guest')}</label></div></div>
+    <div className="upload-nav"><button className="nav-btn secondary" onClick={()=>setStep(1)}>{t('back')}</button><button className="nav-btn primary" disabled={!c2} onClick={()=>setStep(3)}>{t('review')} →</button></div></div>)}
+    {step===3&&(<div><div className="review-card">
+    <div className="review-row"><span className="review-label">{t('name')}</span><span className="review-value">{fd.name}</span></div>
+    <div className="review-row"><span className="review-label">{t('section')}</span><span className="review-value">{fd.section}</span></div>
+    <div className="review-row"><span className="review-label">{t('uploadedBy')}</span><span className="review-value">{fd.uploadedBy}</span></div>
+    <div className="review-row"><span className="review-label">{t('source')}</span><span className="review-value">{file?file.name:url||'N/A'}</span></div>
+    {file&&<div className="review-row"><span className="review-label">{t('fileSize')}</span><span className="review-value">{fmtSize(file.size)}</span></div>}
+    {fc&&<div className="review-row"><span className="review-label">{t('complexityAuto')}</span><span className="review-value">{analyzeCodeComplexity(fc)} pts</span></div>}
+    <div className="review-row"><span className="review-label">{t('description')}</span><span className="review-value">{fd.description||'—'}</span></div></div>
+    <div className="upload-nav"><button className="nav-btn secondary" onClick={()=>setStep(2)}>{t('back')}</button><button className="nav-btn primary" onClick={pub}>{t('publish')}</button></div></div>)}
+  </div>);
 }
 
-// ─── Room Door Card ───
-function RoomDoor({ platform, index, score, onClick }) {
-  return (
-    <div className="room-door fade-in" onClick={onClick} style={{animationDelay: `${index * 0.1}s`}}>
-      <div className="room-preview">
-        <RoomPreview platform={platform} score={score} height={140} />
-        <span className="room-score-badge">{score ?? '—'}</span>
-        <span className="room-category-badge">{platform.section}</span>
-      </div>
-      <div className="room-info">
-        <div className="room-number">Room {platform.roomNumber || (100 + index + 1)}</div>
-        <div className="room-name">{platform.name}</div>
-      </div>
-    </div>
-  );
+function AIConcierge({platforms,scores}){
+  const t=useT();const[tab,setTab]=useState('discrepancies');
+  const sorted=useMemo(()=>[...platforms].sort((a,b)=>(scores[b.id]||0)-(scores[a.id]||0)),[platforms,scores]);
+  const disc=useMemo(()=>{if(platforms.length<2)return[{title:t('notEnough'),text:t('upload2'),status:'info'}];const it=[];const sec={};platforms.forEach(p=>{if(!sec[p.section])sec[p.section]=[];sec[p.section].push(p);});Object.entries(sec).forEach(([s,ps])=>{if(ps.length>1){const hi=Math.max(...ps.map(p=>scores[p.id]||0)),lo=Math.min(...ps.map(p=>scores[p.id]||0));if(hi-lo>30)it.push({title:`${t('scoreGap')} ${s}`,text:`${hi-lo} ${t('gapText')} ${s}. ${t('considerImprove')}`,status:'warn'});}});if(!it.length)it.push({title:t('allClear'),text:t('noDiscrep'),status:'ok'});return it;},[platforms,scores]);
+  const ovlp=useMemo(()=>{if(platforms.length<2)return[{title:t('notEnough'),text:t('uploadMore'),status:'info'}];const it=[];const sec={};platforms.forEach(p=>{if(!sec[p.section])sec[p.section]=[];sec[p.section].push(p);});Object.entries(sec).forEach(([s,ps])=>{if(ps.length>=2)it.push({title:`${ps.length} ${t('platformsIn')} ${s}`,text:`${t('platforms')}: ${ps.map(p=>p.name).join(', ')}. ${t('considerUnify')}`,status:'info'});});if(!it.length)it.push({title:t('noOverlaps'),text:t('uniquePlatforms'),status:'ok'});return it;},[platforms]);
+  return(<div className="config-section"><h3>{t('aiConcierge')}</h3>
+    <div className="ai-tabs">{['discrepancies','overlap','leaderboard'].map(k=>(<button key={k} className={`ai-tab ${tab===k?'active':''}`} onClick={()=>setTab(k)}>{k==='discrepancies'?t('discrepancies'):k==='overlap'?t('overlapUnify'):t('leaderboard')}</button>))}</div>
+    {tab==='discrepancies'&&disc.map((d,i)=>(<div className="ai-card" key={i}><h4>{d.title}<span className={`ai-status ${d.status}`}>{d.status.toUpperCase()}</span></h4><p>{d.text}</p></div>))}
+    {tab==='overlap'&&ovlp.map((o,i)=>(<div className="ai-card" key={i}><h4>{o.title}<span className={`ai-status ${o.status}`}>{o.status.toUpperCase()}</span></h4><p>{o.text}</p></div>))}
+    {tab==='leaderboard'&&(sorted.length===0?<div className="ai-card"><p style={{color:'var(--rose)',fontStyle:'italic'}}>{t('noPlatformsYet')}</p></div>:
+      sorted.map((p,i)=>(<div className="ai-card" key={p.id} style={{display:'flex',alignItems:'center',gap:16}}><div style={{fontSize:24,fontFamily:'Playfair Display,serif',color:i===0?'var(--gold)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--rose)',minWidth:36,textAlign:'center'}}>{i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`}</div><div style={{flex:1}}><h4 style={{margin:0}}>{p.name}</h4><p style={{margin:'4px 0 0',fontSize:13,opacity:0.7}}>{p.section} · {p.uploadedBy||'Unknown'}</p></div><div style={{fontFamily:'Playfair Display,serif',fontSize:22,fontWeight:700,color:'var(--gold)'}}>{scores[p.id]||0}</div></div>))
+    )}</div>);
 }
 
-// ─── Expanded Room Modal ───
-function ExpandedRoom({ platform, score, user, onClose, onEnter }) {
-  const access = getAccessLevel(user, platform.section);
-  const accessLabels = { full: 'Full Access', 'view-only': 'View Only', use: 'Use', 'no-access': 'No Access' };
-  const accessClass = { full: 'access-full', 'view-only': 'access-view', use: 'access-use', 'no-access': 'access-no' };
-  const canEnter = access !== 'no-access';
+function AddUserModal({onClose,onAdd}){const t=useT();const[nm,setNm]=useState('');const[em,setEm]=useState('');const[rl,setRl]=useState('guest');
+  const add=()=>{if(!nm.trim()||!em.trim())return;const av=nm.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);onAdd({id:Date.now(),name:nm.trim(),email:em.trim().toLowerCase(),role:rl,avatar:av});onClose();};
+  return(<div className="modal-overlay" onClick={onClose}><div className="modal-content" onClick={e=>e.stopPropagation()} style={{width:440}}><button className="modal-close" onClick={onClose}>✕</button><div className="modal-body"><h2>{t('registerGuest')}</h2><span className="subtitle" style={{marginBottom:20,display:'block'}}>{t('addMember')}</span><div className="add-user-form"><div className="form-group"><label>{t('fullName')}</label><input className="form-input" placeholder="John Doe" value={nm} onChange={e=>setNm(e.target.value)} autoFocus/></div><div className="form-group"><label>{t('email')}</label><input className="form-input" type="email" placeholder="john@company.com" value={em} onChange={e=>setEm(e.target.value)}/></div><div className="form-group"><label>{t('role')}</label><select className="form-select" value={rl} onChange={e=>setRl(e.target.value)}><option value="guest">{t('guestRole')}</option><option value="concierge">{t('conciergeRole')}</option><option value="bellboy">{t('bellboyRole')}</option></select></div><button className="nav-btn primary" style={{marginTop:8}} onClick={add}>{t('registerBtn')}</button></div></div></div></div>);}
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <div className="modal-preview">
-          <RoomPreview platform={platform} score={score} height={200} />
-        </div>
-        <div className="modal-body">
-          <h2>{platform.name}</h2>
-          <span className="subtitle">Room {platform.roomNumber || '—'} · {platform.section}</span>
-          <div className={`access-badge ${accessClass[access]}`}>{accessLabels[access]}</div>
-          {platform.description && <p className="modal-desc">{platform.description}</p>}
-          <div className="modal-meta">
-            {platform.uploadedBy && <span className="meta-chip">👤 {platform.uploadedBy}</span>}
-            {platform.date && <span className="meta-chip">📅 {platform.date}</span>}
-            {platform.url && <span className="meta-chip">🔗 URL</span>}
-            {platform.fileSize && <span className="meta-chip">📦 {formatFileSize(platform.fileSize)}</span>}
-          </div>
-          <div className="modal-score">
-            <div className="score-circle">{score ?? '—'}</div>
-            <div className="score-bar">
-              <div className="score-bar-track">
-                <div className="score-bar-fill" style={{width: `${score || 0}%`}}></div>
-              </div>
-              <div className="score-label">Complexity Score — auto-analyzed from source code</div>
-            </div>
-          </div>
-          <button className="enter-btn" disabled={!canEnter} onClick={() => canEnter && onEnter(platform)}>
-            {canEnter ? (access === 'view-only' ? '👁 View Room' : access === 'use' ? '🔑 Use Platform' : '🚪 Enter Room') : '🔒 Access Restricted'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+function App(){
+  const[lang,setLang]=useState(()=>loadFromStorage(STORAGE_KEYS.lang,'en'));
+  const[users,setUsers]=useState(()=>loadFromStorage(STORAGE_KEYS.users,initialUsers));
+  const[platforms,setPlatforms]=useState(()=>loadFromStorage(STORAGE_KEYS.platforms,initialPlatforms));
+  const[currentUser,setCU]=useState(null);const[screen,setScreen]=useState('lobby');
+  const[selectedPlatform,setSP]=useState(null);const[showDenied,setSD]=useState(false);
+  const[showWelcome,setSW]=useState(false);const[showAddUser,setSAU]=useState(false);
+  const[toast,setToast]=useState(null);const[confirmAction,setCA]=useState(null);
+  const[celebration,setCeleb]=useState(null);const wRef=useRef(false);
 
-function formatFileSize(bytes) {
-  if (!bytes) return '';
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
-  return (bytes/1048576).toFixed(1) + ' MB';
-}
+  useEffect(()=>{saveToStorage(STORAGE_KEYS.lang,lang);},[lang]);
+  useEffect(()=>{saveToStorage(STORAGE_KEYS.users,users);},[users]);
+  useEffect(()=>{saveToStorage(STORAGE_KEYS.platforms,platforms);},[platforms]);
 
-// ─── Upload Platform ───
-function UploadPlatform({ users, currentUser, onPublish }) {
-  const [step, setStep] = useState(1);
-  const [file, setFile] = useState(null);
-  const [fileContent, setFileContent] = useState('');
-  const [url, setUrl] = useState('');
-  const [dragActive, setDragActive] = useState(false);
-  const [formData, setFormData] = useState({ name:'', section:'tools', description:'', uploadedBy: currentUser.name, accessGuest:true, accessConcierge:true, accessBellboy:true });
-  const fileInput = useRef(null);
+  const t=(key)=>translations[lang]?.[key]||translations.en[key]||key;
+  const scores=useMemo(()=>calcScores(platforms),[platforms]);
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault(); e.stopPropagation(); setDragActive(false);
-    const f = e.dataTransfer?.files?.[0];
-    if (f) readFile(f);
-  }, []);
-  const handleFileSelect = (e) => { const f = e.target.files?.[0]; if (f) readFile(f); };
-  const readFile = (f) => {
-    setFile(f);
-    const reader = new FileReader();
-    reader.onload = (e) => setFileContent(e.target.result);
-    reader.readAsText(f);
-  };
+  const login=u=>{setCU(u);setScreen('lobby');};
+  const logout=()=>{setCU(null);setScreen('lobby');wRef.current=false;};
+  const goConfig=()=>{if(!canAccessConfig(currentUser)){setSD(true);return;}setScreen('config');if(!wRef.current){setSW(true);wRef.current=true;}};
+  const clickPlatform=p=>{if(getAccessLevel(currentUser,p.section)==='no-access'){setSD(true);return;}setSP(p);};
+  const enter=p=>{if(p.url)window.open(p.url,'_blank');else showMsg(`${t('entering')} ${p.name}...`);setSP(null);};
+  const publish=platform=>{setPlatforms(prev=>[...prev,platform]);const phrases=t('celebrationPhrases');setCeleb({name:platform.name,phrase:phrases[Math.floor(Math.random()*phrases.length)]});};
+  const addUser=u=>{setUsers(prev=>[...prev,u]);showMsg(`${u.name} ${t('registered')}`);};
+  const delUser=u=>{if(u.id===currentUser.id)return;setCA({title:t('checkOutGuest'),message:`${t('confirmRemoveUser')} ${u.name} (${u.email}) ${t('fromRegistry')}`,onConfirm:()=>{setUsers(prev=>prev.filter(x=>x.id!==u.id));showMsg(`${u.name} ${t('checkedOut')}`);setCA(null);},onCancel:()=>setCA(null)});};
+  const delPlatform=id=>{const p=platforms.find(x=>x.id===id);setCA({title:t('removePlatform'),message:`${t('confirmRemovePlatform')} ${p?p.name:''} ${t('fromLobby')}`,onConfirm:()=>{setPlatforms(prev=>prev.filter(x=>x.id!==id));showMsg(t('platformOut'));setCA(null);},onCancel:()=>setCA(null)});};
+  const showMsg=m=>{setToast(m);};
 
-  const updateForm = (key, val) => setFormData(prev => ({...prev, [key]: val}));
-  const canNext1 = file || url.trim().length > 5;
-  const canNext2 = formData.name.trim().length > 0;
+  const tp=platforms.filter(p=>p.section==='tools');
+  const ap=platforms.filter(p=>p.section==='analysis');
+  const sp=platforms.filter(p=>p.section==='strategy');
 
-  const handlePublish = () => {
-    const complexity = analyzeCodeComplexity(fileContent, file?.name || '');
-    const platform = {
-      id: Date.now(),
-      name: formData.name,
-      section: formData.section,
-      description: formData.description,
-      uploadedBy: formData.uploadedBy,
-      url: url || null,
-      fileName: file?.name || null,
-      fileSize: file?.size || null,
-      complexity: complexity,
-      roomNumber: 100 + Math.floor(Math.random() * 900),
-      date: new Date().toLocaleDateString('en-US'),
-      fileContent: fileContent.substring(0, 50000), // store first 50k chars for analysis
-    };
-    onPublish(platform);
-    setStep(1); setFile(null); setFileContent(''); setUrl(''); setFormData({ name:'', section:'tools', description:'', uploadedBy: currentUser.name, accessGuest:true, accessConcierge:true, accessBellboy:true });
-  };
+  if(!currentUser)return <LangContext.Provider value={lang}><LoginScreen users={users} onLogin={login} lang={lang} setLang={setLang}/></LangContext.Provider>;
 
-  return (
-    <div className="config-section">
-      <h3>📦 Upload New Platform</h3>
-      <div className="upload-steps">
-        {[{n:1,l:'Source'},{n:2,l:'Details'},{n:3,l:'Review'}].map((s,i) => (
-          <React.Fragment key={s.n}>
-            {i > 0 && <div className="step-line" />}
-            <div className={`upload-step ${step === s.n ? 'active' : step > s.n ? 'done' : ''}`}>
-              <div className="step-num">{step > s.n ? '✓' : s.n}</div>
-              <span>{s.l}</span>
-            </div>
-          </React.Fragment>
-        ))}
-      </div>
-
-      {step === 1 && (
-        <div>
-          <div className={`dropzone ${dragActive ? 'active' : ''}`}
-            onDragEnter={e=>{e.preventDefault();setDragActive(true)}}
-            onDragLeave={e=>{e.preventDefault();setDragActive(false)}}
-            onDragOver={e=>e.preventDefault()}
-            onDrop={handleDrop}
-            onClick={()=>fileInput.current?.click()}>
-            <div className="dropzone-icon">📁</div>
-            <div className="dropzone-text">{dragActive ? 'Drop your file here!' : 'Drag & drop your platform file'}</div>
-            <div className="dropzone-sub">HTML, JS, Python, or any code file</div>
-            <input ref={fileInput} type="file" style={{display:'none'}} onChange={handleFileSelect} />
-          </div>
-          {file && (
-            <div className="file-info">
-              <span className="file-info-icon">📄</span>
-              <div>
-                <div className="file-info-name">{file.name}</div>
-                <div className="file-info-size">{formatFileSize(file.size)}</div>
-              </div>
-              <button className="file-info-remove" onClick={()=>{setFile(null);setFileContent('')}}>✕</button>
-            </div>
-          )}
-          <div className="ornament"><span>OR</span></div>
-          <input className="url-input" placeholder="Paste platform URL (https://...)" value={url} onChange={e=>setUrl(e.target.value)} />
-          <div className="upload-nav">
-            <div />
-            <button className="nav-btn primary" disabled={!canNext1} onClick={()=>setStep(2)}>Next →</button>
-          </div>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="upload-form">
-          <div className="form-group">
-            <label>Platform Name *</label>
-            <input className="form-input" placeholder="e.g. Beaver's Dam" value={formData.name} onChange={e=>updateForm('name',e.target.value)} />
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Section</label>
-              <select className="form-select" value={formData.section} onChange={e=>updateForm('section',e.target.value)}>
-                <option value="tools">🔧 Tools</option>
-                <option value="analysis">📊 Analysis</option>
-                <option value="strategy">♟ Strategy</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Uploaded By</label>
-              <input className="form-input" value={formData.uploadedBy} onChange={e=>updateForm('uploadedBy',e.target.value)} />
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Description</label>
-            <textarea className="form-textarea" placeholder="What does this platform do?" value={formData.description} onChange={e=>updateForm('description',e.target.value)} />
-          </div>
-          <div className="form-group">
-            <label>Access Levels</label>
-            <div className="checkbox-group">
-              <label className="checkbox-label locked"><input type="checkbox" checked disabled /> Bellboy (always)</label>
-              <label className="checkbox-label"><input type="checkbox" checked={formData.accessConcierge} onChange={e=>updateForm('accessConcierge',e.target.checked)} /> Concierge</label>
-              <label className="checkbox-label"><input type="checkbox" checked={formData.accessGuest} onChange={e=>updateForm('accessGuest',e.target.checked)} /> Guest</label>
-            </div>
-          </div>
-          <div className="upload-nav">
-            <button className="nav-btn secondary" onClick={()=>setStep(1)}>← Back</button>
-            <button className="nav-btn primary" disabled={!canNext2} onClick={()=>setStep(3)}>Review →</button>
-          </div>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div>
-          <div className="review-card">
-            <div className="review-row"><span className="review-label">Name</span><span className="review-value">{formData.name}</span></div>
-            <div className="review-row"><span className="review-label">Section</span><span className="review-value">{formData.section}</span></div>
-            <div className="review-row"><span className="review-label">Uploaded By</span><span className="review-value">{formData.uploadedBy}</span></div>
-            <div className="review-row"><span className="review-label">Source</span><span className="review-value">{file ? file.name : url || 'N/A'}</span></div>
-            {file && <div className="review-row"><span className="review-label">File Size</span><span className="review-value">{formatFileSize(file.size)}</span></div>}
-            {fileContent && <div className="review-row"><span className="review-label">Complexity (auto)</span><span className="review-value">{analyzeCodeComplexity(fileContent, file?.name || '')} pts</span></div>}
-            <div className="review-row"><span className="review-label">Description</span><span className="review-value">{formData.description || '—'}</span></div>
-          </div>
-          <div className="upload-nav">
-            <button className="nav-btn secondary" onClick={()=>setStep(2)}>← Back</button>
-            <button className="nav-btn primary" onClick={handlePublish}>🔔 Publish to Lobby</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── AI Concierge ───
-function AIConcierge({ platforms, scores }) {
-  const [tab, setTab] = useState('discrepancies');
-  const sorted = useMemo(() => [...platforms].sort((a,b) => (scores[b.id]||0) - (scores[a.id]||0)), [platforms, scores]);
-
-  const discrepancies = useMemo(() => {
-    if (platforms.length < 2) return [{ title: 'Not enough data', text: 'Upload at least 2 platforms to detect discrepancies.', status: 'info' }];
-    const items = [];
-    const sections = {};
-    platforms.forEach(p => { if (!sections[p.section]) sections[p.section] = []; sections[p.section].push(p); });
-    Object.entries(sections).forEach(([sec, ps]) => {
-      if (ps.length > 1) {
-        const hi = Math.max(...ps.map(p => scores[p.id]||0));
-        const lo = Math.min(...ps.map(p => scores[p.id]||0));
-        if (hi - lo > 30) {
-          items.push({ title: `Score gap in ${sec}`, text: `There's a ${hi-lo} point gap between the highest and lowest scored platforms in ${sec}. Consider improving the lower-scored entries.`, status: 'warn' });
-        }
-      }
-    });
-    if (!items.length) items.push({ title: 'All clear', text: 'No significant discrepancies found between platforms.', status: 'ok' });
-    return items;
-  }, [platforms, scores]);
-
-  const overlaps = useMemo(() => {
-    if (platforms.length < 2) return [{ title: 'Not enough data', text: 'Upload more platforms to detect overlaps.', status: 'info' }];
-    const items = [];
-    const sections = {};
-    platforms.forEach(p => { if (!sections[p.section]) sections[p.section] = []; sections[p.section].push(p); });
-    Object.entries(sections).forEach(([sec, ps]) => {
-      if (ps.length >= 2) {
-        items.push({ title: `${ps.length} platforms in ${sec}`, text: `Platforms: ${ps.map(p=>p.name).join(', ')}. Consider whether any can be unified.`, status: 'info' });
-      }
-    });
-    if (!items.length) items.push({ title: 'No overlaps', text: 'Each section has unique platforms.', status: 'ok' });
-    return items;
-  }, [platforms]);
-
-  return (
-    <div className="config-section">
-      <h3>🤖 AI Concierge — Intelligence Analysis</h3>
-      <div className="ai-tabs">
-        {['discrepancies','overlap','leaderboard'].map(t => (
-          <button key={t} className={`ai-tab ${tab===t?'active':''}`} onClick={()=>setTab(t)}>
-            {t === 'discrepancies' ? '⚠ Discrepancies' : t === 'overlap' ? '🔄 Overlap & Unify' : '🏆 Leaderboard'}
-          </button>
-        ))}
-      </div>
-      {tab === 'discrepancies' && discrepancies.map((d,i) => (
-        <div className="ai-card" key={i}>
-          <h4>{d.title} <span className={`ai-status ${d.status}`}>{d.status.toUpperCase()}</span></h4>
-          <p>{d.text}</p>
-        </div>
-      ))}
-      {tab === 'overlap' && overlaps.map((o,i) => (
-        <div className="ai-card" key={i}>
-          <h4>{o.title} <span className={`ai-status ${o.status}`}>{o.status.toUpperCase()}</span></h4>
-          <p>{o.text}</p>
-        </div>
-      ))}
-      {tab === 'leaderboard' && (
-        sorted.length === 0 ? <div className="ai-card"><p style={{color:'var(--rose)',fontStyle:'italic'}}>No platforms uploaded yet.</p></div> :
-        sorted.map((p,i) => (
-          <div className="ai-card" key={p.id} style={{display:'flex',alignItems:'center',gap:16}}>
-            <div style={{fontSize:24,fontFamily:'Playfair Display,serif',color: i===0?'var(--gold)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--rose)',minWidth:36,textAlign:'center'}}>
-              {i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`}
-            </div>
-            <div style={{flex:1}}>
-              <h4 style={{margin:0}}>{p.name}</h4>
-              <p style={{margin:'4px 0 0',fontSize:13,opacity:0.7}}>{p.section} · {p.uploadedBy || 'Unknown'}</p>
-            </div>
-            <div style={{fontFamily:'Playfair Display,serif',fontSize:22,fontWeight:700,color:'var(--gold)'}}>{scores[p.id] || 0}</div>
-          </div>
-        ))
-      )}
-    </div>
-  );
-}
-
-// ─── Add User Modal ───
-function AddUserModal({ onClose, onAdd }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('guest');
-  const handleAdd = () => {
-    if (!name.trim() || !email.trim()) return;
-    const avatar = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    onAdd({ id: Date.now(), name: name.trim(), email: email.trim().toLowerCase(), role, avatar });
-    onClose();
-  };
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e=>e.stopPropagation()} style={{width:440}}>
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <div className="modal-body">
-          <h2>Register New Guest</h2>
-          <span className="subtitle" style={{marginBottom:20,display:'block'}}>Add a new member to the hotel registry</span>
-          <div className="add-user-form">
-            <div className="form-group">
-              <label>Full Name</label>
-              <input className="form-input" placeholder="John Doe" value={name} onChange={e=>setName(e.target.value)} autoFocus />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input className="form-input" type="email" placeholder="john@company.com" value={email} onChange={e=>setEmail(e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label>Role</label>
-              <select className="form-select" value={role} onChange={e=>setRole(e.target.value)}>
-                <option value="guest">Guest (AE / SDR / KAM)</option>
-                <option value="concierge">Concierge (Manager)</option>
-                <option value="bellboy">Bellboy (Admin)</option>
-              </select>
-            </div>
-            <button className="nav-btn primary" style={{marginTop:8}} onClick={handleAdd}>🔑 Register Guest</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Main App ───
-function App() {
-  const [users, setUsers] = useState(() => loadFromStorage(STORAGE_KEYS.users, initialUsers));
-  const [platforms, setPlatforms] = useState(() => loadFromStorage(STORAGE_KEYS.platforms, initialPlatforms));
-  const [currentUser, setCurrentUser] = useState(null);
-  const [screen, setScreen] = useState('lobby');
-  const [selectedPlatform, setSelectedPlatform] = useState(null);
-  const [showDenied, setShowDenied] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showAddUser, setShowAddUser] = useState(false);
-  const [toast, setToast] = useState(null);
-  const welcomeShown = useRef(false);
-
-  useEffect(() => { saveToStorage(STORAGE_KEYS.users, users); }, [users]);
-  useEffect(() => { saveToStorage(STORAGE_KEYS.platforms, platforms); }, [platforms]);
-
-  const scores = useMemo(() => calcScores(platforms), [platforms]);
-
-  const handleLogin = (user) => { setCurrentUser(user); setScreen('lobby'); };
-  const handleLogout = () => { setCurrentUser(null); setScreen('lobby'); welcomeShown.current = false; };
-
-  const goConfig = () => {
-    if (!canAccessConfig(currentUser)) { setShowDenied(true); return; }
-    setScreen('config');
-    if (!welcomeShown.current) { setShowWelcome(true); welcomeShown.current = true; }
-  };
-
-  const handlePlatformClick = (p) => {
-    const access = getAccessLevel(currentUser, p.section);
-    if (access === 'no-access') { setShowDenied(true); return; }
-    setSelectedPlatform(p);
-  };
-
-  const handleEnter = (p) => {
-    if (p.url) { window.open(p.url, '_blank'); }
-    else { showToast(`Entering ${p.name}...`); }
-    setSelectedPlatform(null);
-  };
-
-  const handlePublish = (platform) => {
-    setPlatforms(prev => [...prev, platform]);
-    showToast(`${platform.name} has been checked in to the lobby!`);
-  };
-
-  const handleAddUser = (user) => {
-    setUsers(prev => [...prev, user]);
-    showToast(`${user.name} has been registered!`);
-  };
-
-  const handleDeletePlatform = (id) => {
-    setPlatforms(prev => prev.filter(p => p.id !== id));
-    showToast('Platform checked out.');
-  };
-
-  const showToast = (msg) => { setToast(msg); };
-
-  const toolsPlatforms = platforms.filter(p => p.section === 'tools');
-  const analysisPlatforms = platforms.filter(p => p.section === 'analysis');
-  const strategyPlatforms = platforms.filter(p => p.section === 'strategy');
-
-  if (!currentUser) return <LoginScreen users={users} onLogin={handleLogin} />;
-
-  return (
+  return(
+    <LangContext.Provider value={lang}>
     <div>
       <div className="topbar">
         <h1>🔔 AI LOBBY</h1>
         <div className="topbar-right">
-          <button className={`tab-btn ${screen==='lobby'?'active':''}`} onClick={()=>setScreen('lobby')}>Lobby</button>
-          <button className={`tab-btn ${screen==='config'?'active':''}`} onClick={goConfig}>Back Office</button>
-          <div className="topbar-user">
-            <div className="topbar-avatar">{currentUser.avatar}</div>
-            <div>
-              <div style={{fontSize:13,fontWeight:500}}>{currentUser.name}</div>
-              <div style={{fontSize:11,opacity:0.6,textTransform:'capitalize'}}>{currentUser.role}</div>
-            </div>
-          </div>
-          <button className="logout-btn" onClick={handleLogout}>Check Out</button>
+          <button className="lang-btn" onClick={()=>setLang(lang==='en'?'es':'en')}>{lang==='en'?'ES 🇪🇸':'EN 🇬🇧'}</button>
+          <button className={`tab-btn ${screen==='lobby'?'active':''}`} onClick={()=>setScreen('lobby')}>{t('lobby')}</button>
+          <button className={`tab-btn ${screen==='config'?'active':''}`} onClick={goConfig}>{t('backOffice')}</button>
+          <div className="topbar-user"><div className="topbar-avatar">{currentUser.avatar}</div><div><div style={{fontSize:13,fontWeight:500}}>{currentUser.name}</div><div style={{fontSize:11,opacity:0.6,textTransform:'capitalize'}}>{currentUser.role}</div></div></div>
+          <button className="logout-btn" onClick={logout}>{t('checkOut')}</button>
         </div>
       </div>
-
-      {screen === 'lobby' && (
-        <div className="lobby fade-in">
-          <h2 className="lobby-title">The Grand Lobby</h2>
-          <div className="ornament"><span>EXPLORE OUR ROOMS</span></div>
-          <div className="columns">
-            <div className="column">
-              <div className="column-title">🔧 Tools</div>
-              {toolsPlatforms.length === 0 ? <div className="empty-col">No tools checked in yet</div> :
-                toolsPlatforms.map((p,i) => <RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>handlePlatformClick(p)} />)}
-            </div>
-            <div className="column">
-              <div className="column-title">📊 Analysis</div>
-              {analysisPlatforms.length === 0 ? <div className="empty-col">No analysis platforms yet</div> :
-                analysisPlatforms.map((p,i) => <RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>handlePlatformClick(p)} />)}
-            </div>
-            <div className="column">
-              <div className="column-title">♟ Strategy</div>
-              {strategyPlatforms.length === 0 ? <div className="empty-col">No strategy platforms yet</div> :
-                strategyPlatforms.map((p,i) => <RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>handlePlatformClick(p)} />)}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {screen === 'config' && (
-        <div className="config fade-in">
-          <h2 style={{textAlign:'center',color:'var(--gold)',fontSize:28,marginBottom:8}}>Back Office</h2>
-          <div className="ornament"><span>MANAGEMENT</span></div>
-
-          <UploadPlatform users={users} currentUser={currentUser} onPublish={handlePublish} />
-
-          {/* Guest Registry */}
-          <div className="config-section">
-            <h3>
-              📋 Guest Registry
-              <button className="add-btn" onClick={()=>setShowAddUser(true)}>+ Register</button>
-            </h3>
-            <table className="config-table">
-              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Tools</th><th>Analysis</th><th>Strategy</th></tr></thead>
-              <tbody>
-                {users.map(u => (
-                  <tr key={u.id}>
-                    <td>{u.name}</td>
-                    <td style={{opacity:0.7,fontSize:13}}>{u.email}</td>
-                    <td><span className={`role-badge role-${u.role}`}>{u.role}</span></td>
-                    <td style={{fontSize:12}}>{getAccessLevel(u,'tools')}</td>
-                    <td style={{fontSize:12}}>{getAccessLevel(u,'analysis')}</td>
-                    <td style={{fontSize:12}}>{getAccessLevel(u,'strategy')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Room Directory */}
-          <div className="config-section">
-            <h3>🚪 Room Directory</h3>
-            {platforms.length === 0 ? <p style={{color:'var(--rose)',fontStyle:'italic',fontSize:14}}>No platforms checked in yet. Use the upload section above!</p> :
-            <table className="config-table">
-              <thead><tr><th>Room</th><th>Name</th><th>Section</th><th>Score</th><th>Uploaded By</th><th></th></tr></thead>
-              <tbody>
-                {platforms.map(p => (
-                  <tr key={p.id}>
-                    <td>{p.roomNumber || '—'}</td>
-                    <td>{p.name}</td>
-                    <td style={{textTransform:'capitalize'}}>{p.section}</td>
-                    <td style={{fontWeight:600,color:'var(--gold)'}}>{scores[p.id] || '—'}</td>
-                    <td style={{fontSize:13,opacity:0.7}}>{p.uploadedBy || '—'}</td>
-                    <td>
-                      {(currentUser.role === 'bellboy') && (
-                        <button onClick={()=>handleDeletePlatform(p.id)} style={{background:'none',border:'1px solid #FF6B6B',color:'#FF6B6B',borderRadius:6,padding:'4px 10px',cursor:'pointer',fontSize:12}}>Remove</button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>}
-          </div>
-
-          <AIConcierge platforms={platforms} scores={scores} />
-        </div>
-      )}
-
-      {selectedPlatform && <ExpandedRoom platform={selectedPlatform} score={scores[selectedPlatform.id]} user={currentUser} onClose={()=>setSelectedPlatform(null)} onEnter={handleEnter} />}
-      {showDenied && <AccessDenied onClose={()=>setShowDenied(false)} />}
-      {showWelcome && <WelcomePopup onClose={()=>setShowWelcome(false)} />}
-      {showAddUser && <AddUserModal onClose={()=>setShowAddUser(false)} onAdd={handleAddUser} />}
-      {toast && <Toast message={toast} onClose={()=>setToast(null)} />}
+      {screen==='lobby'&&(<div className="lobby fade-in"><h2 className="lobby-title">{t('grandLobby')}</h2><div className="ornament"><span>{t('exploreRooms')}</span></div>
+        <div className="columns">
+          <div className="column"><div className="column-title">🔧 {t('tools')}</div>{tp.length===0?<div className="empty-col">{t('noTools')}</div>:tp.map((p,i)=><RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>clickPlatform(p)}/>)}</div>
+          <div className="column"><div className="column-title">📊 {t('analysis')}</div>{ap.length===0?<div className="empty-col">{t('noAnalysis')}</div>:ap.map((p,i)=><RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>clickPlatform(p)}/>)}</div>
+          <div className="column"><div className="column-title">♟ {t('strategy')}</div>{sp.length===0?<div className="empty-col">{t('noStrategy')}</div>:sp.map((p,i)=><RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>clickPlatform(p)}/>)}</div>
+        </div></div>)}
+      {screen==='config'&&(<div className="config fade-in"><h2 style={{textAlign:'center',color:'var(--gold)',fontSize:28,marginBottom:8}}>{t('backOffice')}</h2><div className="ornament"><span>{t('management')}</span></div>
+        <UploadPlatform currentUser={currentUser} onPublish={publish}/>
+        <div className="config-section"><h3>{t('guestRegistry')} <button className="add-btn" onClick={()=>setSAU(true)}>{t('register')}</button></h3>
+          <table className="config-table"><thead><tr><th>{t('name')}</th><th>{t('email')}</th><th>{t('role')}</th><th>{t('tools')}</th><th>{t('analysis')}</th><th>{t('strategy')}</th>{currentUser.role==='bellboy'&&<th></th>}</tr></thead>
+          <tbody>{users.map(u=>(<tr key={u.id}><td>{u.name}</td><td style={{opacity:0.7,fontSize:13}}>{u.email}</td><td><span className={`role-badge role-${u.role}`}>{u.role}</span></td><td style={{fontSize:12}}>{getAccessLevel(u,'tools')}</td><td style={{fontSize:12}}>{getAccessLevel(u,'analysis')}</td><td style={{fontSize:12}}>{getAccessLevel(u,'strategy')}</td>{currentUser.role==='bellboy'&&<td>{u.id!==currentUser.id&&<button className="del-btn" onClick={()=>delUser(u)}>{t('remove')}</button>}</td>}</tr>))}</tbody></table></div>
+        <div className="config-section"><h3>{t('roomDirectory')}</h3>
+          {platforms.length===0?<p style={{color:'var(--rose)',fontStyle:'italic',fontSize:14}}>{t('noPlatforms')}</p>:
+          <table className="config-table"><thead><tr><th>{t('room')}</th><th>{t('name')}</th><th>{t('section')}</th><th>{t('score')}</th><th>{t('uploadedBy')}</th><th></th></tr></thead>
+          <tbody>{platforms.map(p=>(<tr key={p.id}><td>{p.roomNumber||'—'}</td><td>{p.name}</td><td style={{textTransform:'capitalize'}}>{p.section}</td><td style={{fontWeight:600,color:'var(--gold)'}}>{scores[p.id]||'—'}</td><td style={{fontSize:13,opacity:0.7}}>{p.uploadedBy||'—'}</td><td>{(currentUser.role==='bellboy'||currentUser.role==='concierge')&&<button className="del-btn" onClick={()=>delPlatform(p.id)}>{t('remove')}</button>}</td></tr>))}</tbody></table>}</div>
+        <AIConcierge platforms={platforms} scores={scores}/></div>)}
+      {selectedPlatform&&<ExpandedRoom platform={selectedPlatform} score={scores[selectedPlatform.id]} user={currentUser} onClose={()=>setSP(null)} onEnter={enter}/>}
+      {showDenied&&<AccessDenied onClose={()=>setSD(false)}/>}
+      {showWelcome&&<WelcomePopup onClose={()=>setSW(false)}/>}
+      {showAddUser&&<AddUserModal onClose={()=>setSAU(false)} onAdd={addUser}/>}
+      {confirmAction&&<ConfirmDialog title={confirmAction.title} message={confirmAction.message} onConfirm={confirmAction.onConfirm} onCancel={confirmAction.onCancel}/>}
+      {celebration&&<CelebrationPopup name={celebration.name} phrase={celebration.phrase} onClose={()=>setCeleb(null)}/>}
+      {toast&&<Toast message={toast} onClose={()=>setToast(null)}/>}
     </div>
+    </LangContext.Provider>
   );
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
