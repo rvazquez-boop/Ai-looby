@@ -1,569 +1,2889 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI LOBBY — The Grand Intelligence Hotel</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--wine:#9B2335;--burgundy:#5A1A2A;--gold:#D4A843;--cream:#FAF0E4;--dark:#1A0A0E;--brown:#3E1C11;--rose:#C7959B;--ivory:#FFF8F0;--green:#2A5A3A;--shadow:rgba(26,10,14,0.3)}
-body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--cream);min-height:100vh;overflow-x:hidden}
-h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.subtitle{font-family:'Cormorant Garamond',serif;font-style:italic}
-.ornament{position:relative;text-align:center;margin:16px 0}
-.ornament::before,.ornament::after{content:'';display:inline-block;width:60px;height:1px;background:var(--gold);vertical-align:middle}
-.ornament span{padding:0 16px;color:var(--gold);font-size:14px;letter-spacing:4px;text-transform:uppercase;font-family:'Cormorant Garamond',serif}
-::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--burgundy);border-radius:4px}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.fade-in{animation:fadeIn 0.5s ease}
-.login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark) 0%,var(--burgundy) 50%,var(--dark) 100%);position:relative;overflow:hidden}
-.login-bg::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L55 30L30 55L5 30Z' fill='none' stroke='%23D4A84320' stroke-width='0.5'/%3E%3C/svg%3E");opacity:0.3}
-.login-card{background:linear-gradient(145deg,rgba(90,26,42,0.9),rgba(26,10,14,0.95));border:2px solid var(--gold);border-radius:16px;padding:48px;width:420px;max-width:90vw;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:fadeIn 0.8s ease}
-.login-card h1{font-size:32px;color:var(--gold);margin-bottom:4px}
-.login-card .subtitle{font-size:18px;color:var(--rose);margin-bottom:32px;display:block}
-.login-input{width:100%;padding:14px 18px;border:1px solid var(--gold);background:rgba(255,248,240,0.08);color:var(--cream);border-radius:8px;font-size:16px;font-family:'Inter',sans-serif;transition:all 0.3s}
-.login-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 20px rgba(212,168,67,0.2);background:rgba(255,248,240,0.12)}
-.login-input::placeholder{color:var(--rose);opacity:0.6}
-.login-btn{width:100%;padding:14px;border:none;background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);font-family:'Playfair Display',serif;font-size:18px;font-weight:700;border-radius:8px;cursor:pointer;margin-top:16px;transition:all 0.3s;letter-spacing:1px}
-.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,168,67,0.3)}
-.login-error{color:#FF6B6B;font-size:14px;margin-top:12px;animation:fadeIn 0.3s}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:linear-gradient(90deg,var(--dark),var(--burgundy),var(--dark));border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:50}
-.topbar h1{font-size:22px;color:var(--gold);letter-spacing:2px}
-.topbar-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.topbar-user{display:flex;align-items:center;gap:8px;color:var(--rose);font-size:14px}
-.topbar-avatar{width:36px;height:36px;border-radius:50%;background:var(--wine);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold);border:1px solid var(--gold)}
-.tab-btn{padding:8px 20px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:15px;cursor:pointer;transition:all 0.3s;border-radius:6px;letter-spacing:1px}
-.tab-btn.active,.tab-btn:hover{background:var(--gold);color:var(--dark);font-weight:600}
-.logout-btn{padding:8px 16px;border:1px solid var(--rose);background:transparent;color:var(--rose);border-radius:6px;cursor:pointer;font-size:13px;transition:all 0.3s}
-.logout-btn:hover{background:var(--rose);color:var(--dark)}
-.lang-btn{padding:6px 14px;border:1px solid var(--gold);background:rgba(212,168,67,0.15);color:var(--gold);border-radius:16px;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.3s;letter-spacing:1px}
-.lang-btn:hover{background:var(--gold);color:var(--dark)}
-.lobby{padding:32px;max-width:1400px;margin:0 auto}
-.lobby-title{text-align:center;font-size:28px;color:var(--gold);margin-bottom:8px}
-.columns{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:24px}
-.column{background:linear-gradient(180deg,rgba(90,26,42,0.3),rgba(26,10,14,0.5));border:1px solid rgba(212,168,67,0.2);border-radius:12px;padding:24px;min-height:400px}
-.column-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);text-align:center;padding-bottom:12px;border-bottom:1px solid rgba(212,168,67,0.2);margin-bottom:16px;letter-spacing:2px}
-.empty-col{text-align:center;padding:40px 20px;color:var(--rose);opacity:0.5;font-style:italic;font-family:'Cormorant Garamond',serif}
-.room-door{position:relative;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.4s;margin-bottom:16px;border:2px solid rgba(212,168,67,0.3);min-height:180px}
-.room-door:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.4);border-color:var(--gold)}
-.room-preview{width:100%;height:140px;position:relative;overflow:hidden}
-.room-preview canvas{width:100%;height:100%;display:block}
-.room-info{padding:12px 16px;background:linear-gradient(180deg,rgba(26,10,14,0.9),rgba(90,26,42,0.7))}
-.room-number{font-family:'Playfair Display',serif;font-size:11px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;opacity:0.8}
-.room-name{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);margin-top:2px}
-.room-score-badge{position:absolute;top:10px;right:10px;background:rgba(26,10,14,0.85);border:1px solid var(--gold);border-radius:20px;padding:4px 12px;font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);font-weight:700;z-index:2}
-.room-category-badge{position:absolute;top:10px;left:10px;background:rgba(212,168,67,0.9);color:var(--dark);border-radius:12px;padding:3px 10px;font-size:11px;font-weight:600;z-index:2;letter-spacing:1px;text-transform:uppercase}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.3s}
-.modal-content{background:linear-gradient(145deg,var(--burgundy),var(--dark));border:2px solid var(--gold);border-radius:16px;padding:0;width:560px;max-width:92vw;max-height:85vh;overflow-y:auto;position:relative;animation:slideDown 0.4s ease}
-.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--gold);font-size:24px;cursor:pointer;z-index:5;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.3s}
-.modal-close:hover{background:rgba(212,168,67,0.2)}
-.modal-preview{width:100%;height:200px;position:relative;overflow:hidden;border-radius:14px 14px 0 0}
-.modal-preview canvas{width:100%;height:100%;display:block}
-.modal-body{padding:24px 32px 32px}
-.modal-body h2{font-size:24px;color:var(--gold);margin-bottom:4px}
-.modal-body .subtitle{color:var(--rose);font-size:16px;display:block;margin-bottom:16px}
-.modal-meta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px}
-.meta-chip{background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.3);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--gold)}
-.modal-desc{color:var(--cream);line-height:1.7;font-size:15px;margin-bottom:20px;opacity:0.9}
-.modal-score{display:flex;align-items:center;gap:16px;padding:16px;background:rgba(0,0,0,0.2);border-radius:10px;margin-bottom:20px}
-.score-circle{width:60px;height:60px;border-radius:50%;border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold);flex-shrink:0}
-.score-bar{flex:1}.score-bar-track{height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
-.score-bar-fill{height:100%;background:linear-gradient(90deg,var(--wine),var(--gold));border-radius:4px;transition:width 0.8s ease}
-.score-label{font-size:13px;color:var(--rose);margin-top:4px}
-.access-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:500;margin-bottom:20px}
-.access-full{background:rgba(42,90,58,0.3);border:1px solid var(--green);color:#6FCF97}
-.access-view{background:rgba(212,168,67,0.15);border:1px solid var(--gold);color:var(--gold)}
-.access-use{background:rgba(42,90,128,0.3);border:1px solid #5B8DEF;color:#5B8DEF}
-.access-no{background:rgba(155,35,53,0.2);border:1px solid var(--wine);color:#FF6B6B}
-.enter-btn{width:100%;padding:14px;border:none;background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);font-family:'Playfair Display',serif;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:all 0.3s;letter-spacing:1px}
-.enter-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,67,0.3)}
-.enter-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
-.denied-modal{text-align:center;padding:40px 32px}
-.denied-bell{font-size:64px;display:block;margin-bottom:16px;animation:float 2s ease infinite}
-.denied-title{font-size:24px;color:var(--gold);margin-bottom:8px}
-.denied-text{color:var(--rose);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px}
-.denied-close{margin-top:24px;padding:10px 32px;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:8px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:16px;transition:all 0.3s}
-.denied-close:hover{background:var(--gold);color:var(--dark)}
-.config{padding:32px;max-width:1200px;margin:0 auto}
-.config-section{background:linear-gradient(145deg,rgba(90,26,42,0.2),rgba(26,10,14,0.4));border:1px solid rgba(212,168,67,0.2);border-radius:12px;padding:28px;margin-bottom:28px}
-.config-section h3{font-size:20px;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px}
-.config-table{width:100%;border-collapse:collapse}
-.config-table th{text-align:left;padding:12px 16px;border-bottom:2px solid rgba(212,168,67,0.3);color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:1px}
-.config-table td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px;color:var(--cream)}
-.role-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500;text-transform:capitalize}
-.role-bellboy{background:rgba(212,168,67,0.2);color:var(--gold);border:1px solid var(--gold)}
-.role-concierge{background:rgba(42,90,58,0.2);color:#6FCF97;border:1px solid #6FCF97}
-.role-guest{background:rgba(199,149,155,0.2);color:var(--rose);border:1px solid var(--rose)}
-.upload-steps{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px}
-.upload-step{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--rose);opacity:0.5;transition:all 0.3s}
-.upload-step.active{opacity:1;color:var(--gold)}.upload-step.done{opacity:0.7;color:#6FCF97}
-.step-num{width:28px;height:28px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
-.step-line{width:40px;height:1px;background:rgba(212,168,67,0.3)}
-.dropzone{border:2px dashed rgba(212,168,67,0.4);border-radius:12px;padding:48px;text-align:center;cursor:pointer;transition:all 0.3s;background:rgba(255,248,240,0.02)}
-.dropzone:hover,.dropzone.active{border-color:var(--gold);background:rgba(212,168,67,0.06)}
-.dropzone-icon{font-size:48px;margin-bottom:12px}.dropzone-text{color:var(--rose);font-size:15px;margin-bottom:8px}.dropzone-sub{color:var(--rose);font-size:13px;opacity:0.6}
-.url-input{width:100%;padding:12px 16px;border:1px solid rgba(212,168,67,0.3);background:rgba(255,248,240,0.06);color:var(--cream);border-radius:8px;font-size:14px;margin-top:16px;font-family:'Inter',sans-serif}
-.url-input:focus{outline:none;border-color:var(--gold)}.url-input::placeholder{color:var(--rose);opacity:0.5}
-.upload-form{display:grid;gap:16px}
-.form-group{display:flex;flex-direction:column;gap:6px}
-.form-group label{font-size:13px;color:var(--gold);font-family:'Cormorant Garamond',serif;letter-spacing:1px}
-.form-input,.form-select,.form-textarea{padding:10px 14px;border:1px solid rgba(212,168,67,0.3);background:rgba(255,248,240,0.06);color:var(--cream);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif}
-.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--gold)}
-.form-select{cursor:pointer}.form-select option{background:var(--dark);color:var(--cream)}
-.form-textarea{resize:vertical;min-height:80px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.checkbox-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.checkbox-label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--cream);cursor:pointer;padding:6px 12px;border:1px solid rgba(212,168,67,0.2);border-radius:6px;transition:all 0.3s}
-.checkbox-label:hover{border-color:var(--gold)}.checkbox-label input{accent-color:var(--gold)}.checkbox-label.locked{opacity:0.7;cursor:default}
-.upload-nav{display:flex;justify-content:space-between;margin-top:24px}
-.nav-btn{padding:10px 24px;border-radius:8px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;transition:all 0.3s;letter-spacing:1px}
-.nav-btn.primary{background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);border:none;font-weight:600}
-.nav-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,67,0.3)}
-.nav-btn.secondary{background:transparent;border:1px solid var(--gold);color:var(--gold)}
-.nav-btn.secondary:hover{background:rgba(212,168,67,0.1)}
-.nav-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
-.review-card{background:rgba(0,0,0,0.2);border:1px solid rgba(212,168,67,0.2);border-radius:10px;padding:20px}
-.review-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px}
-.review-row:last-child{border-bottom:none}
-.review-label{color:var(--rose);font-family:'Cormorant Garamond',serif}.review-value{color:var(--cream);font-weight:500}
-.ai-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.ai-tab{padding:8px 18px;border:1px solid rgba(212,168,67,0.3);background:transparent;color:var(--rose);border-radius:20px;cursor:pointer;font-size:13px;transition:all 0.3s}
-.ai-tab.active{background:var(--gold);color:var(--dark);font-weight:600;border-color:var(--gold)}
-.ai-card{background:rgba(0,0,0,0.2);border:1px solid rgba(212,168,67,0.15);border-radius:10px;padding:16px;margin-bottom:12px}
-.ai-card h4{color:var(--gold);font-size:15px;margin-bottom:8px}
-.ai-card p{color:var(--cream);font-size:14px;line-height:1.6;opacity:0.85}
-.ai-status{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:8px}
-.ai-status.warn{background:rgba(255,193,7,0.2);color:#FFD54F}
-.ai-status.ok{background:rgba(76,175,80,0.2);color:#81C784}
-.ai-status.info{background:rgba(33,150,243,0.2);color:#64B5F6}
-.welcome-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:200;animation:fadeIn 0.3s}
-.welcome-card{background:linear-gradient(145deg,var(--burgundy),var(--dark));border:2px solid var(--gold);border-radius:16px;padding:40px 32px;width:480px;max-width:90vw;text-align:center;animation:slideDown 0.5s ease}
-.welcome-bell{font-size:56px;display:block;margin-bottom:12px;animation:float 2s ease infinite}
-.welcome-phrase{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);margin-bottom:8px}
-.welcome-sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--rose);font-size:16px;margin-bottom:24px;line-height:1.5}
-.welcome-instructions{text-align:left;background:rgba(0,0,0,0.2);border-radius:10px;padding:16px 20px;margin-bottom:24px}
-.welcome-instructions li{color:var(--cream);font-size:14px;margin-bottom:8px;opacity:0.9;list-style:none;padding-left:20px;position:relative}
-.welcome-instructions li::before{content:'🔑';position:absolute;left:0;font-size:12px}
-.welcome-ok{padding:12px 40px;border:none;background:linear-gradient(135deg,var(--gold),#B8922F);color:var(--dark);font-family:'Playfair Display',serif;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:all 0.3s}
-.welcome-ok:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,67,0.3)}
-.add-user-form{display:grid;gap:16px}
-.add-btn{padding:8px 18px;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:8px;cursor:pointer;font-size:14px;transition:all 0.3s;display:flex;align-items:center;gap:6px}
-.add-btn:hover{background:rgba(212,168,67,0.1)}
-.del-btn{background:none;border:1px solid #FF6B6B;color:#FF6B6B;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;transition:all 0.3s}
-.del-btn:hover{background:#FF6B6B;color:var(--dark)}
-.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,var(--burgundy),var(--dark));border:1px solid var(--gold);border-radius:10px;padding:14px 24px;color:var(--cream);font-size:14px;z-index:300;animation:slideDown 0.3s ease;box-shadow:0 8px 24px rgba(0,0,0,0.4);display:flex;align-items:center;gap:10px}
-.toast-icon{font-size:20px}
-.file-info{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(42,90,58,0.15);border:1px solid rgba(42,90,58,0.3);border-radius:8px;margin-top:12px}
-.file-info-icon{font-size:24px}.file-info-name{color:#6FCF97;font-size:14px;font-weight:500}.file-info-size{color:var(--rose);font-size:12px}
-.file-info-remove{margin-left:auto;background:none;border:none;color:#FF6B6B;cursor:pointer;font-size:18px}
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:250;animation:fadeIn 0.2s}
-.confirm-card{background:linear-gradient(145deg,var(--burgundy),var(--dark));border:2px solid var(--gold);border-radius:12px;padding:28px;width:380px;max-width:90vw;text-align:center;animation:slideDown 0.3s}
-.confirm-card h4{color:var(--gold);margin-bottom:12px;font-size:18px}
-.confirm-card p{color:var(--cream);font-size:14px;margin-bottom:20px;opacity:0.85}
-.confirm-btns{display:flex;gap:12px;justify-content:center}
-.confirm-btns button{padding:10px 24px;border-radius:8px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;transition:all 0.3s}
-.confirm-cancel{background:transparent;border:1px solid var(--rose);color:var(--rose)}
-.confirm-cancel:hover{background:var(--rose);color:var(--dark)}
-.confirm-delete{background:#FF6B6B;border:none;color:var(--dark);font-weight:600}
-.confirm-delete:hover{background:#FF4444}
-@media(max-width:900px){.columns{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.topbar{padding:12px 16px;flex-wrap:wrap;gap:8px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI LOBBY - Platform Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --wine: #9B2335;
+            --burgundy: #5A1A2A;
+            --gold: #D4A843;
+            --cream: #FAF0E4;
+            --dark: #1A0A0E;
+            --brown: #3E1C11;
+            --rose: #C7959B;
+            --green: #2A5A3A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* LOGIN SCREEN */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(250, 240, 228, 0.95);
+            padding: 60px 40px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-bell {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            color: var(--wine);
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            color: var(--burgundy);
+            font-style: italic;
+        }
+
+        .ornament-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .ornament-divider::before {
+            content: '◆';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gold);
+            font-size: 12px;
+            background: rgba(250, 240, 228, 0.95);
+            padding: 0 8px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--burgundy);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            padding: 12px 16px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: var(--dark);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--wine);
+            box-shadow: 0 0 8px rgba(155, 35, 53, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .login-error {
+            color: var(--wine);
+            font-size: 13px;
+            margin-top: -16px;
+            font-weight: 500;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--wine) 0%, var(--burgundy) 100%);
+            color: var(--cream);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(155, 35, 53, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .lang-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .lang-btn:hover {
+            background: var(--wine);
+            color: var(--cream);
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: linear-gradient(90deg, var(--burgundy) 0%, var(--dark) 100%);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--gold);
+            font-weight: 900;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--wine), var(--rose));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--cream);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--gold);
+            opacity: 0.8;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logout-btn {
+            background: var(--wine);
+            color: var(--cream);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .logout-btn:hover {
+            background: var(--rose);
+            transform: translateY(-2px);
+        }
+
+        /* LOBBY SCREEN */
+        .lobby-container {
+            flex: 1;
+            padding: 40px 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .lobby-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .lobby-welcome {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .lobby-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            color: var(--rose);
+            font-style: italic;
+        }
+
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-header {
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .section-description {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: var(--rose);
+            font-style: italic;
+        }
+
+        .platforms-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .room-door {
+            background: linear-gradient(135deg, rgba(90, 26, 42, 0.5), rgba(58, 28, 17, 0.5));
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-door:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(212, 168, 67, 0.2);
+            border-color: var(--rose);
+        }
+
+        .room-preview {
+            flex: 1;
+            width: 100%;
+            min-height: 180px;
+            background: linear-gradient(135deg, #2a1a2e, #3e1c11);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-preview img, .room-preview canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .room-category-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--wine);
+            color: var(--cream);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        .room-footer {
+            padding: 16px;
+            background: rgba(26, 10, 14, 0.8);
+            border-top: 1px solid var(--gold);
+        }
+
+        .room-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .room-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            color: var(--cream);
+            font-weight: 600;
+        }
+
+        /* EXPANDED ROOM MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+            cursor: pointer;
+        }
+
+        .modal-overlay.scrollable {
+            align-items: flex-start;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .modal-card {
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            cursor: default;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--wine);
+            border: none;
+            color: var(--cream);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--rose);
+            transform: rotate(90deg);
+        }
+
+        .expanded-preview {
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #2a1a2e, #3e1c11);
+            position: relative;
+        }
+
+        .expanded-preview img, .expanded-preview canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .modal-body {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .modal-header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-room-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .modal-platform-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--cream);
+            font-weight: 700;
+        }
+
+        .modal-section {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            color: var(--rose);
+            font-style: italic;
+        }
+
+        .access-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: fit-content;
+        }
+
+        .access-badge.full {
+            background: var(--wine);
+            color: var(--cream);
+        }
+
+        .access-badge.view {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .access-badge.use {
+            background: var(--green);
+            color: var(--cream);
+        }
+
+        .access-badge.denied {
+            background: var(--rose);
+            color: var(--dark);
+        }
+
+        .modal-description {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            color: var(--cream);
+            line-height: 1.6;
+        }
+
+        .meta-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .meta-chip {
+            background: rgba(212, 168, 67, 0.2);
+            border: 1px solid var(--gold);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--cream);
+        }
+
+        .meta-label {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .modal-action-btn {
+            background: linear-gradient(135deg, var(--wine), var(--burgundy));
+            color: var(--cream);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(155, 35, 53, 0.3);
+        }
+
+        .modal-action-btn.disabled {
+            background: var(--rose);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .modal-action-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ACCESS DENIED POPUP */
+        .access-denied-popup {
+            animation: float 0.6s ease-out;
+        }
+
+        @keyframes float {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .denied-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+            animation: bellFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes bellFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .denied-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--wine);
+            margin-bottom: 12px;
+        }
+
+        .denied-message {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            color: var(--cream);
+            margin-bottom: 20px;
+        }
+
+        /* BACK OFFICE */
+        .backoffice-container {
+            flex: 1;
+            padding: 40px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .backoffice-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .backoffice-nav {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .nav-btn:hover {
+            color: var(--rose);
+        }
+
+        /* WELCOME POPUP */
+        .welcome-popup {
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .popup-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .popup-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--wine);
+            margin-bottom: 12px;
+        }
+
+        .popup-phrase {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            color: var(--burgundy);
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .popup-instructions {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: var(--dark);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .popup-close-btn {
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .popup-close-btn:hover {
+            background: var(--wine);
+            color: var(--cream);
+        }
+
+        /* UPLOAD PLATFORM */
+        .upload-section {
+            background: rgba(90, 26, 42, 0.3);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .upload-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+
+        .steps-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--burgundy);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: var(--gold);
+            width: 40px;
+            border-radius: 6px;
+        }
+
+        .upload-step {
+            display: none;
+        }
+
+        .upload-step.active {
+            display: block;
+        }
+
+        .step-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        /* DRAG AND DROP */
+        .upload-area {
+            border: 2px dashed var(--gold);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(212, 168, 67, 0.05);
+        }
+
+        .upload-area:hover,
+        .upload-area.active {
+            background: rgba(212, 168, 67, 0.1);
+            border-color: var(--wine);
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            color: var(--cream);
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: var(--rose);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .url-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .url-input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            background: rgba(26, 10, 14, 0.5);
+            color: var(--cream);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+        }
+
+        .url-input-group input:focus {
+            outline: none;
+            border-color: var(--rose);
+            box-shadow: 0 0 8px rgba(155, 35, 53, 0.2);
+        }
+
+        .url-input-group button {
+            padding: 12px 20px;
+            background: var(--wine);
+            color: var(--cream);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .url-input-group button:hover {
+            background: var(--rose);
+            transform: translateY(-2px);
+        }
+
+        /* FORM ROWS */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-col label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-col input,
+        .form-col select,
+        .form-col textarea {
+            padding: 10px 12px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            background: rgba(26, 10, 14, 0.5);
+            color: var(--cream);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+        }
+
+        .form-col textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .form-col input:focus,
+        .form-col select:focus,
+        .form-col textarea:focus {
+            outline: none;
+            border-color: var(--rose);
+            box-shadow: 0 0 8px rgba(155, 35, 53, 0.2);
+        }
+
+        .form-col select {
+            cursor: pointer;
+        }
+
+        /* CHECKBOXES */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .checkbox-item label {
+            font-size: 13px;
+            color: var(--cream);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* REVIEW CARD */
+        .review-card {
+            background: rgba(212, 168, 67, 0.1);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .review-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(212, 168, 67, 0.2);
+            font-size: 13px;
+        }
+
+        .review-row:last-child {
+            border-bottom: none;
+        }
+
+        .review-label {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .review-value {
+            color: var(--cream);
+            text-align: right;
+        }
+
+        /* BUTTONS */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--wine), var(--burgundy));
+            color: var(--cream);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(155, 35, 53, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 12px 20px;
+            background: rgba(212, 168, 67, 0.2);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        /* TABLES */
+        .table-container {
+            background: rgba(90, 26, 42, 0.3);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            overflow: auto;
+            margin-bottom: 32px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .table thead {
+            background: rgba(155, 35, 53, 0.3);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .table th {
+            padding: 12px;
+            text-align: left;
+            color: var(--gold);
+            font-weight: 600;
+            font-family: 'Cormorant Garamond', serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(212, 168, 67, 0.2);
+            color: var(--cream);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(212, 168, 67, 0.1);
+        }
+
+        /* ROLE BADGE */
+        .role-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-badge.bellboy {
+            background: var(--wine);
+            color: var(--cream);
+        }
+
+        .role-badge.concierge {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .role-badge.guest {
+            background: var(--green);
+            color: var(--cream);
+        }
+
+        /* DELETE BUTTON */
+        .del-btn {
+            background: rgba(199, 149, 155, 0.3);
+            color: var(--rose);
+            border: 1px solid var(--rose);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .del-btn:hover {
+            background: var(--rose);
+            color: var(--dark);
+        }
+
+        .del-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .del-btn.disabled:hover {
+            background: rgba(199, 149, 155, 0.3);
+            color: var(--rose);
+        }
+
+        /* CONFIRM DIALOG */
+        .confirm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+        }
+
+        .confirm-card {
+            background: linear-gradient(135deg, var(--burgundy), var(--dark));
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 32px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .confirm-emoji {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .confirm-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .confirm-message {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            color: var(--cream);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .confirm-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .confirm-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .confirm-btn.cancel {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .confirm-btn.cancel:hover {
+            background: var(--rose);
+            color: var(--dark);
+        }
+
+        .confirm-btn.delete {
+            background: var(--wine);
+            color: var(--cream);
+        }
+
+        .confirm-btn.delete:hover {
+            background: var(--rose);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--wine), var(--burgundy));
+            color: var(--cream);
+            padding: 16px 24px;
+            border-radius: 4px;
+            border-left: 4px solid var(--gold);
+            z-index: 400;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 300px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ADD USER MODAL */
+        .add-user-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-form-group label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .modal-form-group input,
+        .modal-form-group select {
+            padding: 10px 12px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            background: rgba(26, 10, 14, 0.5);
+            color: var(--cream);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+        }
+
+        .modal-form-group input:focus,
+        .modal-form-group select:focus {
+            outline: none;
+            border-color: var(--rose);
+            box-shadow: 0 0 8px rgba(155, 35, 53, 0.2);
+        }
+
+        /* TABS */
+        .tabs-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 12px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab-btn:hover {
+            color: var(--rose);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* LEADERBOARD */
+        .leaderboard-entry {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(90, 26, 42, 0.3);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .leaderboard-rank {
+            font-size: 20px;
+            margin-right: 12px;
+            min-width: 30px;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+            color: var(--cream);
+            font-size: 13px;
+        }
+
+        .leaderboard-platform {
+            font-size: 11px;
+            color: var(--rose);
+        }
+
+        .leaderboard-score {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* CELEBRATION POPUP */
+        .celebration-popup {
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .celebration-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .celebration-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .celebration-phrase {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            color: var(--cream);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .celebration-btn {
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .celebration-btn:hover {
+            background: var(--wine);
+            color: var(--cream);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th,
+            .table td {
+                padding: 8px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .backoffice-nav {
+                flex-wrap: wrap;
+            }
+
+            .login-card {
+                padding: 40px 24px;
+            }
+
+            .toast {
+                bottom: 12px;
+                right: 12px;
+                left: 12px;
+                max-width: none;
+            }
+
+            .modal-card {
+                max-width: 90vw;
+                max-height: 95vh;
+            }
+
+            .confirm-card {
+                margin: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-title {
+                font-size: 32px;
+            }
+
+            .lobby-welcome {
+                font-size: 22px;
+            }
+
+            .modal-platform-name {
+                font-size: 22px;
+            }
+
+            .topbar-left {
+                gap: 8px;
+            }
+
+            .topbar-title {
+                font-size: 16px;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } = React;
+    <div id="root"></div>
 
-// ─── i18n ───
-const translations = {
-  en: {
-    title: 'AI LOBBY', subtitle: 'The Grand Intelligence Hotel', checkIn: 'CHECK IN',
-    emailPlaceholder: 'Enter your email address...', enterLobby: 'Enter the Lobby',
-    loginError: 'This email is not registered. Please contact your concierge.',
-    tagline: '"Where intelligence meets elegance"',
-    lobby: 'Lobby', backOffice: 'Back Office', checkOut: 'Check Out',
-    grandLobby: 'The Grand Lobby', exploreRooms: 'EXPLORE OUR ROOMS',
-    tools: 'Tools', analysis: 'Analysis', strategy: 'Strategy',
-    noTools: 'No tools checked in yet', noAnalysis: 'No analysis platforms yet', noStrategy: 'No strategy platforms yet',
-    room: 'Room', management: 'MANAGEMENT',
-    oops: 'Oops!', noKey: "We're sorry, but you don't have a key to this room. Please contact the concierge for access.",
-    returnLobby: 'Return to Lobby',
-    fullAccess: 'Full Access', viewOnly: 'View Only', use: 'Use', noAccess: 'No Access',
-    scoreLabel: 'Complexity Score — auto-analyzed from source code',
-    viewRoom: '👁 View Room', usePlatform: '🔑 Use Platform', enterRoom: '🚪 Enter Room', restricted: '🔒 Access Restricted',
-    uploadTitle: '📦 Upload New Platform', source: 'Source', details: 'Details', review: 'Review',
-    dropFile: 'Drag & drop your platform file', dropActive: 'Drop your file here!',
-    dropSub: 'HTML, JS, Python, or any code file', or: 'OR',
-    urlPlaceholder: 'Paste platform URL (https://...)',
-    next: 'Next →', back: '← Back', publish: '🔔 Publish to Lobby',
-    platformName: 'Platform Name *', namePlaceholder: "e.g. Beaver's Dam",
-    section: 'Section', uploadedBy: 'Uploaded By', description: 'Description',
-    descPlaceholder: 'What does this platform do?',
-    accessLevels: 'Access Levels', bellboyAlways: 'Bellboy (always)', concierge: 'Concierge', guest: 'Guest',
-    name: 'Name', fileSize: 'File Size', complexityAuto: 'Complexity (auto)',
-    guestRegistry: '📋 Guest Registry', register: '+ Register',
-    email: 'Email', role: 'Role',
-    roomDirectory: '🚪 Room Directory', noPlatforms: 'No platforms checked in yet. Use the upload section above!',
-    score: 'Score', remove: 'Remove',
-    aiConcierge: '🤖 AI Concierge — Intelligence Analysis',
-    discrepancies: '⚠ Discrepancies', overlapUnify: '🔄 Overlap & Unify', leaderboard: '🏆 Leaderboard',
-    notEnough: 'Not enough data', upload2: 'Upload at least 2 platforms to detect discrepancies.',
-    uploadMore: 'Upload more platforms to detect overlaps.',
-    allClear: 'All clear', noDiscrep: 'No significant discrepancies found.',
-    scoreGap: 'Score gap in', gapText: 'point gap between platforms in',
-    considerImprove: 'Consider improving lower-scored entries.',
-    platformsIn: 'platforms in', considerUnify: 'Consider whether any can be unified.',
-    noOverlaps: 'No overlaps', uniquePlatforms: 'Each section has unique platforms.',
-    noPlatformsYet: 'No platforms uploaded yet.',
-    registerGuest: 'Register New Guest', addMember: 'Add a new member to the hotel registry',
-    fullName: 'Full Name', registerBtn: '🔑 Register Guest',
-    guestRole: 'Guest (AE / SDR / KAM)', conciergeRole: 'Concierge (Manager)', bellboyRole: 'Bellboy (Admin)',
-    checkOutGuest: 'Check Out Guest?', confirmRemoveUser: 'Are you sure you want to remove',
-    fromRegistry: 'from the registry? This cannot be undone.',
-    removePlatform: 'Remove Platform?', confirmRemovePlatform: 'Are you sure you want to remove',
-    fromLobby: 'from the lobby?', cancel: 'Cancel', confirm: 'Confirm',
-    checkedIn: 'has been checked in!', registered: 'has been registered!',
-    checkedOut: 'has been checked out.', platformOut: 'Platform checked out.',
-    congrats: 'Congratulations!', nowLive: 'is now live in the lobby.', cheers: 'Cheers! 🍷',
-    entering: 'Entering',
-    welcomeBack: 'Welcome to the Back Office — the engine room of our grand hotel.',
-    welcomeI1: 'Drag & drop or paste a URL to register a new platform',
-    welcomeI2: 'Fill in the details: name, section, access level',
-    welcomeI3: 'Review and publish — your platform will appear in the lobby!',
-    begin: 'Begin', platforms: 'Platforms',
-    hotelPhrases: [
-      "Welcome to the Grand Intelligence Hotel!","Your suite awaits, esteemed guest.",
-      "The concierge is at your service.","A five-star experience for your AI needs.",
-      "Step into luxury. Step into intelligence.","Room service? We serve insights.","Check in. Power up. Excel."
-    ],
-    celebrationPhrases: [
-      "You just made this lobby a lot more interesting... 🍷",
-      "A platform this good deserves a toast. Cheers to you! 🥂",
-      "The lobby just got hotter. Must be you. 🍷",
-      "That upload? Flawless. Just like your taste. 🥂",
-      "You didn't just upload a platform — you made an entrance. 🍷",
-      "If platforms were people, this one would be a 10. Just like you. 🥂",
-      "The hotel bar is pouring one in your honor tonight. 🍷",
-      "Smooth upload. Smoother operator. Cheers! 🥂",
-      "The Grand Lobby just leveled up — and so did you. 🥂",
-    ],
-  },
-  es: {
-    title: 'AI LOBBY', subtitle: 'El Gran Hotel de la Inteligencia', checkIn: 'REGISTRO',
-    emailPlaceholder: 'Ingresa tu correo electrónico...', enterLobby: 'Entrar al Lobby',
-    loginError: 'Este correo no está registrado. Contacta al concierge.',
-    tagline: '"Donde la inteligencia se encuentra con la elegancia"',
-    lobby: 'Lobby', backOffice: 'Back Office', checkOut: 'Salir',
-    grandLobby: 'El Gran Lobby', exploreRooms: 'EXPLORA NUESTRAS SALAS',
-    tools: 'Herramientas', analysis: 'Análisis', strategy: 'Estrategia',
-    noTools: 'Sin herramientas registradas aún', noAnalysis: 'Sin plataformas de análisis aún', noStrategy: 'Sin plataformas de estrategia aún',
-    room: 'Sala', management: 'GESTIÓN',
-    oops: '¡Oops!', noKey: 'Lo sentimos, no tienes llave para esta sala. Contacta al concierge para acceso.',
-    returnLobby: 'Volver al Lobby',
-    fullAccess: 'Acceso Total', viewOnly: 'Solo Lectura', use: 'Uso', noAccess: 'Sin Acceso',
-    scoreLabel: 'Puntuación de Complejidad — analizada automáticamente del código fuente',
-    viewRoom: '👁 Ver Sala', usePlatform: '🔑 Usar Plataforma', enterRoom: '🚪 Entrar a la Sala', restricted: '🔒 Acceso Restringido',
-    uploadTitle: '📦 Subir Nueva Plataforma', source: 'Fuente', details: 'Detalles', review: 'Revisión',
-    dropFile: 'Arrastra y suelta tu archivo de plataforma', dropActive: '¡Suelta tu archivo aquí!',
-    dropSub: 'HTML, JS, Python, o cualquier archivo de código', or: 'O',
-    urlPlaceholder: 'Pega la URL de la plataforma (https://...)',
-    next: 'Siguiente →', back: '← Atrás', publish: '🔔 Publicar en el Lobby',
-    platformName: 'Nombre de Plataforma *', namePlaceholder: "ej. Beaver's Dam",
-    section: 'Sección', uploadedBy: 'Subido por', description: 'Descripción',
-    descPlaceholder: '¿Qué hace esta plataforma?',
-    accessLevels: 'Niveles de Acceso', bellboyAlways: 'Bellboy (siempre)', concierge: 'Concierge', guest: 'Guest',
-    name: 'Nombre', fileSize: 'Tamaño', complexityAuto: 'Complejidad (auto)',
-    guestRegistry: '📋 Registro de Huéspedes', register: '+ Registrar',
-    email: 'Correo', role: 'Rol',
-    roomDirectory: '🚪 Directorio de Salas', noPlatforms: '¡No hay plataformas registradas aún! Usa la sección de subida arriba.',
-    score: 'Puntaje', remove: 'Eliminar',
-    aiConcierge: '🤖 AI Concierge — Análisis de Inteligencia',
-    discrepancies: '⚠ Discrepancias', overlapUnify: '🔄 Solapamiento y Unificación', leaderboard: '🏆 Tabla de Posiciones',
-    notEnough: 'Datos insuficientes', upload2: 'Sube al menos 2 plataformas para detectar discrepancias.',
-    uploadMore: 'Sube más plataformas para detectar solapamientos.',
-    allClear: 'Todo en orden', noDiscrep: 'No se encontraron discrepancias significativas.',
-    scoreGap: 'Brecha de puntaje en', gapText: 'puntos de diferencia entre plataformas en',
-    considerImprove: 'Considera mejorar las de menor puntaje.',
-    platformsIn: 'plataformas en', considerUnify: 'Considera si alguna puede unificarse.',
-    noOverlaps: 'Sin solapamientos', uniquePlatforms: 'Cada sección tiene plataformas únicas.',
-    noPlatformsYet: 'Aún no se han subido plataformas.',
-    registerGuest: 'Registrar Nuevo Huésped', addMember: 'Agrega un nuevo miembro al registro del hotel',
-    fullName: 'Nombre Completo', registerBtn: '🔑 Registrar Huésped',
-    guestRole: 'Guest (AE / SDR / KAM)', conciergeRole: 'Concierge (Gerente)', bellboyRole: 'Bellboy (Admin)',
-    checkOutGuest: '¿Dar de baja al huésped?', confirmRemoveUser: '¿Estás seguro de que quieres eliminar a',
-    fromRegistry: 'del registro? Esta acción no se puede deshacer.',
-    removePlatform: '¿Eliminar Plataforma?', confirmRemovePlatform: '¿Estás seguro de que quieres eliminar',
-    fromLobby: 'del lobby?', cancel: 'Cancelar', confirm: 'Confirmar',
-    checkedIn: '¡se registró en el lobby!', registered: '¡ha sido registrado!',
-    checkedOut: 'ha sido dado de baja.', platformOut: 'Plataforma eliminada.',
-    congrats: '¡Felicidades!', nowLive: 'ya está en vivo en el lobby.', cheers: '¡Salud! 🍷',
-    entering: 'Entrando a',
-    welcomeBack: 'Bienvenido al Back Office — la sala de máquinas de nuestro gran hotel.',
-    welcomeI1: 'Arrastra y suelta o pega una URL para registrar una nueva plataforma',
-    welcomeI2: 'Llena los detalles: nombre, sección, nivel de acceso',
-    welcomeI3: 'Revisa y publica — ¡tu plataforma aparecerá en el lobby!',
-    begin: 'Comenzar', platforms: 'Plataformas',
-    hotelPhrases: [
-      "¡Bienvenido al Gran Hotel de la Inteligencia!","Tu suite te espera, estimado huésped.",
-      "El concierge está a tu servicio.","Una experiencia cinco estrellas para tus necesidades de IA.",
-      "Entra al lujo. Entra a la inteligencia.","¿Servicio a la habitación? Servimos insights.","Regístrate. Enciende. Destaca."
-    ],
-    celebrationPhrases: [
-      "Acabas de hacer este lobby mucho más interesante... 🍷",
-      "Una plataforma así merece un brindis. ¡Salud! 🥂",
-      "El lobby se acaba de poner más caliente. Seguro eres tú. 🍷",
-      "¿Esa subida? Impecable. Igual que tu gusto. 🥂",
-      "No solo subiste una plataforma — hiciste una entrada triunfal. 🍷",
-      "Si las plataformas fueran personas, esta sería un 10. Igual que tú. 🥂",
-      "El bar del hotel está sirviendo una en tu honor esta noche. 🍷",
-      "Subida suave. Operador más suave aún. ¡Salud! 🥂",
-      "¡El Gran Lobby acaba de subir de nivel — y tú también! 🥂",
-    ],
-  }
-};
+    <script type="text/babel">
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-const LangContext = createContext('en');
-function useLang() { return useContext(LangContext); }
-function useT() { const lang = useLang(); return (key) => translations[lang]?.[key] || translations.en[key] || key; }
+        const { useState, useContext, createContext, useEffect, useRef } = React;
 
-// ─── Storage ───
-const STORAGE_KEYS = { users:'ailobby_users', platforms:'ailobby_platforms', lang:'ailobby_lang' };
-function loadFromStorage(key,fallback){try{const r=localStorage.getItem(key);if(r)return JSON.parse(r);}catch(e){}return fallback;}
-function saveToStorage(key,data){try{localStorage.setItem(key,JSON.stringify(data));}catch(e){}}
+        // Language Context
+        const LangContext = createContext();
 
-const initialUsers=[
-  {id:1,name:"Rafa Vázquez",email:"r.vazquez@sesametime.com",role:"bellboy",avatar:"RV"},
-  {id:2,name:"Carlos Méndez",email:"c.mendez@sesametime.com",role:"concierge",avatar:"CM"},
-  {id:3,name:"Laura García",email:"l.garcia@sesametime.com",role:"concierge",avatar:"LG"},
-  {id:4,name:"Ana López",email:"a.lopez@sesametime.com",role:"guest",avatar:"AL"},
-  {id:5,name:"Miguel Torres",email:"m.torres@sesametime.com",role:"guest",avatar:"MT"},
-  {id:6,name:"Sofía Ruiz",email:"s.ruiz@sesametime.com",role:"guest",avatar:"SR"},
-];
-const initialPlatforms=[];
+        const translations = {
+            en: {
+                // Common
+                appName: "AI LOBBY",
+                bellEmoji: "🔔",
+                hotelPhrases: [
+                    "Welcome to the Grand Budapest Hub",
+                    "Your key to innovation awaits",
+                    "Ascending to the finest platforms",
+                    "Where excellence is the standard",
+                    "A sanctuary for brilliant minds",
+                    "Your curated collection of tools",
+                    "The pinnacle of AI integration"
+                ],
 
-function getAccessLevel(u,cat){if(!u)return'no-access';const r=u.role;if(r==='bellboy')return'full';if(r==='concierge')return cat==='strategy'?'view-only':'full';if(cat==='tools')return'use';if(cat==='analysis')return'view-only';return'no-access';}
-function canAccessConfig(u){return u&&(u.role==='bellboy'||u.role==='concierge');}
+                // Login
+                loginTitle: "AI LOBBY",
+                loginSubtitle: "Platform Hub",
+                loginLabel: "Email Address",
+                loginPlaceholder: "you@sesametime.com",
+                loginBtn: "Check In",
+                loginError: "Guest not found. Please verify your email.",
+                langBtnEn: "EN 🇬🇧",
+                langBtnEs: "ES 🇪🇸",
 
-function analyzeCodeComplexity(content){
-  if(!content)return 10;const t=typeof content==='string'?content:'';const l=t.length;
-  const fn=(t.match(/function\s+\w+|=>\s*[{(]|\.prototype\.|class\s+\w+|def\s+\w+|const\s+\w+\s*=\s*\(/g)||[]).length;
-  const html=(t.match(/<[a-zA-Z][^>]*>/g)||[]).length;
-  const css=(t.match(/[{][^}]*[}]/g)||[]).length;
-  const imp=(t.match(/import\s+|require\s*\(|from\s+['"]/g)||[]).length;
-  const cond=(t.match(/\bif\b|\belse\b|\bswitch\b|\bcase\b|\?\s*.*:/g)||[]).length;
-  const loops=(t.match(/\bfor\b|\bwhile\b|\b\.map\b|\b\.forEach\b|\b\.reduce\b|\b\.filter\b/g)||[]).length;
-  const hooks=(t.match(/useState|useEffect|useRef|useCallback|useMemo|useReducer|useContext/g)||[]).length;
-  const api=(t.match(/fetch\s*\(|axios\.|XMLHttpRequest|\.ajax\(/g)||[]).length;
-  const ev=(t.match(/onClick|onChange|onSubmit|addEventListener|on[A-Z]\w+=/g)||[]).length;
-  const com=(t.match(/\/\/|\/\*|\*\/|#\s+\w/g)||[]).length;
-  const err=(t.match(/try\s*{|catch\s*\(|\.catch\(|throw\s+/g)||[]).length;
-  let s=0;s+=Math.min(l/500,30);s+=Math.min(fn*3,20);s+=Math.min(html*0.3,10);s+=Math.min(css*0.5,8);
-  s+=Math.min(imp*2,8);s+=Math.min(cond*1.5,8);s+=Math.min(loops*2,6);s+=Math.min(hooks*3,6);
-  s+=Math.min(api*3,4);s+=Math.min(ev*1.5,5);s+=Math.min(com*0.5,3);s+=Math.min(err*2,4);
-  return Math.max(1,Math.round(s));
-}
-function calcScores(p){if(!p.length)return{};const mx=Math.max(...p.map(x=>x.complexity||1));const s={};p.forEach(x=>{s[x.id]=mx>0?Math.round(((x.complexity||1)/mx)*100):50;});return s;}
+                // Topbar
+                logout: "Logout",
 
-// ─── Visual Preview ───
-const PALETTES={tools:{bg:'#1a2744',accent:'#4A90D9',secondary:'#2E5C8A',highlight:'#7BB8F5',ground:'#0D1B30'},analysis:{bg:'#1E2A1A',accent:'#5CB85C',secondary:'#2E7D32',highlight:'#A5D6A7',ground:'#0D1A0D'},strategy:{bg:'#2A1A2E',accent:'#9B59B6',secondary:'#6C3483',highlight:'#CE93D8',ground:'#1A0D1E'}};
-function hsh(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return Math.abs(h);}
-function srng(sd){let s=sd;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
-function dk(hex,p){const n=parseInt(hex.replace('#',''),16);return`rgb(${Math.max(0,(n>>16)-p)},${Math.max(0,((n>>8)&0xFF)-p)},${Math.max(0,(n&0xFF)-p)})`;};
-function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h);c.lineTo(x,y+h);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.fill();}
+                // Lobby
+                lobbyWelcome: "Welcome to the Lobby",
+                lobbySubtitle: "Explore platforms by category",
+                toolsSection: "Tools",
+                toolsDesc: "Utility platforms and automation",
+                analysisSection: "Analysis",
+                analysisDesc: "Data insight and visualization",
+                strategySection: "Strategy",
+                strategyDesc: "Planning and decision support",
 
-function genVisual(cv,pl,sc){
-  if(!cv)return;const c=cv.getContext('2d');const W=cv.width=cv.offsetWidth*2||600;const H=cv.height=cv.offsetHeight*2||280;
-  const pal=PALETTES[pl.section]||PALETTES.tools;const sd=hsh(pl.name+pl.id);const rn=srng(sd);
-  const sg=c.createLinearGradient(0,0,0,H*0.7);sg.addColorStop(0,dk(pal.bg,20));sg.addColorStop(1,pal.bg);c.fillStyle=sg;c.fillRect(0,0,W,H);
-  for(let i=0;i<30;i++){c.beginPath();c.arc(rn()*W,rn()*H*0.5,rn()*2+0.5,0,Math.PI*2);c.fillStyle=`rgba(255,255,255,${rn()*0.5+0.2})`;c.fill();}
-  const gY=H*0.68;const gg=c.createLinearGradient(0,gY,0,H);gg.addColorStop(0,pal.ground);gg.addColorStop(1,dk(pal.ground,30));c.fillStyle=gg;c.beginPath();c.moveTo(0,gY);for(let x=0;x<=W;x+=20)c.lineTo(x,gY+Math.sin(x*0.02+sd)*8);c.lineTo(W,H);c.lineTo(0,H);c.fill();
-  c.strokeStyle=`${pal.accent}22`;c.lineWidth=1;for(let i=0;i<8;i++){c.beginPath();c.moveTo(0,gY+i*12+10);c.lineTo(W,gY+i*12+10);c.stroke();}
-  for(let i=0;i<12;i++){const x=(W/12)*i+(sd%30);c.beginPath();c.moveTo(x,gY);c.lineTo(W/2+(x-W/2)*2,H);c.stroke();}
-  const nB=3+Math.floor(rn()*3);for(let i=0;i<nB;i++){const bx=(W/(nB+1))*(i+1)+(rn()-0.5)*40;const bw=30+rn()*50,bh=40+rn()*(H*0.3),by=gY-bh;const bg=c.createLinearGradient(bx-bw/2,by,bx+bw/2,by);bg.addColorStop(0,pal.secondary);bg.addColorStop(1,dk(pal.secondary,20));c.fillStyle=bg;rr(c,bx-bw/2,by,bw,bh,4);const rs=Math.floor(bh/20),cs=Math.floor(bw/18);for(let r=0;r<rs;r++)for(let cl=0;cl<cs;cl++){c.fillStyle=rn()>0.4?`${pal.highlight}BB`:`${pal.ground}88`;c.fillRect(bx-bw/2+8+cl*18,by+8+r*20,10,12);}c.fillStyle=pal.accent;c.fillRect(bx-bw/2-2,by-3,bw+4,6);}
-  const cx=W/2,cy=gY-20;c.beginPath();c.arc(cx,cy-40,25,0,Math.PI*2);c.fillStyle=`${pal.accent}44`;c.fill();c.beginPath();c.arc(cx,cy-40,18,0,Math.PI*2);c.fillStyle=`${pal.accent}88`;c.fill();c.font='bold 28px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#fff';const ic={tools:'⚙',analysis:'📊',strategy:'♟'};c.fillText(ic[pl.section]||'🏨',cx,cy-40);
-  for(let i=0;i<15;i++){c.beginPath();c.arc(rn()*W,rn()*gY,1+rn()*3,0,Math.PI*2);c.fillStyle=`${pal.accent}${Math.floor(rn()*60+20).toString(16).padStart(2,'0')}`;c.fill();}
-  if(sc!==undefined){const bH=4,bY=H-bH;c.fillStyle=`${pal.ground}CC`;c.fillRect(0,bY,W,bH);const bg2=c.createLinearGradient(0,bY,(sc/100)*W,bY);bg2.addColorStop(0,pal.accent);bg2.addColorStop(1,pal.highlight);c.fillStyle=bg2;c.fillRect(0,bY,(sc/100)*W,bH);}
-  c.font=`bold ${Math.round(W*0.04)}px 'Playfair Display',serif`;c.textAlign='center';c.fillStyle='#ffffffDD';c.shadowColor='rgba(0,0,0,0.8)';c.shadowBlur=10;c.fillText(pl.name.toUpperCase(),W/2,H*0.88);c.shadowBlur=0;
-}
+                // Room cards
+                room: "Room",
 
-function RoomPreview({platform,score,height}){const ref=useRef(null);useEffect(()=>{if(ref.current&&platform)genVisual(ref.current,platform,score);},[platform,score]);return <canvas ref={ref} style={{width:'100%',height:height||140,display:'block'}}/>;}
-function Toast({message,onClose}){useEffect(()=>{const t=setTimeout(onClose,3000);return()=>clearTimeout(t);},[]);return <div className="toast"><span className="toast-icon">🔔</span>{message}</div>;}
-function fmtSize(b){if(!b)return'';if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(1)+' MB';}
+                // Access levels
+                fullAccess: "Full Access",
+                viewOnly: "View Only",
+                useOnly: "Use Only",
+                noAccess: "No Access",
 
-function LoginScreen({users,onLogin,lang,setLang}){
-  const t=useT();const[email,setEmail]=useState('');const[error,setError]=useState('');
-  const submit=e=>{e.preventDefault();const u=users.find(u=>u.email.toLowerCase()===email.trim().toLowerCase());if(u)onLogin(u);else setError(t('loginError'));};
-  return(<div className="login-bg"><form className="login-card" onSubmit={submit}>
-    <div style={{position:'absolute',top:16,right:16}}><button type="button" className="lang-btn" onClick={()=>setLang(lang==='en'?'es':'en')}>{lang==='en'?'ES 🇪🇸':'EN 🇬🇧'}</button></div>
-    <div style={{fontSize:48,marginBottom:8}}>🔔</div><h1>{t('title')}</h1><span className="subtitle">{t('subtitle')}</span>
-    <div className="ornament"><span>{t('checkIn')}</span></div>
-    <input className="login-input" type="email" placeholder={t('emailPlaceholder')} value={email} onChange={e=>{setEmail(e.target.value);setError('');}} autoFocus/>
-    <button className="login-btn" type="submit">{t('enterLobby')}</button>
-    {error&&<div className="login-error">{error}</div>}
-    <div style={{marginTop:24,fontSize:12,color:'var(--rose)',opacity:0.5,fontFamily:'Cormorant Garamond,serif',fontStyle:'italic'}}>{t('tagline')}</div>
-  </form></div>);
-}
+                // Modal
+                uploadedBy: "Uploaded by",
+                uploadedDate: "Date",
+                url: "URL",
+                fileSize: "Size",
+                enterRoom: "Enter Room",
+                viewRoom: "View Room",
+                useRoom: "Use Room",
+                noAccessMessage: "You don't have a key to this room yet.",
+                returnLobby: "Return to Lobby",
 
-function AccessDenied({onClose}){const t=useT();return(<div className="modal-overlay" onClick={onClose}><div className="modal-content" onClick={e=>e.stopPropagation()} style={{width:400}}><div className="denied-modal"><span className="denied-bell">🔔</span><h3 className="denied-title">{t('oops')}</h3><p className="denied-text">{t('noKey')}</p><button className="denied-close" onClick={onClose}>{t('returnLobby')}</button></div></div></div>);}
+                // Back Office
+                backOfficeTitle: "Back Office",
+                uploadPlatform: "Upload Platform",
+                guestRegistry: "Guest Registry",
+                roomDirectory: "Room Directory",
+                aiConcierge: "AI Concierge",
 
-function WelcomePopup({onClose}){const t=useT();const phrases=t('hotelPhrases');const phrase=phrases[Math.floor(Math.random()*phrases.length)];
-  return(<div className="welcome-overlay" onClick={onClose}><div className="welcome-card" onClick={e=>e.stopPropagation()}><span className="welcome-bell">🔔</span><h3 className="welcome-phrase">{phrase}</h3><p className="welcome-sub">{t('welcomeBack')}</p><ul className="welcome-instructions"><li>{t('welcomeI1')}</li><li>{t('welcomeI2')}</li><li>{t('welcomeI3')}</li></ul><button className="welcome-ok" onClick={onClose}>{t('begin')}</button></div></div>);}
+                // Upload flow
+                step1Source: "Step 1: Source",
+                step2Details: "Step 2: Details",
+                step3Review: "Step 3: Review",
+                dragDrop: "Drag and drop your file here",
+                orClick: "or click to select",
+                orPasteUrl: "Or paste a URL",
+                pasteBtn: "Paste",
+                platformName: "Platform Name",
+                selectSection: "Select Section",
+                uploadedByLabel: "Uploaded by",
+                descriptionLabel: "Description",
+                accessFor: "Access for",
+                selectRole: "Select Role",
+                scoreLabel: "Complexity Score",
+                next: "Next",
+                back: "Back",
+                publish: "Publish",
+                cancel: "Cancel",
 
-function ConfirmDialog({title,message,onConfirm,onCancel}){const t=useT();return(<div className="confirm-overlay" onClick={onCancel}><div className="confirm-card" onClick={e=>e.stopPropagation()}><h4>{title}</h4><p>{message}</p><div className="confirm-btns"><button className="confirm-cancel" onClick={onCancel}>{t('cancel')}</button><button className="confirm-delete" onClick={onConfirm}>{t('confirm')}</button></div></div></div>);}
+                // Guest registry
+                name: "Name",
+                email: "Email",
+                role: "Role",
+                access: "Access",
+                remove: "Remove",
+                registerUser: "+ Register",
+                bellboyRole: "Bellboy",
+                conciergeRole: "Concierge",
+                guestRole: "Guest",
 
-function CelebrationPopup({name,phrase,onClose}){const t=useT();useEffect(()=>{const tm=setTimeout(onClose,6000);return()=>clearTimeout(tm);},[]);
-  return(<div className="welcome-overlay" onClick={onClose}><div className="welcome-card" onClick={e=>e.stopPropagation()} style={{maxWidth:420}}><span style={{fontSize:64,display:'block',marginBottom:8,animation:'float 2s ease infinite'}}>🥂</span><h3 className="welcome-phrase">{t('congrats')}</h3><p style={{fontFamily:'Playfair Display,serif',fontSize:17,color:'var(--cream)',marginBottom:8}}><strong>{name}</strong> {t('nowLive')}</p><p style={{fontFamily:'Cormorant Garamond,serif',fontStyle:'italic',color:'var(--rose)',fontSize:18,marginBottom:24,lineHeight:1.5}}>{phrase}</p><button className="welcome-ok" onClick={onClose}>{t('cheers')}</button></div></div>);}
+                // Room directory
+                roomNumber: "Room #",
+                platformName: "Platform Name",
+                section: "Section",
+                score: "Score",
+                uploadedByCol: "Uploaded by",
 
-function RoomDoor({platform,index,score,onClick}){const t=useT();return(<div className="room-door fade-in" onClick={onClick} style={{animationDelay:`${index*0.1}s`}}><div className="room-preview"><RoomPreview platform={platform} score={score} height={140}/><span className="room-score-badge">{score??'—'}</span><span className="room-category-badge">{platform.section}</span></div><div className="room-info"><div className="room-number">{t('room')} {platform.roomNumber||(100+index+1)}</div><div className="room-name">{platform.name}</div></div></div>);}
+                // AI Concierge
+                discrepancies: "Discrepancies",
+                overlapUnify: "Overlap & Unify",
+                leaderboard: "Leaderboard",
 
-function ExpandedRoom({platform,score,user,onClose,onEnter}){
-  const t=useT();const access=getAccessLevel(user,platform.section);
-  const labels={full:t('fullAccess'),'view-only':t('viewOnly'),use:t('use'),'no-access':t('noAccess')};
-  const cls={full:'access-full','view-only':'access-view',use:'access-use','no-access':'access-no'};
-  const ok=access!=='no-access';
-  return(<div className="modal-overlay" onClick={onClose}><div className="modal-content" onClick={e=>e.stopPropagation()}>
-    <button className="modal-close" onClick={onClose}>✕</button>
-    <div className="modal-preview"><RoomPreview platform={platform} score={score} height={200}/></div>
-    <div className="modal-body"><h2>{platform.name}</h2><span className="subtitle">{t('room')} {platform.roomNumber||'—'} · {platform.section}</span>
-    <div className={`access-badge ${cls[access]}`}>{labels[access]}</div>
-    {platform.description&&<p className="modal-desc">{platform.description}</p>}
-    <div className="modal-meta">{platform.uploadedBy&&<span className="meta-chip">👤 {platform.uploadedBy}</span>}{platform.date&&<span className="meta-chip">📅 {platform.date}</span>}{platform.url&&<span className="meta-chip">🔗 URL</span>}{platform.fileSize&&<span className="meta-chip">📦 {fmtSize(platform.fileSize)}</span>}</div>
-    <div className="modal-score"><div className="score-circle">{score??'—'}</div><div className="score-bar"><div className="score-bar-track"><div className="score-bar-fill" style={{width:`${score||0}%`}}></div></div><div className="score-label">{t('scoreLabel')}</div></div></div>
-    <button className="enter-btn" disabled={!ok} onClick={()=>ok&&onEnter(platform)}>{ok?(access==='view-only'?t('viewRoom'):access==='use'?t('usePlatform'):t('enterRoom')):t('restricted')}</button>
-    </div></div></div>);
-}
+                // Messages
+                welcomePopupTitle: "Welcome to Back Office",
+                welcomePopupMsg: "Upload platforms through our 3-step process. Each platform goes through complexity analysis for scoring.",
+                closeBtn: "Got it!",
+                celebrationTitle: "Platform Published!",
+                celebrationPhrases: [
+                    "Cheers! 🍷",
+                    "Magnificent! The guests will love it!",
+                    "Excellence has been delivered!",
+                    "Another masterpiece in the collection!",
+                    "The standards are maintained!",
+                    "Bravo! A splendid addition!",
+                    "The lobby is enhanced!",
+                    "Perfection achieved!",
+                    "Brilliant work! The hotel shines!"
+                ],
+                confirmDeleteUser: "Remove Guest?",
+                confirmDeleteMsg: "This guest will be removed from the registry. This action cannot be undone.",
+                confirmDelete: "Delete",
+                confirmCancel: "Cancel",
+                accessDeniedTitle: "Oops!",
+                accessDeniedMsg: "You don't have a key to this room yet. Perhaps ask a concierge?",
 
-function UploadPlatform({currentUser,onPublish}){
-  const t=useT();const[step,setStep]=useState(1);const[file,setFile]=useState(null);const[fc,setFc]=useState('');const[url,setUrl]=useState('');const[da,setDa]=useState(false);
-  const[fd,setFd]=useState({name:'',section:'tools',description:'',uploadedBy:currentUser.name,aG:true,aC:true,aB:true});const fi=useRef(null);
-  const drop=useCallback(e=>{e.preventDefault();e.stopPropagation();setDa(false);const f=e.dataTransfer?.files?.[0];if(f)rf(f);},[]);
-  const fs=e=>{const f=e.target.files?.[0];if(f)rf(f);};
-  const rf=f=>{setFile(f);const r=new FileReader();r.onload=e=>setFc(e.target.result);r.readAsText(f);};
-  const uf=(k,v)=>setFd(p=>({...p,[k]:v}));const c1=file||url.trim().length>5;const c2=fd.name.trim().length>0;
-  const pub=()=>{const cx=analyzeCodeComplexity(fc);const pl={id:Date.now(),name:fd.name,section:fd.section,description:fd.description,uploadedBy:fd.uploadedBy,url:url||null,fileName:file?.name||null,fileSize:file?.size||null,complexity:cx,roomNumber:100+Math.floor(Math.random()*900),date:new Date().toLocaleDateString('en-US'),fileContent:fc.substring(0,50000)};onPublish(pl);setStep(1);setFile(null);setFc('');setUrl('');setFd({name:'',section:'tools',description:'',uploadedBy:currentUser.name,aG:true,aC:true,aB:true});};
-  return(<div className="config-section"><h3>{t('uploadTitle')}</h3>
-    <div className="upload-steps">{[{n:1,l:t('source')},{n:2,l:t('details')},{n:3,l:t('review')}].map((s,i)=>(<React.Fragment key={s.n}>{i>0&&<div className="step-line"/>}<div className={`upload-step ${step===s.n?'active':step>s.n?'done':''}`}><div className="step-num">{step>s.n?'✓':s.n}</div><span>{s.l}</span></div></React.Fragment>))}</div>
-    {step===1&&(<div><div className={`dropzone ${da?'active':''}`} onDragEnter={e=>{e.preventDefault();setDa(true)}} onDragLeave={e=>{e.preventDefault();setDa(false)}} onDragOver={e=>e.preventDefault()} onDrop={drop} onClick={()=>fi.current?.click()}><div className="dropzone-icon">📁</div><div className="dropzone-text">{da?t('dropActive'):t('dropFile')}</div><div className="dropzone-sub">{t('dropSub')}</div><input ref={fi} type="file" style={{display:'none'}} onChange={fs}/></div>
-    {file&&(<div className="file-info"><span className="file-info-icon">📄</span><div><div className="file-info-name">{file.name}</div><div className="file-info-size">{fmtSize(file.size)}</div></div><button className="file-info-remove" onClick={()=>{setFile(null);setFc('')}}>✕</button></div>)}
-    <div className="ornament"><span>{t('or')}</span></div><input className="url-input" placeholder={t('urlPlaceholder')} value={url} onChange={e=>setUrl(e.target.value)}/>
-    <div className="upload-nav"><div/><button className="nav-btn primary" disabled={!c1} onClick={()=>setStep(2)}>{t('next')}</button></div></div>)}
-    {step===2&&(<div className="upload-form"><div className="form-group"><label>{t('platformName')}</label><input className="form-input" placeholder={t('namePlaceholder')} value={fd.name} onChange={e=>uf('name',e.target.value)}/></div>
-    <div className="form-row"><div className="form-group"><label>{t('section')}</label><select className="form-select" value={fd.section} onChange={e=>uf('section',e.target.value)}><option value="tools">🔧 {t('tools')}</option><option value="analysis">📊 {t('analysis')}</option><option value="strategy">♟ {t('strategy')}</option></select></div>
-    <div className="form-group"><label>{t('uploadedBy')}</label><input className="form-input" value={fd.uploadedBy} onChange={e=>uf('uploadedBy',e.target.value)}/></div></div>
-    <div className="form-group"><label>{t('description')}</label><textarea className="form-textarea" placeholder={t('descPlaceholder')} value={fd.description} onChange={e=>uf('description',e.target.value)}/></div>
-    <div className="form-group"><label>{t('accessLevels')}</label><div className="checkbox-group"><label className="checkbox-label locked"><input type="checkbox" checked disabled/> {t('bellboyAlways')}</label><label className="checkbox-label"><input type="checkbox" checked={fd.aC} onChange={e=>uf('aC',e.target.checked)}/> {t('concierge')}</label><label className="checkbox-label"><input type="checkbox" checked={fd.aG} onChange={e=>uf('aG',e.target.checked)}/> {t('guest')}</label></div></div>
-    <div className="upload-nav"><button className="nav-btn secondary" onClick={()=>setStep(1)}>{t('back')}</button><button className="nav-btn primary" disabled={!c2} onClick={()=>setStep(3)}>{t('review')} →</button></div></div>)}
-    {step===3&&(<div><div className="review-card">
-    <div className="review-row"><span className="review-label">{t('name')}</span><span className="review-value">{fd.name}</span></div>
-    <div className="review-row"><span className="review-label">{t('section')}</span><span className="review-value">{fd.section}</span></div>
-    <div className="review-row"><span className="review-label">{t('uploadedBy')}</span><span className="review-value">{fd.uploadedBy}</span></div>
-    <div className="review-row"><span className="review-label">{t('source')}</span><span className="review-value">{file?file.name:url||'N/A'}</span></div>
-    {file&&<div className="review-row"><span className="review-label">{t('fileSize')}</span><span className="review-value">{fmtSize(file.size)}</span></div>}
-    {fc&&<div className="review-row"><span className="review-label">{t('complexityAuto')}</span><span className="review-value">{analyzeCodeComplexity(fc)} pts</span></div>}
-    <div className="review-row"><span className="review-label">{t('description')}</span><span className="review-value">{fd.description||'—'}</span></div></div>
-    <div className="upload-nav"><button className="nav-btn secondary" onClick={()=>setStep(2)}>{t('back')}</button><button className="nav-btn primary" onClick={pub}>{t('publish')}</button></div></div>)}
-  </div>);
-}
+                // Tabs
+                allDiscrepancies: "All Discrepancies",
+                noDiscrepancies: "No discrepancies found. All scores are consistent!",
+                allOverlaps: "All Overlaps",
+                noOverlaps: "No overlaps detected. Each section is unique!",
 
-function AIConcierge({platforms,scores}){
-  const t=useT();const[tab,setTab]=useState('discrepancies');
-  const sorted=useMemo(()=>[...platforms].sort((a,b)=>(scores[b.id]||0)-(scores[a.id]||0)),[platforms,scores]);
-  const disc=useMemo(()=>{if(platforms.length<2)return[{title:t('notEnough'),text:t('upload2'),status:'info'}];const it=[];const sec={};platforms.forEach(p=>{if(!sec[p.section])sec[p.section]=[];sec[p.section].push(p);});Object.entries(sec).forEach(([s,ps])=>{if(ps.length>1){const hi=Math.max(...ps.map(p=>scores[p.id]||0)),lo=Math.min(...ps.map(p=>scores[p.id]||0));if(hi-lo>30)it.push({title:`${t('scoreGap')} ${s}`,text:`${hi-lo} ${t('gapText')} ${s}. ${t('considerImprove')}`,status:'warn'});}});if(!it.length)it.push({title:t('allClear'),text:t('noDiscrep'),status:'ok'});return it;},[platforms,scores]);
-  const ovlp=useMemo(()=>{if(platforms.length<2)return[{title:t('notEnough'),text:t('uploadMore'),status:'info'}];const it=[];const sec={};platforms.forEach(p=>{if(!sec[p.section])sec[p.section]=[];sec[p.section].push(p);});Object.entries(sec).forEach(([s,ps])=>{if(ps.length>=2)it.push({title:`${ps.length} ${t('platformsIn')} ${s}`,text:`${t('platforms')}: ${ps.map(p=>p.name).join(', ')}. ${t('considerUnify')}`,status:'info'});});if(!it.length)it.push({title:t('noOverlaps'),text:t('uniquePlatforms'),status:'ok'});return it;},[platforms]);
-  return(<div className="config-section"><h3>{t('aiConcierge')}</h3>
-    <div className="ai-tabs">{['discrepancies','overlap','leaderboard'].map(k=>(<button key={k} className={`ai-tab ${tab===k?'active':''}`} onClick={()=>setTab(k)}>{k==='discrepancies'?t('discrepancies'):k==='overlap'?t('overlapUnify'):t('leaderboard')}</button>))}</div>
-    {tab==='discrepancies'&&disc.map((d,i)=>(<div className="ai-card" key={i}><h4>{d.title}<span className={`ai-status ${d.status}`}>{d.status.toUpperCase()}</span></h4><p>{d.text}</p></div>))}
-    {tab==='overlap'&&ovlp.map((o,i)=>(<div className="ai-card" key={i}><h4>{o.title}<span className={`ai-status ${o.status}`}>{o.status.toUpperCase()}</span></h4><p>{o.text}</p></div>))}
-    {tab==='leaderboard'&&(sorted.length===0?<div className="ai-card"><p style={{color:'var(--rose)',fontStyle:'italic'}}>{t('noPlatformsYet')}</p></div>:
-      sorted.map((p,i)=>(<div className="ai-card" key={p.id} style={{display:'flex',alignItems:'center',gap:16}}><div style={{fontSize:24,fontFamily:'Playfair Display,serif',color:i===0?'var(--gold)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--rose)',minWidth:36,textAlign:'center'}}>{i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`}</div><div style={{flex:1}}><h4 style={{margin:0}}>{p.name}</h4><p style={{margin:'4px 0 0',fontSize:13,opacity:0.7}}>{p.section} · {p.uploadedBy||'Unknown'}</p></div><div style={{fontFamily:'Playfair Display,serif',fontSize:22,fontWeight:700,color:'var(--gold)'}}>{scores[p.id]||0}</div></div>))
-    )}</div>);
-}
+                // Success/Error
+                platformAdded: "Platform published successfully!",
+                userAdded: "Guest registered successfully!",
+                userRemoved: "Guest removed from registry.",
+                errorOccurred: "An error occurred. Please try again.",
+            },
+            es: {
+                // Common
+                appName: "AI LOBBY",
+                bellEmoji: "🔔",
+                hotelPhrases: [
+                    "Bienvenido al Grand Budapest",
+                    "Tu llave a la innovación te espera",
+                    "Ascendiendo a las mejores plataformas",
+                    "Donde la excelencia es el estándar",
+                    "Un santuario para mentes brillantes",
+                    "Tu colección seleccionada de herramientas",
+                    "El apogeo de la integración de IA"
+                ],
 
-function AddUserModal({onClose,onAdd}){const t=useT();const[nm,setNm]=useState('');const[em,setEm]=useState('');const[rl,setRl]=useState('guest');
-  const add=()=>{if(!nm.trim()||!em.trim())return;const av=nm.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);onAdd({id:Date.now(),name:nm.trim(),email:em.trim().toLowerCase(),role:rl,avatar:av});onClose();};
-  return(<div className="modal-overlay" onClick={onClose}><div className="modal-content" onClick={e=>e.stopPropagation()} style={{width:440}}><button className="modal-close" onClick={onClose}>✕</button><div className="modal-body"><h2>{t('registerGuest')}</h2><span className="subtitle" style={{marginBottom:20,display:'block'}}>{t('addMember')}</span><div className="add-user-form"><div className="form-group"><label>{t('fullName')}</label><input className="form-input" placeholder="John Doe" value={nm} onChange={e=>setNm(e.target.value)} autoFocus/></div><div className="form-group"><label>{t('email')}</label><input className="form-input" type="email" placeholder="john@company.com" value={em} onChange={e=>setEm(e.target.value)}/></div><div className="form-group"><label>{t('role')}</label><select className="form-select" value={rl} onChange={e=>setRl(e.target.value)}><option value="guest">{t('guestRole')}</option><option value="concierge">{t('conciergeRole')}</option><option value="bellboy">{t('bellboyRole')}</option></select></div><button className="nav-btn primary" style={{marginTop:8}} onClick={add}>{t('registerBtn')}</button></div></div></div></div>);}
+                // Login
+                loginTitle: "AI LOBBY",
+                loginSubtitle: "Centro de Plataformas",
+                loginLabel: "Correo Electrónico",
+                loginPlaceholder: "tu@sesametime.com",
+                loginBtn: "Registrarse",
+                loginError: "Huésped no encontrado. Por favor verifica tu correo.",
+                langBtnEn: "EN 🇬🇧",
+                langBtnEs: "ES 🇪🇸",
 
-function App(){
-  const[lang,setLang]=useState(()=>loadFromStorage(STORAGE_KEYS.lang,'en'));
-  const[users,setUsers]=useState(()=>loadFromStorage(STORAGE_KEYS.users,initialUsers));
-  const[platforms,setPlatforms]=useState(()=>loadFromStorage(STORAGE_KEYS.platforms,initialPlatforms));
-  const[currentUser,setCU]=useState(null);const[screen,setScreen]=useState('lobby');
-  const[selectedPlatform,setSP]=useState(null);const[showDenied,setSD]=useState(false);
-  const[showWelcome,setSW]=useState(false);const[showAddUser,setSAU]=useState(false);
-  const[toast,setToast]=useState(null);const[confirmAction,setCA]=useState(null);
-  const[celebration,setCeleb]=useState(null);const wRef=useRef(false);
+                // Topbar
+                logout: "Cerrar Sesión",
 
-  useEffect(()=>{saveToStorage(STORAGE_KEYS.lang,lang);},[lang]);
-  useEffect(()=>{saveToStorage(STORAGE_KEYS.users,users);},[users]);
-  useEffect(()=>{saveToStorage(STORAGE_KEYS.platforms,platforms);},[platforms]);
+                // Lobby
+                lobbyWelcome: "Bienvenido al Lobby",
+                lobbySubtitle: "Explora plataformas por categoría",
+                toolsSection: "Herramientas",
+                toolsDesc: "Plataformas de utilidad y automatización",
+                analysisSection: "Análisis",
+                analysisDesc: "Información de datos y visualización",
+                strategySection: "Estrategia",
+                strategyDesc: "Planificación y soporte de decisiones",
 
-  const t=(key)=>translations[lang]?.[key]||translations.en[key]||key;
-  const scores=useMemo(()=>calcScores(platforms),[platforms]);
+                // Room cards
+                room: "Sala",
 
-  const login=u=>{setCU(u);setScreen('lobby');};
-  const logout=()=>{setCU(null);setScreen('lobby');wRef.current=false;};
-  const goConfig=()=>{if(!canAccessConfig(currentUser)){setSD(true);return;}setScreen('config');if(!wRef.current){setSW(true);wRef.current=true;}};
-  const clickPlatform=p=>{if(getAccessLevel(currentUser,p.section)==='no-access'){setSD(true);return;}setSP(p);};
-  const enter=p=>{if(p.url)window.open(p.url,'_blank');else showMsg(`${t('entering')} ${p.name}...`);setSP(null);};
-  const publish=platform=>{setPlatforms(prev=>[...prev,platform]);const phrases=t('celebrationPhrases');setCeleb({name:platform.name,phrase:phrases[Math.floor(Math.random()*phrases.length)]});};
-  const addUser=u=>{setUsers(prev=>[...prev,u]);showMsg(`${u.name} ${t('registered')}`);};
-  const delUser=u=>{if(u.id===currentUser.id)return;setCA({title:t('checkOutGuest'),message:`${t('confirmRemoveUser')} ${u.name} (${u.email}) ${t('fromRegistry')}`,onConfirm:()=>{setUsers(prev=>prev.filter(x=>x.id!==u.id));showMsg(`${u.name} ${t('checkedOut')}`);setCA(null);},onCancel:()=>setCA(null)});};
-  const delPlatform=id=>{const p=platforms.find(x=>x.id===id);setCA({title:t('removePlatform'),message:`${t('confirmRemovePlatform')} ${p?p.name:''} ${t('fromLobby')}`,onConfirm:()=>{setPlatforms(prev=>prev.filter(x=>x.id!==id));showMsg(t('platformOut'));setCA(null);},onCancel:()=>setCA(null)});};
-  const showMsg=m=>{setToast(m);};
+                // Access levels
+                fullAccess: "Acceso Completo",
+                viewOnly: "Solo Ver",
+                useOnly: "Solo Usar",
+                noAccess: "Sin Acceso",
 
-  const tp=platforms.filter(p=>p.section==='tools');
-  const ap=platforms.filter(p=>p.section==='analysis');
-  const sp=platforms.filter(p=>p.section==='strategy');
+                // Modal
+                uploadedBy: "Subido por",
+                uploadedDate: "Fecha",
+                url: "URL",
+                fileSize: "Tamaño",
+                enterRoom: "Entrar a Sala",
+                viewRoom: "Ver Sala",
+                useRoom: "Usar Sala",
+                noAccessMessage: "Aún no tienes llave para esta sala.",
+                returnLobby: "Volver al Lobby",
 
-  if(!currentUser)return <LangContext.Provider value={lang}><LoginScreen users={users} onLogin={login} lang={lang} setLang={setLang}/></LangContext.Provider>;
+                // Back Office
+                backOfficeTitle: "Oficina del Concierge",
+                uploadPlatform: "Subir Plataforma",
+                guestRegistry: "Registro de Huéspedes",
+                roomDirectory: "Directorio de Salas",
+                aiConcierge: "IA Conserje",
 
-  return(
-    <LangContext.Provider value={lang}>
-    <div>
-      <div className="topbar">
-        <h1>🔔 AI LOBBY</h1>
-        <div className="topbar-right">
-          <button className="lang-btn" onClick={()=>setLang(lang==='en'?'es':'en')}>{lang==='en'?'ES 🇪🇸':'EN 🇬🇧'}</button>
-          <button className={`tab-btn ${screen==='lobby'?'active':''}`} onClick={()=>setScreen('lobby')}>{t('lobby')}</button>
-          <button className={`tab-btn ${screen==='config'?'active':''}`} onClick={goConfig}>{t('backOffice')}</button>
-          <div className="topbar-user"><div className="topbar-avatar">{currentUser.avatar}</div><div><div style={{fontSize:13,fontWeight:500}}>{currentUser.name}</div><div style={{fontSize:11,opacity:0.6,textTransform:'capitalize'}}>{currentUser.role}</div></div></div>
-          <button className="logout-btn" onClick={logout}>{t('checkOut')}</button>
-        </div>
-      </div>
-      {screen==='lobby'&&(<div className="lobby fade-in"><h2 className="lobby-title">{t('grandLobby')}</h2><div className="ornament"><span>{t('exploreRooms')}</span></div>
-        <div className="columns">
-          <div className="column"><div className="column-title">🔧 {t('tools')}</div>{tp.length===0?<div className="empty-col">{t('noTools')}</div>:tp.map((p,i)=><RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>clickPlatform(p)}/>)}</div>
-          <div className="column"><div className="column-title">📊 {t('analysis')}</div>{ap.length===0?<div className="empty-col">{t('noAnalysis')}</div>:ap.map((p,i)=><RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>clickPlatform(p)}/>)}</div>
-          <div className="column"><div className="column-title">♟ {t('strategy')}</div>{sp.length===0?<div className="empty-col">{t('noStrategy')}</div>:sp.map((p,i)=><RoomDoor key={p.id} platform={p} index={i} score={scores[p.id]} onClick={()=>clickPlatform(p)}/>)}</div>
-        </div></div>)}
-      {screen==='config'&&(<div className="config fade-in"><h2 style={{textAlign:'center',color:'var(--gold)',fontSize:28,marginBottom:8}}>{t('backOffice')}</h2><div className="ornament"><span>{t('management')}</span></div>
-        <UploadPlatform currentUser={currentUser} onPublish={publish}/>
-        <div className="config-section"><h3>{t('guestRegistry')} <button className="add-btn" onClick={()=>setSAU(true)}>{t('register')}</button></h3>
-          <table className="config-table"><thead><tr><th>{t('name')}</th><th>{t('email')}</th><th>{t('role')}</th><th>{t('tools')}</th><th>{t('analysis')}</th><th>{t('strategy')}</th>{currentUser.role==='bellboy'&&<th></th>}</tr></thead>
-          <tbody>{users.map(u=>(<tr key={u.id}><td>{u.name}</td><td style={{opacity:0.7,fontSize:13}}>{u.email}</td><td><span className={`role-badge role-${u.role}`}>{u.role}</span></td><td style={{fontSize:12}}>{getAccessLevel(u,'tools')}</td><td style={{fontSize:12}}>{getAccessLevel(u,'analysis')}</td><td style={{fontSize:12}}>{getAccessLevel(u,'strategy')}</td>{currentUser.role==='bellboy'&&<td>{u.id!==currentUser.id&&<button className="del-btn" onClick={()=>delUser(u)}>{t('remove')}</button>}</td>}</tr>))}</tbody></table></div>
-        <div className="config-section"><h3>{t('roomDirectory')}</h3>
-          {platforms.length===0?<p style={{color:'var(--rose)',fontStyle:'italic',fontSize:14}}>{t('noPlatforms')}</p>:
-          <table className="config-table"><thead><tr><th>{t('room')}</th><th>{t('name')}</th><th>{t('section')}</th><th>{t('score')}</th><th>{t('uploadedBy')}</th><th></th></tr></thead>
-          <tbody>{platforms.map(p=>(<tr key={p.id}><td>{p.roomNumber||'—'}</td><td>{p.name}</td><td style={{textTransform:'capitalize'}}>{p.section}</td><td style={{fontWeight:600,color:'var(--gold)'}}>{scores[p.id]||'—'}</td><td style={{fontSize:13,opacity:0.7}}>{p.uploadedBy||'—'}</td><td>{(currentUser.role==='bellboy'||currentUser.role==='concierge')&&<button className="del-btn" onClick={()=>delPlatform(p.id)}>{t('remove')}</button>}</td></tr>))}</tbody></table>}</div>
-        <AIConcierge platforms={platforms} scores={scores}/></div>)}
-      {selectedPlatform&&<ExpandedRoom platform={selectedPlatform} score={scores[selectedPlatform.id]} user={currentUser} onClose={()=>setSP(null)} onEnter={enter}/>}
-      {showDenied&&<AccessDenied onClose={()=>setSD(false)}/>}
-      {showWelcome&&<WelcomePopup onClose={()=>setSW(false)}/>}
-      {showAddUser&&<AddUserModal onClose={()=>setSAU(false)} onAdd={addUser}/>}
-      {confirmAction&&<ConfirmDialog title={confirmAction.title} message={confirmAction.message} onConfirm={confirmAction.onConfirm} onCancel={confirmAction.onCancel}/>}
-      {celebration&&<CelebrationPopup name={celebration.name} phrase={celebration.phrase} onClose={()=>setCeleb(null)}/>}
-      {toast&&<Toast message={toast} onClose={()=>setToast(null)}/>}
-    </div>
-    </LangContext.Provider>
-  );
-}
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
-</script>
+                // Upload flow
+                step1Source: "Paso 1: Fuente",
+                step2Details: "Paso 2: Detalles",
+                step3Review: "Paso 3: Revisión",
+                dragDrop: "Arrastra tu archivo aquí",
+                orClick: "o haz clic para seleccionar",
+                orPasteUrl: "O pega una URL",
+                pasteBtn: "Pegar",
+                platformName: "Nombre de Plataforma",
+                selectSection: "Selecciona Sección",
+                uploadedByLabel: "Subido por",
+                descriptionLabel: "Descripción",
+                accessFor: "Acceso para",
+                selectRole: "Selecciona Rol",
+                scoreLabel: "Puntuación de Complejidad",
+                next: "Siguiente",
+                back: "Atrás",
+                publish: "Publicar",
+                cancel: "Cancelar",
+
+                // Guest registry
+                name: "Nombre",
+                email: "Correo",
+                role: "Rol",
+                access: "Acceso",
+                remove: "Eliminar",
+                registerUser: "+ Registrar",
+                bellboyRole: "Botones",
+                conciergeRole: "Conserje",
+                guestRole: "Huésped",
+
+                // Room directory
+                roomNumber: "Sala #",
+                platformName: "Nombre de Plataforma",
+                section: "Sección",
+                score: "Puntuación",
+                uploadedByCol: "Subido por",
+
+                // AI Concierge
+                discrepancies: "Discrepancias",
+                overlapUnify: "Solapamiento y Unificación",
+                leaderboard: "Tabla de Clasificación",
+
+                // Messages
+                welcomePopupTitle: "Bienvenido a la Oficina",
+                welcomePopupMsg: "Sube plataformas a través de nuestro proceso de 3 pasos. Cada plataforma pasa por análisis de complejidad para puntuación.",
+                closeBtn: "¡Entendido!",
+                celebrationTitle: "¡Plataforma Publicada!",
+                celebrationPhrases: [
+                    "¡Salud! 🍷",
+                    "¡Magnífico! ¡A los huéspedes les encantará!",
+                    "¡La excelencia ha sido entregada!",
+                    "¡Otra obra maestra en la colección!",
+                    "¡Los estándares se mantienen!",
+                    "¡Bravo! ¡Una adición espléndida!",
+                    "¡El lobby está mejorado!",
+                    "¡Perfección lograda!",
+                    "¡¡Trabajo brillante! ¡El hotel brilla!"
+                ],
+                confirmDeleteUser: "¿Eliminar Huésped?",
+                confirmDeleteMsg: "Este huésped será eliminado del registro. Esta acción no se puede deshacer.",
+                confirmDelete: "Eliminar",
+                confirmCancel: "Cancelar",
+                accessDeniedTitle: "¡Vaya!",
+                accessDeniedMsg: "Aún no tienes llave para esta sala. ¿Quizás pregunta a un conserje?",
+
+                // Tabs
+                allDiscrepancies: "Todas las Discrepancias",
+                noDiscrepancies: "No hay discrepancias. ¡Todas las puntuaciones son consistentes!",
+                allOverlaps: "Todos los Solapamientos",
+                noOverlaps: "No se detectó solapamiento. ¡Cada sección es única!",
+
+                // Success/Error
+                platformAdded: "¡Plataforma publicada con éxito!",
+                userAdded: "¡Huésped registrado con éxito!",
+                userRemoved: "Huésped eliminado del registro.",
+                errorOccurred: "Ocurrió un error. Por favor intenta de nuevo.",
+            }
+        };
+
+        const useT = () => {
+            const lang = useContext(LangContext);
+            return (key) => {
+                const keys = key.split('.');
+                let value = translations[lang];
+                for (let k of keys) {
+                    value = value[k];
+                }
+                return value;
+            };
+        };
+
+        // Initial users
+        const initialUsers = [
+            { id: 1, name: "Rafa Vázquez", email: "r.vazquez@sesametime.com", role: "bellboy", avatar: "RV" },
+            { id: 2, name: "Carlos Méndez", email: "c.mendez@sesametime.com", role: "concierge", avatar: "CM" },
+            { id: 3, name: "Laura García", email: "l.garcia@sesametime.com", role: "concierge", avatar: "LG" },
+            { id: 4, name: "Ana López", email: "a.lopez@sesametime.com", role: "guest", avatar: "AL" },
+            { id: 5, name: "Miguel Torres", email: "m.torres@sesametime.com", role: "guest", avatar: "MT" },
+            { id: 6, name: "Sofía Ruiz", email: "s.ruiz@sesametime.com", role: "guest", avatar: "SR" },
+            { id: 7, name: "I. Herrero", email: "i.herrero@sesametime.com", role: "concierge", avatar: "IH" },
+            { id: 8, name: "L. Bahía", email: "l.bahia@sesametime.com", role: "concierge", avatar: "LB" },
+            { id: 9, name: "M. Díaz", email: "m.diaz@sesametime.com", role: "concierge", avatar: "MD" },
+            { id: 10, name: "J. Corpus", email: "j.corpus@sesametime.com", role: "bellboy", avatar: "JC" },
+            { id: 11, name: "A. Sevillano", email: "a.sevillano@sesametime.com", role: "concierge", avatar: "AS" },
+            { id: 12, name: "A. Céfalo", email: "a.cefalo@sesametime.com", role: "concierge", avatar: "AC" },
+            { id: 13, name: "V. Herrera", email: "v.herrera@sesametime.com", role: "concierge", avatar: "VH" },
+            { id: 14, name: "J. Herrera", email: "j.herrera@sesametime.com", role: "concierge", avatar: "JH" },
+            { id: 15, name: "W. Moreira", email: "w.moreira@sesametime.com", role: "concierge", avatar: "WM" },
+            { id: 16, name: "C. Edo", email: "c.edo@sesametime.com", role: "concierge", avatar: "CE" },
+            { id: 17, name: "Majo", email: "majo@sesametime.com", role: "concierge", avatar: "MA" },
+        ];
+
+        // Access matrix
+        const accessMatrix = {
+            bellboy: { tools: "full", analysis: "full", strategy: "full", config: true },
+            concierge: { tools: "full", analysis: "full", strategy: "view-only", config: true },
+            guest: { tools: "use", analysis: "view-only", strategy: "no-access", config: false },
+        };
+
+        // Utility to get access level for a section
+        const getAccessLevel = (userRole, section) => {
+            const access = accessMatrix[userRole][section];
+            if (access === "full") return "Full Access";
+            if (access === "view-only") return "View Only";
+            if (access === "use") return "Use Only";
+            return "No Access";
+        };
+
+        // Hotel-themed images per category (Unsplash free photos)
+        const hotelImages = {
+            tools: [
+                'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&h=300&fit=crop',  // luxury hotel room
+                'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=300&fit=crop',  // hotel lobby
+                'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=300&fit=crop',  // hotel room desk
+                'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&h=300&fit=crop',  // grand hotel
+                'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&h=300&fit=crop',  // hotel suite
+            ],
+            analysis: [
+                'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=300&fit=crop',  // charts/analytics
+                'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop',  // dashboard screen
+                'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop',  // data analytics
+                'https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&h=300&fit=crop',  // graphs notebook
+                'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=300&fit=crop',  // monitoring screens
+            ],
+            strategy: [
+                'https://images.unsplash.com/photo-1553484771-047a44eee27b?w=600&h=300&fit=crop',  // chess strategy
+                'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=300&fit=crop',  // business meeting
+                'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=300&fit=crop',  // strategy session
+                'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=300&fit=crop',  // planning board
+                'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&h=300&fit=crop',  // executive office
+            ],
+        };
+
+        // Get a consistent image for a platform based on its name + id
+        const getPlatformImage = (platform, section) => {
+            const images = hotelImages[section] || hotelImages.tools;
+            const seed = (platform.name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) + (platform.id || 0);
+            return images[seed % images.length];
+        };
+
+        // Code complexity analyzer
+        const analyzeCodeComplexity = (fileContent) => {
+            const countMatches = (pattern) => {
+                const matches = fileContent.match(new RegExp(pattern, 'g'));
+                return matches ? matches.length : 0;
+            };
+
+            const metrics = {
+                functions: countMatches(/function\s+\w+|const\s+\w+\s*=\s*\(|const\s+\w+\s*=\s*function/),
+                htmlTags: countMatches(/<[a-z][a-z0-9]*\s*[^>]*>/i),
+                cssRules: countMatches(/\{[^}]+\}/),
+                imports: countMatches(/import\s+|require\s*\(/),
+                conditionals: countMatches(/if\s*\(|else|switch\s*\(|case\s+/),
+                loops: countMatches(/for\s*\(|while\s*\(|forEach|map\s*\(/),
+                hooks: countMatches(/useState|useEffect|useContext|useRef|useReducer/),
+                apiCalls: countMatches(/fetch|axios|fetch\s*\(|\.get\s*\(|\.post\s*\(/),
+                eventHandlers: countMatches(/onClick|onChange|onSubmit|addEventListener/),
+                comments: countMatches(/\/\/|\/\*|\*\//),
+                errorHandling: countMatches(/try\s*\{|catch\s*\(|throw\s+/),
+                fileSize: Math.ceil(fileContent.length / 100),
+            };
+
+            let score = 0;
+            score += metrics.functions * 3;
+            score += metrics.htmlTags * 0.5;
+            score += metrics.cssRules * 2;
+            score += metrics.imports * 1;
+            score += metrics.conditionals * 2;
+            score += metrics.loops * 2;
+            score += metrics.hooks * 4;
+            score += metrics.apiCalls * 5;
+            score += metrics.eventHandlers * 2;
+            score += metrics.comments * 0.5;
+            score += metrics.errorHandling * 3;
+            score += metrics.fileSize * 0.1;
+
+            return Math.ceil(score);
+        };
+
+        // Calculate normalized scores
+        const calcScores = (platforms) => {
+            const scores = platforms.map(p => ({ ...p, rawScore: p.rawScore || 0 }));
+            const maxScore = Math.max(...scores.map(p => p.rawScore));
+            return scores.map(p => ({
+                ...p,
+                score: maxScore > 0 ? Math.round((p.rawScore / maxScore) * 100) : 0
+            }));
+        };
+
+        // Toast component
+        const Toast = ({ message }) => (
+            <div className="toast">{message}</div>
+        );
+
+        // Confirm Dialog
+        const ConfirmDialog = ({ title, message, onConfirm, onCancel, emoji = "⚠️" }) => (
+            <div className="confirm-overlay" onClick={onCancel}>
+                <div className="confirm-card" onClick={(e) => e.stopPropagation()}>
+                    <div className="confirm-emoji">{emoji}</div>
+                    <div className="confirm-title">{title}</div>
+                    <div className="confirm-message">{message}</div>
+                    <div className="confirm-btns">
+                        <button className="confirm-btn cancel" onClick={onCancel}>Cancel</button>
+                        <button className="confirm-btn delete" onClick={onConfirm}>Delete</button>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // Add User Modal
+        const AddUserModal = ({ onAdd, onClose, users, t }) => {
+            const [formData, setFormData] = useState({ name: '', email: '', role: 'guest' });
+            const [error, setError] = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!formData.name || !formData.email) {
+                    setError('All fields required');
+                    return;
+                }
+                if (users.some(u => u.email === formData.email)) {
+                    setError('Email already registered');
+                    return;
+                }
+                onAdd(formData);
+                onClose();
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={onClose}>✕</button>
+                        <div className="modal-body">
+                            <div className="modal-header-info">
+                                <div className="modal-platform-name">{t('registerUser')}</div>
+                            </div>
+                            <form className="add-user-form" onSubmit={handleSubmit}>
+                                <div className="modal-form-group">
+                                    <label>{t('name')}</label>
+                                    <input
+                                        type="text"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                        placeholder="Full Name"
+                                    />
+                                </div>
+                                <div className="modal-form-group">
+                                    <label>{t('email')}</label>
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                        placeholder="user@example.com"
+                                    />
+                                </div>
+                                <div className="modal-form-group">
+                                    <label>{t('role')}</label>
+                                    <select
+                                        value={formData.role}
+                                        onChange={(e) => setFormData({...formData, role: e.target.value})}
+                                    >
+                                        <option value="guest">{t('guestRole')}</option>
+                                        <option value="concierge">{t('conciergeRole')}</option>
+                                    </select>
+                                </div>
+                                {error && <div className="login-error">{error}</div>}
+                                <div className="btn-group">
+                                    <button type="button" className="btn-secondary" onClick={onClose}>{t('cancel')}</button>
+                                    <button type="submit" className="btn-primary">Register</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // RoomDoor component (Lobby card)
+        const RoomDoor = ({ platform, section, onRoomClick }) => {
+            const imgUrl = getPlatformImage(platform, section);
+
+            return (
+                <div className="room-door" onClick={() => onRoomClick(platform)}>
+                    <div className="room-preview" style={{backgroundImage: `url(${imgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                        <div className="room-category-badge">{section}</div>
+                    </div>
+                    <div className="room-footer">
+                        <div className="room-number">#{platform.roomNumber}</div>
+                        <div className="room-name">{platform.name}</div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Expanded Room Modal
+        const ExpandedRoom = ({ platform, section, userRole, onClose, t }) => {
+            const accessLevel = getAccessLevel(userRole, section);
+            const imgUrl = getPlatformImage(platform, section);
+
+            const canAccess = accessMatrix[userRole][section] !== 'no-access';
+
+            return (
+                <div className="modal-overlay scrollable" onClick={onClose}>
+                    <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={onClose}>✕</button>
+                        <div className="expanded-preview" style={{backgroundImage: `url(${imgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
+                        <div className="modal-body">
+                            <div className="modal-header-info">
+                                <div className="modal-room-number">#{platform.roomNumber}</div>
+                                <div className="modal-platform-name">{platform.name}</div>
+                                <div className="modal-section">{section}</div>
+                                <div className={`access-badge ${accessLevel.includes('No Access') ? 'denied' : accessLevel.includes('Full') ? 'full' : accessLevel.includes('View') ? 'view' : 'use'}`}>
+                                    {accessLevel}
+                                </div>
+                            </div>
+                            <div className="modal-description">{platform.description}</div>
+                            <div className="meta-chips">
+                                <div className="meta-chip">
+                                    <span className="meta-label">{t('uploadedBy')}:</span> {platform.uploadedBy}
+                                </div>
+                                <div className="meta-chip">
+                                    <span className="meta-label">{t('uploadedDate')}:</span> {platform.uploadedDate}
+                                </div>
+                                {platform.url && (
+                                    <div className="meta-chip">
+                                        <span className="meta-label">{t('url')}:</span> <a href={platform.url} target="_blank" rel="noopener noreferrer" style={{color: 'var(--gold)'}}>{platform.url.substring(0, 30)}...</a>
+                                    </div>
+                                )}
+                                {platform.fileSize && (
+                                    <div className="meta-chip">
+                                        <span className="meta-label">{t('fileSize')}:</span> {platform.fileSize}
+                                    </div>
+                                )}
+                            </div>
+                            {canAccess && (
+                                <button className="modal-action-btn" onClick={() => alert(`Accessing ${platform.name}...`)}>
+                                    {accessMatrix[userRole][section] === 'full' && t('enterRoom')}
+                                    {accessMatrix[userRole][section] === 'view-only' && t('viewRoom')}
+                                    {accessMatrix[userRole][section] === 'use' && t('useRoom')}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Access Denied Popup
+        const AccessDeniedPopup = ({ onClose, t }) => (
+            <div className="modal-overlay" onClick={onClose}>
+                <div className="modal-card access-denied-popup" onClick={(e) => e.stopPropagation()}>
+                    <button className="modal-close" onClick={onClose}>✕</button>
+                    <div className="modal-body" style={{textAlign: 'center'}}>
+                        <div className="denied-emoji">🔔</div>
+                        <div className="denied-title">{t('accessDeniedTitle')}</div>
+                        <div className="denied-message">{t('accessDeniedMsg')}</div>
+                        <button className="modal-action-btn" onClick={onClose}>{t('returnLobby')}</button>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // Login Screen
+        const LoginScreen = ({ onLogin, t, lang, setLang, users }) => {
+            const [email, setEmail] = useState('');
+            const [error, setError] = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const user = users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
+                if (user) {
+                    onLogin(user);
+                } else {
+                    setError(t('loginError'));
+                }
+            };
+
+            return (
+                <div className="login-container">
+                    <div className="login-card">
+                        <button
+                            className="lang-btn"
+                            onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+                        >
+                            {lang === 'en' ? t('langBtnEs') : t('langBtnEn')}
+                        </button>
+                        <div className="login-header">
+                            <div className="login-bell">{t('bellEmoji')}</div>
+                            <div className="login-title">{t('loginTitle')}</div>
+                            <div className="login-subtitle">{t('loginSubtitle')}</div>
+                            <div className="ornament-divider"></div>
+                        </div>
+                        <form className="login-form" onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label>{t('loginLabel')}</label>
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => {setEmail(e.target.value); setError('');}}
+                                    placeholder={t('loginPlaceholder')}
+                                />
+                            </div>
+                            {error && <div className="login-error">{error}</div>}
+                            <button type="submit" className="login-btn">{t('loginBtn')}</button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        // Lobby Screen
+        const LobbyScreen = ({ currentUser, onLogout, platforms, onShowBackOffice, t, lang, setLang }) => {
+            const [expandedPlatform, setExpandedPlatform] = useState(null);
+            const [showAccessDenied, setShowAccessDenied] = useState(false);
+
+            const handleRoomClick = (platform) => {
+                const section = platform.section;
+                if (accessMatrix[currentUser.role][section] === 'no-access') {
+                    setShowAccessDenied(true);
+                } else {
+                    setExpandedPlatform(platform);
+                }
+            };
+
+            const platformsBySection = {
+                tools: platforms.filter(p => p.section === 'tools'),
+                analysis: platforms.filter(p => p.section === 'analysis'),
+                strategy: platforms.filter(p => p.section === 'strategy'),
+            };
+
+            return (
+                <div className="app">
+                    <div className="topbar">
+                        <div className="topbar-left">
+                            <div className="topbar-title">🔔 {t('appName')}</div>
+                        </div>
+                        <div className="topbar-user">
+                            <div className="user-avatar">{currentUser.avatar}</div>
+                            <div className="user-info">
+                                <div className="user-name">{currentUser.name}</div>
+                                <div className="user-role">{currentUser.role}</div>
+                            </div>
+                        </div>
+                        <div className="topbar-right">
+                            <button
+                                className="lang-btn"
+                                onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+                            >
+                                {lang === 'en' ? t('langBtnEs') : t('langBtnEn')}
+                            </button>
+                            {(currentUser.role === 'bellboy' || currentUser.role === 'concierge') && (
+                                <button className="logout-btn" onClick={onShowBackOffice}>Back Office</button>
+                            )}
+                            <button className="logout-btn" onClick={onLogout}>{t('logout')}</button>
+                        </div>
+                    </div>
+                    <div className="lobby-container">
+                        <div className="lobby-header">
+                            <div className="lobby-welcome">{t('lobbyWelcome')}</div>
+                            <div className="lobby-subtitle">{t('lobbySubtitle')}</div>
+                        </div>
+                        <div className="sections-grid">
+                            {['tools', 'analysis', 'strategy'].map(section => (
+                                <div key={section} className="section">
+                                    <div className="section-header">
+                                        <div className="section-title">{t(section + 'Section')}</div>
+                                        <div className="section-description">{t(section + 'Desc')}</div>
+                                    </div>
+                                    <div className="platforms-list">
+                                        {platformsBySection[section].map(platform => (
+                                            <RoomDoor
+                                                key={platform.id}
+                                                platform={platform}
+                                                section={section}
+                                                onRoomClick={handleRoomClick}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    {expandedPlatform && (
+                        <ExpandedRoom
+                            platform={expandedPlatform}
+                            section={expandedPlatform.section}
+                            userRole={currentUser.role}
+                            onClose={() => setExpandedPlatform(null)}
+                            t={t}
+                        />
+                    )}
+                    {showAccessDenied && <AccessDeniedPopup onClose={() => setShowAccessDenied(false)} t={t} />}
+                </div>
+            );
+        };
+
+        // Back Office Screen
+        const BackOfficeScreen = ({ currentUser, onBack, platforms, setPlatforms, users, setUsers, t }) => {
+            const [activeNav, setActiveNav] = useState('upload');
+            const [uploadStep, setUploadStep] = useState(1);
+            const [uploadData, setUploadData] = useState({ fileContent: '', fileName: '', name: '', section: 'tools', uploadedBy: currentUser.name, description: '', accessRoles: ['bellboy'], url: '', fileSize: '' });
+            const [showWelcome, setShowWelcome] = useState(true);
+            const [showCelebration, setShowCelebration] = useState(false);
+            const [showAddUser, setShowAddUser] = useState(false);
+            const [confirmDelete, setConfirmDelete] = useState(null);
+            const [toastMsg, setToastMsg] = useState('');
+
+            const handleFileUpload = async (file) => {
+                const content = await file.text();
+                setUploadData({...uploadData, fileContent: content, fileName: file.name, fileSize: (file.size / 1024).toFixed(2) + ' KB'});
+            };
+
+            const handleUrlPaste = async (url) => {
+                try {
+                    const response = await fetch(url);
+                    const content = await response.text();
+                    setUploadData({...uploadData, fileContent: content, url: url});
+                } catch (e) {
+                    alert('Failed to fetch URL');
+                }
+            };
+
+            const handleNextStep = () => {
+                if (uploadStep === 1 && !uploadData.fileContent) {
+                    alert('Please upload or paste content');
+                    return;
+                }
+                if (uploadStep === 2) {
+                    if (!uploadData.name || !uploadData.section) {
+                        alert('Please fill in all required fields');
+                        return;
+                    }
+                }
+                setUploadStep(uploadStep + 1);
+            };
+
+            const handlePublish = () => {
+                const rawScore = analyzeCodeComplexity(uploadData.fileContent);
+                const newPlatform = {
+                    id: Date.now(),
+                    roomNumber: platforms.length + 1,
+                    name: uploadData.name,
+                    section: uploadData.section,
+                    uploadedBy: uploadData.uploadedBy,
+                    uploadedDate: new Date().toLocaleDateString(),
+                    description: uploadData.description,
+                    url: uploadData.url,
+                    fileSize: uploadData.fileSize,
+                    rawScore: rawScore,
+                    accessRoles: uploadData.accessRoles,
+                };
+                const updatedPlatforms = [...platforms, newPlatform];
+                const normalizedPlatforms = calcScores(updatedPlatforms);
+                setPlatforms(normalizedPlatforms);
+                // Save to Firebase
+                const platformsObj = {};
+                normalizedPlatforms.forEach(p => { platformsObj[p.id] = p; });
+                db.ref('platforms').set(platformsObj);
+                setUploadStep(1);
+                setUploadData({ fileContent: '', fileName: '', name: '', section: 'tools', uploadedBy: currentUser.name, description: '', accessRoles: ['bellboy'], url: '', fileSize: '' });
+                setShowCelebration(true);
+                setTimeout(() => setShowCelebration(false), 6000);
+                setToastMsg(t('platformAdded'));
+            };
+
+            const handleAddUser = (formData) => {
+                const newUser = {
+                    id: Math.max(...users.map(u => u.id), 0) + 1,
+                    avatar: formData.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+                    ...formData
+                };
+                const updatedUsers = [...users, newUser];
+                setUsers(updatedUsers);
+                // Save new user to Firebase
+                db.ref('users/' + newUser.id).set(newUser);
+                setToastMsg(t('userAdded'));
+            };
+
+            const handleDeleteUser = (userId) => {
+                if (userId === currentUser.id) {
+                    alert('Cannot remove yourself');
+                    return;
+                }
+                const updatedUsers = users.filter(u => u.id !== userId);
+                setUsers(updatedUsers);
+                // Remove user from Firebase
+                db.ref('users/' + userId).remove();
+                setConfirmDelete(null);
+                setToastMsg(t('userRemoved'));
+            };
+
+            const detectDiscrepancies = () => {
+                const discrepancies = [];
+                const sections = ['tools', 'analysis', 'strategy'];
+                sections.forEach(section => {
+                    const sectionPlatforms = platforms.filter(p => p.section === section);
+                    for (let i = 0; i < sectionPlatforms.length; i++) {
+                        for (let j = i + 1; j < sectionPlatforms.length; j++) {
+                            if (Math.abs(sectionPlatforms[i].score - sectionPlatforms[j].score) > 30) {
+                                discrepancies.push({
+                                    section,
+                                    platform1: sectionPlatforms[i].name,
+                                    platform2: sectionPlatforms[j].name,
+                                    score1: sectionPlatforms[i].score,
+                                    score2: sectionPlatforms[j].score,
+                                    diff: Math.abs(sectionPlatforms[i].score - sectionPlatforms[j].score)
+                                });
+                            }
+                        }
+                    }
+                });
+                return discrepancies;
+            };
+
+            const detectOverlaps = () => {
+                const overlaps = [];
+                const sections = ['tools', 'analysis', 'strategy'];
+                sections.forEach(section => {
+                    const sectionPlatforms = platforms.filter(p => p.section === section);
+                    if (sectionPlatforms.length > 1) {
+                        overlaps.push({section, count: sectionPlatforms.length, platforms: sectionPlatforms});
+                    }
+                });
+                return overlaps;
+            };
+
+            const discrepancies = detectDiscrepancies();
+            const overlaps = detectOverlaps();
+            const sortedByScore = [...platforms].sort((a, b) => b.score - a.score);
+
+            return (
+                <div className="app">
+                    <div className="topbar">
+                        <div className="topbar-left">
+                            <div className="topbar-title">🔔 {t('appName')}</div>
+                        </div>
+                        <div className="topbar-user">
+                            <div className="user-avatar">{currentUser.avatar}</div>
+                            <div className="user-info">
+                                <div className="user-name">{currentUser.name}</div>
+                                <div className="user-role">{currentUser.role}</div>
+                            </div>
+                        </div>
+                        <div className="topbar-right">
+                            <button className="logout-btn" onClick={onBack}>Lobby</button>
+                            <button className="logout-btn" onClick={() => {localStorage.removeItem('ailobby_lang'); window.location.reload();}}>Logout</button>
+                        </div>
+                    </div>
+
+                    {showWelcome && (
+                        <div className="modal-overlay" onClick={() => setShowWelcome(false)}>
+                            <div className="modal-card welcome-popup" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-body" style={{textAlign: 'center'}}>
+                                    <div className="popup-emoji">🔑</div>
+                                    <div className="popup-title">{t('welcomePopupTitle')}</div>
+                                    <div className="popup-phrase">{t('hotelPhrases')[Math.floor(Math.random() * t('hotelPhrases').length)]}</div>
+                                    <div className="popup-instructions">{t('welcomePopupMsg')}</div>
+                                    <button className="popup-close-btn" onClick={() => setShowWelcome(false)}>{t('closeBtn')}</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {showCelebration && (
+                        <div className="modal-overlay" onClick={() => setShowCelebration(false)}>
+                            <div className="modal-card celebration-popup" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-body" style={{textAlign: 'center'}}>
+                                    <div className="celebration-emoji">🥂</div>
+                                    <div className="celebration-title">{t('celebrationTitle')}</div>
+                                    <div className="celebration-phrase">{t('celebrationPhrases')[Math.floor(Math.random() * t('celebrationPhrases').length)]}</div>
+                                    <button className="celebration-btn" onClick={() => setShowCelebration(false)}>Cheers! 🍷</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {showAddUser && <AddUserModal onAdd={handleAddUser} onClose={() => setShowAddUser(false)} users={users} t={t} />}
+
+                    {confirmDelete && (
+                        <ConfirmDialog
+                            title={t('confirmDeleteUser')}
+                            message={t('confirmDeleteMsg')}
+                            onConfirm={() => handleDeleteUser(confirmDelete)}
+                            onCancel={() => setConfirmDelete(null)}
+                            emoji="🗑️"
+                        />
+                    )}
+
+                    <div className="backoffice-container">
+                        <div className="backoffice-title">{t('backOfficeTitle')}</div>
+
+                        <div className="backoffice-nav">
+                            <button className={`nav-btn ${activeNav === 'upload' ? 'active' : ''}`} onClick={() => setActiveNav('upload')}>{t('uploadPlatform')}</button>
+                            <button className={`nav-btn ${activeNav === 'guests' ? 'active' : ''}`} onClick={() => setActiveNav('guests')}>{t('guestRegistry')}</button>
+                            <button className={`nav-btn ${activeNav === 'rooms' ? 'active' : ''}`} onClick={() => setActiveNav('rooms')}>{t('roomDirectory')}</button>
+                            <button className={`nav-btn ${activeNav === 'concierge' ? 'active' : ''}`} onClick={() => setActiveNav('concierge')}>{t('aiConcierge')}</button>
+                        </div>
+
+                        {activeNav === 'upload' && (
+                            <div className="upload-section">
+                                <div className="upload-title">{t('uploadPlatform')}</div>
+                                <div className="steps-indicator">
+                                    {[1, 2, 3].map(step => (
+                                        <div
+                                            key={step}
+                                            className={`step-dot ${uploadStep === step ? 'active' : ''}`}
+                                            onClick={() => setUploadStep(step)}
+                                        ></div>
+                                    ))}
+                                </div>
+
+                                {uploadStep === 1 && (
+                                    <div className="upload-step active">
+                                        <div className="step-title">{t('step1Source')}</div>
+                                        <div className="upload-area" onClick={() => document.getElementById('file-input').click()}>
+                                            <div className="upload-icon">📁</div>
+                                            <div className="upload-text">{t('dragDrop')}</div>
+                                            <div className="upload-hint">{t('orClick')}</div>
+                                        </div>
+                                        <input
+                                            id="file-input"
+                                            type="file"
+                                            className="upload-input"
+                                            onChange={(e) => handleFileUpload(e.target.files[0])}
+                                        />
+                                        <div style={{margin: '20px 0', textAlign: 'center', color: 'var(--gold)'}}>— {t('orPasteUrl')} —</div>
+                                        <div className="url-input-group">
+                                            <input
+                                                type="text"
+                                                placeholder="https://example.com/api.json"
+                                                id="url-input"
+                                            />
+                                            <button type="button" onClick={() => {
+                                                const url = document.getElementById('url-input').value;
+                                                if (url) handleUrlPaste(url);
+                                            }}>
+                                                {t('pasteBtn')}
+                                            </button>
+                                        </div>
+                                        {uploadData.fileContent && <div style={{marginTop: '12px', color: 'var(--gold)', fontSize: '12px'}}>✓ File loaded: {uploadData.fileName || 'Content pasted'}</div>}
+                                        <div className="btn-group">
+                                            <button className="btn-secondary" onClick={() => setUploadStep(1)} disabled>{t('back')}</button>
+                                            <button className="btn-primary" onClick={handleNextStep}>{t('next')}</button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {uploadStep === 2 && (
+                                    <div className="upload-step active">
+                                        <div className="step-title">{t('step2Details')}</div>
+                                        <div className="form-row">
+                                            <div className="form-col">
+                                                <label>{t('platformName')}</label>
+                                                <input
+                                                    type="text"
+                                                    value={uploadData.name}
+                                                    onChange={(e) => setUploadData({...uploadData, name: e.target.value})}
+                                                    placeholder="My Awesome Platform"
+                                                />
+                                            </div>
+                                            <div className="form-col">
+                                                <label>{t('selectSection')}</label>
+                                                <select
+                                                    value={uploadData.section}
+                                                    onChange={(e) => setUploadData({...uploadData, section: e.target.value})}
+                                                >
+                                                    <option value="tools">Tools</option>
+                                                    <option value="analysis">Analysis</option>
+                                                    <option value="strategy">Strategy</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="form-row">
+                                            <div className="form-col">
+                                                <label>{t('uploadedByLabel')}</label>
+                                                <input type="text" value={uploadData.uploadedBy} disabled />
+                                            </div>
+                                        </div>
+                                        <div className="form-row full">
+                                            <div className="form-col">
+                                                <label>{t('descriptionLabel')}</label>
+                                                <textarea
+                                                    value={uploadData.description}
+                                                    onChange={(e) => setUploadData({...uploadData, description: e.target.value})}
+                                                    placeholder="Describe your platform..."
+                                                ></textarea>
+                                            </div>
+                                        </div>
+                                        <div className="form-row full">
+                                            <label style={{color: 'var(--gold)', fontWeight: '600'}}>{t('accessFor')}</label>
+                                            <div className="checkbox-group">
+                                                {['bellboy', 'concierge', 'guest'].map(role => (
+                                                    <div key={role} className="checkbox-item">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`role-${role}`}
+                                                            checked={uploadData.accessRoles.includes(role) || role === 'bellboy'}
+                                                            onChange={(e) => {
+                                                                if (role === 'bellboy') return;
+                                                                const roles = e.target.checked
+                                                                    ? [...uploadData.accessRoles, role]
+                                                                    : uploadData.accessRoles.filter(r => r !== role);
+                                                                setUploadData({...uploadData, accessRoles: roles});
+                                                            }}
+                                                            disabled={role === 'bellboy'}
+                                                        />
+                                                        <label htmlFor={`role-${role}`}>
+                                                            {role === 'bellboy' && t('bellboyRole')}
+                                                            {role === 'concierge' && t('conciergeRole')}
+                                                            {role === 'guest' && t('guestRole')}
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="btn-group">
+                                            <button className="btn-secondary" onClick={() => setUploadStep(1)}>{t('back')}</button>
+                                            <button className="btn-primary" onClick={handleNextStep}>{t('next')}</button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {uploadStep === 3 && (
+                                    <div className="upload-step active">
+                                        <div className="step-title">{t('step3Review')}</div>
+                                        <div className="review-card">
+                                            <div className="review-row">
+                                                <span className="review-label">{t('platformName')}</span>
+                                                <span className="review-value">{uploadData.name}</span>
+                                            </div>
+                                            <div className="review-row">
+                                                <span className="review-label">{t('selectSection')}</span>
+                                                <span className="review-value">{uploadData.section}</span>
+                                            </div>
+                                            <div className="review-row">
+                                                <span className="review-label">{t('uploadedByLabel')}</span>
+                                                <span className="review-value">{uploadData.uploadedBy}</span>
+                                            </div>
+                                            <div className="review-row">
+                                                <span className="review-label">{t('descriptionLabel')}</span>
+                                                <span className="review-value">{uploadData.description.substring(0, 50)}...</span>
+                                            </div>
+                                            <div className="review-row">
+                                                <span className="review-label">{t('scoreLabel')}</span>
+                                                <span className="review-value">{analyzeCodeComplexity(uploadData.fileContent)} (auto-calculated)</span>
+                                            </div>
+                                        </div>
+                                        <div className="btn-group">
+                                            <button className="btn-secondary" onClick={() => setUploadStep(2)}>{t('back')}</button>
+                                            <button className="btn-primary" onClick={handlePublish}>{t('publish')}</button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeNav === 'guests' && (
+                            <div className="table-container">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>{t('name')}</th>
+                                            <th>{t('email')}</th>
+                                            <th>{t('role')}</th>
+                                            <th>{t('access')}</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {users.map(user => (
+                                            <tr key={user.id}>
+                                                <td>{user.name}</td>
+                                                <td>{user.email}</td>
+                                                <td>
+                                                    <span className={`role-badge ${user.role}`}>
+                                                        {user.role === 'bellboy' && t('bellboyRole')}
+                                                        {user.role === 'concierge' && t('conciergeRole')}
+                                                        {user.role === 'guest' && t('guestRole')}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span style={{fontSize: '11px'}} title={`Tools: ${accessMatrix[user.role].tools}, Analysis: ${accessMatrix[user.role].analysis}, Strategy: ${accessMatrix[user.role].strategy}`}>
+                                                        ⚙️ Configured
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    {user.id !== currentUser.id && (
+                                                        <button className="del-btn" onClick={() => setConfirmDelete(user.id)}>Remove</button>
+                                                    )}
+                                                    {user.id === currentUser.id && <span style={{fontSize: '11px', color: 'var(--rose)'}}>Current</span>}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                <div style={{marginTop: '20px'}}>
+                                    <button className="btn-primary" onClick={() => setShowAddUser(true)}>{t('registerUser')}</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeNav === 'rooms' && (
+                            <div className="table-container">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>{t('roomNumber')}</th>
+                                            <th>{t('platformName')}</th>
+                                            <th>{t('section')}</th>
+                                            <th>{t('score')}</th>
+                                            <th>{t('uploadedByCol')}</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {platforms.map(platform => (
+                                            <tr key={platform.id}>
+                                                <td>#{platform.roomNumber}</td>
+                                                <td>{platform.name}</td>
+                                                <td>{platform.section}</td>
+                                                <td style={{color: 'var(--gold)', fontWeight: 'bold'}}>{platform.score}</td>
+                                                <td>{platform.uploadedBy}</td>
+                                                <td>
+                                                    <button
+                                                        className="del-btn"
+                                                        onClick={() => {
+                                                            const updated = platforms.filter(p => p.id !== platform.id);
+                                                            setPlatforms(updated);
+                                                            // Remove platform from Firebase
+                                                            db.ref('platforms/' + platform.id).remove();
+                                                        }}
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {activeNav === 'concierge' && (
+                            <div>
+                                <div className="tabs-container">
+                                    <button className={`tab-btn ${activeNav === 'concierge' ? 'active' : ''}`}>{t('discrepancies')}</button>
+                                    <button className={`tab-btn ${activeNav === 'concierge' ? 'active' : ''}`}>{t('overlapUnify')}</button>
+                                    <button className={`tab-btn ${activeNav === 'concierge' ? 'active' : ''}`}>{t('leaderboard')}</button>
+                                </div>
+
+                                <div style={{display: 'flex', gap: '24px'}}>
+                                    <div style={{flex: 1}}>
+                                        <h3 style={{color: 'var(--gold)', marginBottom: '16px'}}>{t('discrepancies')}</h3>
+                                        {discrepancies.length === 0 ? (
+                                            <div style={{color: 'var(--rose)', fontSize: '13px'}}>{t('noDiscrepancies')}</div>
+                                        ) : (
+                                            discrepancies.map((d, idx) => (
+                                                <div key={idx} style={{background: 'rgba(90, 26, 42, 0.3)', border: '1px solid var(--gold)', padding: '12px', marginBottom: '8px', borderRadius: '4px', fontSize: '12px'}}>
+                                                    <div style={{color: 'var(--gold)', fontWeight: 'bold'}}>{d.section}</div>
+                                                    <div style={{color: 'var(--cream)'}}>{d.platform1} ({d.score1}) vs {d.platform2} ({d.score2})</div>
+                                                    <div style={{color: 'var(--rose)'}}>Diff: {d.diff}</div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+
+                                    <div style={{flex: 1}}>
+                                        <h3 style={{color: 'var(--gold)', marginBottom: '16px'}}>{t('overlapUnify')}</h3>
+                                        {overlaps.length === 0 ? (
+                                            <div style={{color: 'var(--rose)', fontSize: '13px'}}>{t('noOverlaps')}</div>
+                                        ) : (
+                                            overlaps.map((o, idx) => (
+                                                <div key={idx} style={{background: 'rgba(90, 26, 42, 0.3)', border: '1px solid var(--gold)', padding: '12px', marginBottom: '8px', borderRadius: '4px', fontSize: '12px'}}>
+                                                    <div style={{color: 'var(--gold)', fontWeight: 'bold'}}>{o.section}</div>
+                                                    <div style={{color: 'var(--cream)'}}>{o.count} platforms in this section</div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+
+                                    <div style={{flex: 1}}>
+                                        <h3 style={{color: 'var(--gold)', marginBottom: '16px'}}>{t('leaderboard')}</h3>
+                                        {sortedByScore.map((platform, idx) => {
+                                            const medals = ['🥇', '🥈', '🥉'];
+                                            return (
+                                                <div key={platform.id} className="leaderboard-entry">
+                                                    <div className="leaderboard-rank">{medals[idx] || `${idx + 1}.`}</div>
+                                                    <div className="leaderboard-info">
+                                                        <div className="leaderboard-name">{platform.name}</div>
+                                                        <div className="leaderboard-platform">{platform.section}</div>
+                                                    </div>
+                                                    <div className="leaderboard-score">{platform.score}</div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {toastMsg && <Toast message={toastMsg} />}
+                </div>
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            const [lang, setLang] = useState(() => localStorage.getItem('ailobby_lang') || 'en');
+            const [currentUser, setCurrentUser] = useState(null);
+            const [platforms, setPlatforms] = useState([]);
+            const [users, setUsers] = useState(initialUsers);
+            const [showBackOffice, setShowBackOffice] = useState(false);
+            const [firebaseReady, setFirebaseReady] = useState(false);
+
+            // Firebase real-time listeners
+            useEffect(() => {
+                // Listen for platforms changes
+                const platformsRef = db.ref('platforms');
+                platformsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        const platformList = Object.values(data);
+                        setPlatforms(platformList);
+                    } else {
+                        setPlatforms([]);
+                    }
+                    setFirebaseReady(true);
+                });
+
+                // Listen for users changes
+                const usersRef = db.ref('users');
+                usersRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        const userList = Object.values(data);
+                        // Merge: keep initialUsers that aren't in Firebase, add all Firebase users
+                        const mergedUsers = [...initialUsers];
+                        userList.forEach(fbUser => {
+                            if (!mergedUsers.find(u => u.email === fbUser.email)) {
+                                mergedUsers.push(fbUser);
+                            }
+                        });
+                        setUsers(mergedUsers);
+                    }
+                });
+
+                // Cleanup listeners on unmount
+                return () => {
+                    platformsRef.off();
+                    usersRef.off();
+                };
+            }, []);
+
+            useEffect(() => {
+                localStorage.setItem('ailobby_lang', lang);
+            }, [lang]);
+
+            const setLangFunc = (newLang) => {
+                setLang(newLang);
+            };
+
+            const t = (key) => {
+                const keys = key.split('.');
+                let value = translations[lang];
+                for (let k of keys) {
+                    value = value[k];
+                }
+                return value;
+            };
+
+            if (!firebaseReady) {
+                return (
+                    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'linear-gradient(135deg, #5A1A2A 0%, #1A0A0E 100%)',color:'#D4A843',fontFamily:'Playfair Display',fontSize:'2rem'}}>
+                        <div style={{textAlign:'center'}}>
+                            <div style={{fontSize:'4rem',marginBottom:'20px'}}>🔔</div>
+                            <div>Loading AI Lobby...</div>
+                            <div style={{fontSize:'0.8rem',marginTop:'10px',color:'#C7959B'}}>Connecting to hotel network</div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (!currentUser) {
+                return <LoginScreen onLogin={setCurrentUser} t={t} lang={lang} setLang={setLangFunc} users={users} />;
+            }
+
+            if (showBackOffice && (currentUser.role === 'bellboy' || currentUser.role === 'concierge')) {
+                return (
+                    <BackOfficeScreen
+                        currentUser={currentUser}
+                        onBack={() => setShowBackOffice(false)}
+                        platforms={platforms}
+                        setPlatforms={setPlatforms}
+                        users={users}
+                        setUsers={setUsers}
+                        t={t}
+                    />
+                );
+            }
+
+            return (
+                <LobbyScreen
+                    currentUser={currentUser}
+                    onLogout={() => {
+                        setCurrentUser(null);
+                    }}
+                    platforms={platforms}
+                    onShowBackOffice={() => setShowBackOffice(true)}
+                    t={t}
+                    lang={lang}
+                    setLang={setLangFunc}
+                />
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
 </html>
