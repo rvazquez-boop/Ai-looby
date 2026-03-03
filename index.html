@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI LOBBY - The Grand Platform Hotel</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://www.gstatic.com/firebaseapps/8.10.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebaseapps/8.10.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <title>AI LOBBY - Platform Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Firebase FIRST -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- Then React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
         :root {
             --wine: #9B2335;
             --burgundy: #5A1A2A;
@@ -28,35 +27,80 @@
             --green: #2A5A3A;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--burgundy) 100%);
             color: var(--cream);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         #root {
             min-height: 100vh;
         }
 
-        /* ===== LOGIN SCREEN ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(212, 168, 67, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(212, 168, 67, 0.6); }
+        }
+
+        /* LOGIN SCREEN */
         .login-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
             padding: 20px;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .login-card {
-            background: rgba(250, 240, 228, 0.95);
+            background: linear-gradient(135deg, rgba(26, 10, 14, 0.95) 0%, rgba(90, 26, 42, 0.95) 100%);
+            border: 2px solid var(--gold);
             border-radius: 12px;
             padding: 60px 40px;
-            max-width: 420px;
+            max-width: 400px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            border: 2px solid var(--gold);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            animation: slideInUp 0.6s ease-out;
         }
 
         .login-header {
@@ -65,42 +109,24 @@
         }
 
         .login-bell {
-            font-size: 4rem;
+            font-size: 48px;
             margin-bottom: 20px;
-            display: block;
         }
 
         .login-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--wine);
-            margin-bottom: 8px;
-            font-weight: 700;
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
         }
 
         .login-subtitle {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
+            font-size: 16px;
             color: var(--rose);
-            margin-bottom: 20px;
-        }
-
-        .lang-toggle-top {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--wine);
-            color: var(--cream);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .lang-toggle-top:hover {
-            background: var(--burgundy);
+            font-style: italic;
         }
 
         .login-form {
@@ -109,265 +135,321 @@
             gap: 20px;
         }
 
-        .login-form input {
-            padding: 14px;
-            border: 2px solid var(--gold);
-            border-radius: 6px;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            background: rgba(255, 255, 255, 0.95);
-            color: var(--dark);
-            transition: all 0.3s ease;
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
 
-        .login-form input:focus {
-            outline: none;
-            border-color: var(--wine);
-            box-shadow: 0 0 0 3px rgba(155, 35, 53, 0.1);
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            margin-bottom: 8px;
         }
 
-        .login-form button {
-            padding: 14px;
-            background: var(--wine);
+        .form-input {
+            padding: 12px 16px;
+            border: 1px solid var(--gold);
+            background: rgba(250, 240, 228, 0.08);
             color: var(--cream);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--cream);
+            background: rgba(250, 240, 228, 0.12);
+            box-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: rgba(212, 168, 67, 0.5);
+        }
+
+        .login-button {
+            padding: 12px 24px;
+            background: var(--gold);
+            color: var(--dark);
             border: none;
             border-radius: 6px;
-            font-size: 1rem;
             font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
         }
 
-        .login-form button:hover {
-            background: var(--burgundy);
+        .login-button:hover {
+            background: var(--cream);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(212, 168, 67, 0.4);
+        }
+
+        .login-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .login-error {
-            color: #C41E3A;
-            font-size: 0.9rem;
-            margin-top: -10px;
+            color: #ff6b6b;
+            font-size: 13px;
             text-align: center;
+            padding: 12px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 4px;
         }
 
-        /* ===== LOBBY SCREEN ===== */
+        .login-lang-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        /* LOBBY SCREEN */
         .lobby-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
-            padding-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .lobby-header {
-            background: linear-gradient(135deg, var(--wine) 0%, var(--burgundy) 100%);
-            padding: 30px 20px;
-            border-bottom: 3px solid var(--gold);
+            background: linear-gradient(90deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
+            border-bottom: 2px solid var(--gold);
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .lobby-title-section {
+            display: flex;
+            align-items: center;
             gap: 20px;
         }
 
-        .lobby-title-block {
-            flex: 1;
-            min-width: 250px;
+        .lobby-bell {
+            font-size: 28px;
         }
 
-        .lobby-title {
+        .lobby-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lobby-main-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
-            margin: 0;
+            font-size: 32px;
             font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 2px;
         }
 
         .lobby-subtitle {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            color: var(--cream);
-            margin-top: 5px;
+            font-size: 14px;
+            color: var(--rose);
+            font-style: italic;
         }
 
-        .lobby-user-section {
+        .lobby-header-right {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 30px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: rgba(212, 168, 67, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(212, 168, 67, 0.3);
         }
 
         .user-avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--gold);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            background: var(--gold);
+            color: var(--dark);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            color: var(--dark);
-            font-size: 1rem;
+            font-size: 13px;
         }
 
-        .user-info {
-            text-align: right;
+        .user-details {
+            display: flex;
+            flex-direction: column;
         }
 
         .user-name {
             font-weight: 600;
-            color: var(--cream);
-            font-size: 0.95rem;
+            font-size: 13px;
         }
 
         .user-role {
-            font-size: 0.8rem;
+            font-size: 11px;
             color: var(--rose);
-            text-transform: capitalize;
+            text-transform: uppercase;
         }
 
-        .lobby-buttons {
-            display: flex;
-            gap: 10px;
+        .header-button {
+            padding: 10px 16px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .btn-secondary {
+        .header-button:hover {
             background: var(--gold);
             color: var(--dark);
+        }
+
+        .lang-toggle-btn {
+            background: none;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 168, 67, 0.3);
-        }
-
-        .btn-logout {
-            background: var(--burgundy);
-            color: var(--cream);
-            border: 2px solid var(--rose);
-        }
-
-        .btn-logout:hover {
-            background: var(--dark);
-        }
-
-        .lobby-nav {
-            display: flex;
-            gap: 0;
-            padding: 0 20px;
-            border-bottom: 2px solid rgba(212, 168, 67, 0.2);
-            margin-top: 20px;
-        }
-
-        .nav-tab {
-            padding: 15px 25px;
-            background: transparent;
-            border: none;
-            color: var(--cream);
-            cursor: pointer;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .nav-tab:hover {
             color: var(--gold);
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        .nav-tab.active {
-            color: var(--gold);
-            border-bottom-color: var(--gold);
+        .lang-toggle-btn:hover {
+            transform: scale(1.1);
         }
 
+        /* LOBBY CONTENT */
         .lobby-content {
-            padding: 30px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
 
-        .platform-grid {
+        .floor-tabs {
+            display: flex;
+            gap: 16px;
+            border-bottom: 2px solid rgba(212, 168, 67, 0.2);
+            padding-bottom: 16px;
+        }
+
+        .floor-tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .floor-tab:hover {
+            color: var(--gold);
+        }
+
+        .floor-tab.active {
+            color: var(--gold);
+        }
+
+        .floor-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+        }
+
+        .rooms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        .room-door {
-            background: rgba(250, 240, 228, 0.05);
-            border: 2px solid var(--gold);
+        .room-card {
+            background: rgba(26, 10, 14, 0.6);
+            border: 1px solid rgba(212, 168, 67, 0.2);
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             display: flex;
             flex-direction: column;
-            height: 100%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .room-door:hover {
-            transform: translateY(-8px);
-            border-color: var(--cream);
-            box-shadow: 0 20px 40px rgba(212, 168, 67, 0.2);
+        .room-card:hover {
+            transform: scale(1.03);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 168, 67, 0.4);
         }
 
         .room-image {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--wine) 100%);
-        }
-
-        .room-content {
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            position: relative;
         }
 
         .room-badge {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--dark);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            width: fit-content;
-        }
-
-        .room-number {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
-            color: var(--rose);
-            margin-bottom: 8px;
-        }
-
-        .room-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(155, 35, 53, 0.9);
             color: var(--gold);
-            margin-bottom: 10px;
-            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .room-description {
-            font-size: 0.9rem;
-            color: var(--cream);
-            line-height: 1.5;
+        .room-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             flex: 1;
         }
 
-        /* ===== EXPANDED ROOM MODAL ===== */
+        .room-number {
+            font-size: 12px;
+            color: var(--rose);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .room-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        /* EXPANDED ROOM MODAL */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -378,152 +460,131 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
             padding: 20px;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .modal-content {
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
-            border-radius: 12px;
+        .expanded-room {
+            background: linear-gradient(135deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
             border: 2px solid var(--gold);
+            border-radius: 12px;
             max-width: 600px;
             width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: slideInUp 0.4s ease-out;
         }
 
-        .modal-image {
+        .expanded-image {
             width: 100%;
             height: 300px;
             object-fit: cover;
         }
 
-        .modal-body {
-            padding: 30px;
+        .expanded-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .modal-badge {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--dark);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
-
-        .modal-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            color: var(--gold);
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .modal-description {
-            color: var(--cream);
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .modal-meta {
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 3px solid var(--gold);
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 4px;
-        }
-
-        .meta-item {
-            font-size: 0.9rem;
-            color: var(--rose);
-            margin-bottom: 8px;
-        }
-
-        .meta-label {
+        .expanded-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
             font-weight: 600;
+            color: var(--gold);
+        }
+
+        .expanded-description {
+            color: var(--cream);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .expanded-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 168, 67, 0.2);
+        }
+
+        .meta-chip {
+            padding: 6px 12px;
+            background: rgba(212, 168, 67, 0.1);
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
             color: var(--gold);
         }
 
         .access-badge {
-            display: inline-block;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            padding: 8px 16px;
+            background: var(--gold);
+            color: var(--dark);
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 600;
-            margin-bottom: 20px;
+            text-transform: uppercase;
+            width: fit-content;
         }
 
-        .access-full {
-            background: rgba(42, 90, 58, 0.3);
-            color: #90EE90;
-            border: 1px solid #90EE90;
-        }
-
-        .access-view {
-            background: rgba(212, 168, 67, 0.2);
-            color: var(--gold);
-            border: 1px solid var(--gold);
-        }
-
-        .access-none {
-            background: rgba(155, 35, 53, 0.2);
-            color: #FF6B6B;
-            border: 1px solid #FF6B6B;
-        }
-
-        .modal-buttons {
+        .expanded-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 168, 67, 0.2);
         }
 
-        .btn-enter {
+        .enter-button {
             flex: 1;
-            padding: 12px;
+            padding: 12px 24px;
             background: var(--gold);
             color: var(--dark);
             border: none;
             border-radius: 6px;
-            cursor: pointer;
             font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .btn-enter:hover {
+        .enter-button:hover {
+            background: var(--cream);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(212, 168, 67, 0.3);
         }
 
-        .btn-close {
-            padding: 12px 20px;
-            background: var(--burgundy);
-            color: var(--cream);
-            border: 2px solid var(--rose);
+        .close-button {
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
             border-radius: 6px;
-            cursor: pointer;
             font-weight: 600;
-            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .btn-close:hover {
-            background: var(--dark);
+        .close-button:hover {
+            background: var(--gold);
+            color: var(--dark);
         }
 
-        /* ===== BACK OFFICE ===== */
+        /* BACK OFFICE */
         .backoffice-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .backoffice-header {
-            max-width: 1400px;
-            margin: 0 auto 30px;
+            background: linear-gradient(90deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
+            border-bottom: 2px solid var(--gold);
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -531,179 +592,231 @@
 
         .backoffice-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
+            font-size: 28px;
             font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 2px;
         }
 
-        .backoffice-tabs {
+        .backoffice-controls {
             display: flex;
-            gap: 10px;
-            max-width: 1400px;
-            margin: 0 auto 30px;
-            border-bottom: 2px solid rgba(212, 168, 67, 0.2);
-        }
-
-        .bo-tab-btn {
-            padding: 12px 20px;
-            background: transparent;
-            border: none;
-            color: var(--cream);
-            cursor: pointer;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .bo-tab-btn:hover {
-            color: var(--gold);
-        }
-
-        .bo-tab-btn.active {
-            color: var(--gold);
-            border-bottom-color: var(--gold);
+            gap: 12px;
         }
 
         .backoffice-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(90, 26, 42, 0.3);
-            border: 2px solid var(--gold);
-            border-radius: 8px;
-            padding: 30px;
+            flex: 1;
+            display: flex;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--burgundy) 100%);
         }
 
-        /* ===== UPLOAD SECTION ===== */
-        .upload-wizard {
+        .backoffice-tabs {
+            width: 200px;
+            background: rgba(26, 10, 14, 0.9);
+            border-right: 2px solid rgba(212, 168, 67, 0.2);
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+        }
+
+        .backoffice-tab {
+            padding: 16px 20px;
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            border-left: 3px solid transparent;
+        }
+
+        .backoffice-tab:hover {
+            color: var(--gold);
+            background: rgba(212, 168, 67, 0.1);
+        }
+
+        .backoffice-tab.active {
+            color: var(--gold);
+            border-left-color: var(--gold);
+            background: rgba(212, 168, 67, 0.1);
+        }
+
+        .backoffice-panel {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        /* UPLOAD WIZARD */
+        .wizard-steps {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(212, 168, 67, 0.2);
         }
 
         .wizard-step {
-            display: none;
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
         }
 
-        .wizard-step.active {
-            display: block;
-        }
-
-        .step-indicator {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            justify-content: center;
-        }
-
-        .step-dot {
+        .step-number {
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            background: rgba(212, 168, 67, 0.1);
+            border: 2px solid rgba(212, 168, 67, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(212, 168, 67, 0.2);
-            color: var(--cream);
-            font-weight: 700;
-            border: 2px solid var(--gold);
+            margin: 0 auto 8px;
+            font-weight: 600;
+            color: var(--gold);
+            transition: all 0.3s;
         }
 
-        .step-dot.active {
+        .wizard-step.active .step-number {
             background: var(--gold);
             color: var(--dark);
+            border-color: var(--gold);
         }
 
-        .drag-drop-zone {
-            border: 2px dashed var(--gold);
-            border-radius: 8px;
-            padding: 60px 20px;
-            text-align: center;
-            background: rgba(212, 168, 67, 0.05);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .drag-drop-zone:hover {
-            background: rgba(212, 168, 67, 0.15);
-            border-color: var(--cream);
-        }
-
-        .drag-drop-zone.dragover {
-            background: rgba(212, 168, 67, 0.25);
-            border-color: var(--cream);
-        }
-
-        .drag-drop-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .drag-drop-text {
-            font-size: 1.1rem;
+        .wizard-step.completed .step-number {
+            background: var(--green);
+            border-color: var(--green);
             color: var(--cream);
-            margin-bottom: 10px;
         }
 
-        .drag-drop-hint {
-            font-size: 0.85rem;
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--cream);
+        }
+
+        /* FILE DROP ZONE */
+        .drop-zone {
+            border: 2px dashed rgba(212, 168, 67, 0.4);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(212, 168, 67, 0.05);
+        }
+
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: var(--gold);
+            background: rgba(212, 168, 67, 0.1);
+            box-shadow: 0 0 20px rgba(212, 168, 67, 0.2);
+        }
+
+        .drop-zone-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .drop-zone-text {
+            font-size: 14px;
+            color: var(--cream);
+            margin-bottom: 8px;
+        }
+
+        .drop-zone-hint {
+            font-size: 12px;
             color: var(--rose);
         }
 
-        .upload-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .file-input {
+            display: none;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .file-preview {
+            padding: 16px;
+            background: rgba(212, 168, 67, 0.1);
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            border-radius: 6px;
+            margin-top: 16px;
         }
 
-        .form-label {
+        .file-preview-name {
             font-weight: 600;
             color: var(--gold);
-            font-size: 0.95rem;
+            font-size: 14px;
         }
 
-        .form-input, .form-select, .form-textarea {
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid var(--gold);
-            border-radius: 6px;
+        .file-preview-size {
+            font-size: 12px;
+            color: var(--rose);
+            margin-top: 4px;
+        }
+
+        /* FORM ELEMENTS */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .textarea {
+            padding: 12px 16px;
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            background: rgba(250, 240, 228, 0.08);
             color: var(--cream);
+            border-radius: 6px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--cream);
-            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.2);
-        }
-
-        .form-textarea {
+            font-size: 14px;
             resize: vertical;
             min-height: 100px;
+            transition: all 0.3s;
         }
 
-        .form-select {
+        .textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(250, 240, 228, 0.12);
+            box-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
+        }
+
+        .select {
+            padding: 12px 16px;
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            background: rgba(250, 240, 228, 0.08);
+            color: var(--cream);
+            border-radius: 6px;
+            font-size: 14px;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .form-select option {
-            background: var(--dark);
+        .select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(250, 240, 228, 0.12);
+        }
+
+        .select option {
+            background: var(--burgundy);
             color: var(--cream);
         }
 
-        .checkboxes-group {
+        .checkbox-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 16px;
+            margin-top: 8px;
         }
 
         .checkbox-item {
@@ -721,167 +834,183 @@
 
         .checkbox-item label {
             cursor: pointer;
-            color: var(--cream);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .preview-box {
+        /* PREVIEW CARD */
+        .preview-card {
             background: rgba(212, 168, 67, 0.1);
             border: 2px solid var(--gold);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
         }
 
-        .preview-item {
+        .preview-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid rgba(212, 168, 67, 0.2);
-            color: var(--cream);
         }
 
-        .preview-item:last-child {
+        .preview-row:last-child {
             border-bottom: none;
         }
 
         .preview-label {
+            font-size: 12px;
             font-weight: 600;
+            text-transform: uppercase;
+            color: var(--rose);
+            letter-spacing: 0.5px;
+        }
+
+        .preview-value {
+            font-size: 14px;
             color: var(--gold);
+            font-weight: 500;
         }
 
-        /* ===== TABLES ===== */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
+        /* TABLES */
+        .data-table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 24px;
         }
 
-        th {
+        .data-table thead {
             background: rgba(212, 168, 67, 0.1);
             border-bottom: 2px solid var(--gold);
-            padding: 12px;
+        }
+
+        .data-table th {
+            padding: 12px 16px;
             text-align: left;
-            color: var(--gold);
+            font-size: 12px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gold);
         }
 
-        td {
+        .data-table td {
+            padding: 12px 16px;
             border-bottom: 1px solid rgba(212, 168, 67, 0.1);
-            padding: 12px;
-            color: var(--cream);
+            font-size: 13px;
         }
 
-        tr:hover {
-            background: rgba(212, 168, 67, 0.05);
+        .data-table tbody tr:nth-child(even) {
+            background: rgba(26, 10, 14, 0.5);
         }
 
-        .table-actions {
-            display: flex;
-            gap: 8px;
+        .data-table tbody tr:hover {
+            background: rgba(212, 168, 67, 0.08);
         }
 
-        .btn-small {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-delete {
-            background: #C41E3A;
-            color: var(--cream);
-        }
-
-        .btn-delete:hover {
-            background: #A01A2D;
-        }
-
-        /* ===== SCORE ANALYSIS ===== */
-        .score-table-container {
-            margin-top: 20px;
-        }
-
-        .score-value {
-            font-weight: 700;
+        /* SCORE COLUMN */
+        .score-cell {
             color: var(--gold);
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 14px;
         }
 
-        .score-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(212, 168, 67, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 6px;
-        }
-
-        .score-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold) 0%, var(--rose) 100%);
-        }
-
-        .discrepancy-alert {
-            background: rgba(196, 30, 58, 0.2);
-            border-left: 4px solid #C41E3A;
-            padding: 15px;
+        /* ACTION BUTTONS */
+        .action-button {
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid var(--rose);
+            color: var(--rose);
             border-radius: 4px;
-            margin-bottom: 15px;
-            color: #FF9999;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
         }
 
-        /* ===== CELEBRATION POPUP ===== */
-        .celebration-popup {
+        .action-button:hover {
+            background: var(--rose);
+            color: var(--dark);
+        }
+
+        .delete-button {
+            background: none;
+            border: none;
+            color: var(--rose);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delete-button:hover {
+            color: #ff6b6b;
+            transform: scale(1.2);
+        }
+
+        /* ADD USER FORM */
+        .add-user-section {
+            background: rgba(212, 168, 67, 0.1);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .add-user-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .add-user-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        /* CELEBRATION */
+        .celebration-overlay {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .celebration-card {
             background: linear-gradient(135deg, var(--wine) 0%, var(--burgundy) 100%);
             border: 2px solid var(--gold);
             border-radius: 12px;
-            padding: 40px;
+            padding: 60px 40px;
             text-align: center;
-            z-index: 2000;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-            animation: popupSlideIn 0.5s ease;
-        }
-
-        @keyframes popupSlideIn {
-            from {
-                transform: translate(-50%, -50%) scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
+            max-width: 400px;
+            animation: bounce 0.6s ease-out;
         }
 
         .celebration-emoji {
-            font-size: 4rem;
+            font-size: 64px;
             margin-bottom: 20px;
-            animation: bounce 0.6s ease-in-out infinite;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .celebration-text {
+        .celebration-message {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-size: 24px;
             color: var(--gold);
             font-weight: 700;
         }
 
-        /* ===== TOAST NOTIFICATION ===== */
+        /* TOAST */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -890,190 +1019,355 @@
             color: var(--dark);
             padding: 16px 24px;
             border-radius: 6px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
             font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            animation: slideInUp 0.3s ease-out;
             z-index: 1500;
-            animation: toastSlideIn 0.4s ease;
+            max-width: 300px;
         }
 
-        @keyframes toastSlideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* ===== CONFIRM DIALOG ===== */
-        .confirm-dialog {
+        /* DIALOG */
+        .dialog-overlay {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
-            border: 2px solid var(--wine);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .dialog-card {
+            background: linear-gradient(135deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
+            border: 2px solid var(--gold);
             border-radius: 12px;
             padding: 40px;
-            z-index: 1500;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
             max-width: 400px;
-            width: 90%;
-        }
-
-        .confirm-emoji {
-            font-size: 3rem;
+            width: 100%;
             text-align: center;
-            margin-bottom: 20px;
+            animation: slideInUp 0.3s ease-out;
         }
 
-        .confirm-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+        .dialog-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .dialog-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
             color: var(--gold);
-            margin-bottom: 15px;
-            text-align: center;
+            margin-bottom: 12px;
+            font-weight: 600;
         }
 
-        .confirm-message {
+        .dialog-message {
             color: var(--cream);
-            text-align: center;
-            margin-bottom: 25px;
+            font-size: 14px;
+            margin-bottom: 24px;
             line-height: 1.6;
         }
 
-        .confirm-buttons {
+        .dialog-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .btn-confirm {
+        .dialog-button {
             flex: 1;
-            padding: 12px;
-            background: #C41E3A;
-            color: var(--cream);
+            padding: 12px 24px;
             border: none;
             border-radius: 6px;
-            cursor: pointer;
             font-weight: 600;
-            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .btn-confirm:hover {
-            background: #A01A2D;
+        .dialog-confirm {
+            background: var(--wine);
+            color: var(--cream);
         }
 
-        .btn-cancel {
-            flex: 1;
-            padding: 12px;
+        .dialog-confirm:hover {
+            background: #bb2944;
+            transform: translateY(-2px);
+        }
+
+        .dialog-cancel {
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        .dialog-cancel:hover {
             background: var(--gold);
             color: var(--dark);
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
         }
 
-        .btn-cancel:hover {
-            opacity: 0.9;
-        }
-
-        /* ===== LOADING SCREEN ===== */
-        .loading-screen {
+        /* LOADING SCREEN */
+        .loading-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark) 100%);
-            color: var(--gold);
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.6s ease-out;
         }
 
-        .loading-content {
-            text-align: center;
-        }
-
-        .loading-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .loading-bell {
+            font-size: 64px;
+            animation: bounce 1.5s ease-in-out infinite;
         }
 
         .loading-text {
-            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--gold);
+            font-weight: 700;
         }
 
-        .loading-subtitle {
-            font-size: 0.8rem;
-            color: var(--rose);
-            margin-top: 10px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* ===== RESPONSIVE ===== */
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .lobby-header {
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 16px;
             }
 
-            .lobby-user-section {
+            .lobby-header-right {
                 width: 100%;
                 justify-content: space-between;
             }
 
-            .platform-grid {
+            .rooms-grid {
                 grid-template-columns: 1fr;
             }
 
-            .modal-overlay {
-                padding: 10px;
+            .add-user-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .backoffice-content {
+                flex-direction: column;
             }
 
             .backoffice-tabs {
-                flex-wrap: wrap;
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid rgba(212, 168, 67, 0.2);
+                flex-direction: row;
+                padding: 0;
             }
 
-            .step-indicator {
-                gap: 10px;
+            .backoffice-tab {
+                padding: 12px 16px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
             }
 
-            .step-dot {
-                width: 35px;
-                height: 35px;
-                font-size: 0.8rem;
+            .backoffice-tab.active {
+                border-left: none;
+                border-bottom-color: var(--gold);
             }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel">
-        const { useState, useEffect, useContext, createContext, useCallback } = React;
 
-        // ===== FIREBASE CONFIG =====
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRWcexkV2fPtam-RmSzO0fac6cLwAPmeM",
-            authDomain: "ai-lobby.firebaseapp.com",
-            databaseURL: "https://ai-lobby-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "ai-lobby",
-            storageBucket: "ai-lobby.firebasestorage.app",
-            messagingSenderId: "252396863420",
-            appId: "1:252396863420:web:db0624a69b8f75b73675b9"
+    <!-- Firebase initialization in regular script BEFORE Babel -->
+    <script>
+        window.firebaseReady = false;
+        window.firebaseError = null;
+
+        try {
+            var firebaseConfig = {
+                apiKey: "AIzaSyDRWcexkV2fPtam-RmSzO0fac6cLwAPmeM",
+                authDomain: "ai-lobby.firebaseapp.com",
+                databaseURL: "https://ai-lobby-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "ai-lobby",
+                storageBucket: "ai-lobby.firebasestorage.app",
+                messagingSenderId: "252396863420",
+                appId: "1:252396863420:web:db0624a69b8f75b73675b9"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            window.db = firebase.database();
+            window.firebaseReady = true;
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            window.firebaseError = error.message;
+            window.firebaseReady = true;
+        }
+
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error("Global error:", msg, error);
+            return false;
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+    </script>
 
-        // ===== INITIAL DATA =====
+    <!-- React and Babel scripts with main app -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const translations = {
+            en: {
+                login_title: "AI LOBBY",
+                login_subtitle: "The Grand Platform Hotel",
+                login_email: "Email",
+                login_submit: "Enter",
+                login_error: "User not found. Please check your email.",
+                lobby_subtitle: "The Grand Platform Hotel",
+                tools_floor: "Tools Floor",
+                analysis_floor: "Analysis Floor",
+                strategy_floor: "Strategy Floor",
+                room_number: "Room",
+                enter_room: "Enter Room",
+                close: "Close",
+                back_office: "Back Office",
+                logout: "Logout",
+                uploaded_by: "Uploaded by",
+                access_level: "Access Level",
+                full_access: "Full Access",
+                view_only: "View Only",
+                use_access: "Can Use",
+                no_access: "No Access",
+                back_to_lobby: "Back to Lobby",
+                upload_platform: "Upload Platform",
+                guest_registry: "Guest Registry",
+                score_analysis: "Score Analysis",
+                ai_discrepancies: "AI Discrepancies",
+                step1_upload: "Upload File",
+                step2_details: "Details",
+                step3_preview: "Preview",
+                drop_files: "Drop your code file here",
+                drop_hint: "or click to select",
+                file_name: "File Name",
+                file_size: "File Size",
+                platform_name: "Platform Name",
+                section: "Section",
+                tools: "Tools",
+                analysis: "Analysis",
+                strategy: "Strategy",
+                description: "Description",
+                url: "Platform URL",
+                access_roles: "Access Roles",
+                publish: "Publish",
+                add_user: "Add New User",
+                user_name: "Name",
+                user_email: "Email",
+                user_role: "Role",
+                user_role_bellboy: "Bellboy",
+                user_role_concierge: "Concierge",
+                user_role_guest: "Guest",
+                add: "Add",
+                platform: "Platform",
+                raw_score: "Raw Score",
+                normalized_score: "Normalized Score",
+                discrepancy_title: "High Score Discrepancy Detected",
+                discrepancy_msg: "Review and audit these platforms for consistency",
+                celebration_msg1: "Another masterpiece checked in!",
+                celebration_msg2: "The penthouse just got an upgrade!",
+                celebration_msg3: "Room service: excellence delivered!",
+                celebration_msg4: "Five stars and counting!",
+                celebration_msg5: "Excellence level: achieved!",
+                toast_published: "Platform published successfully!",
+                toast_user_added: "User added successfully!",
+                toast_user_deleted: "User deleted successfully!",
+                toast_platform_deleted: "Platform deleted successfully!",
+                confirm_delete_user: "Delete User",
+                confirm_delete_user_msg: "Are you sure you want to delete this user? This action cannot be undone.",
+                confirm_delete_platform: "Delete Platform",
+                confirm_delete_platform_msg: "Are you sure you want to delete this platform? This action cannot be undone.",
+                cannot_delete_yourself: "You cannot delete yourself.",
+            },
+            es: {
+                login_title: "AI LOBBY",
+                login_subtitle: "El Grand Platform Hotel",
+                login_email: "Email",
+                login_submit: "Entrar",
+                login_error: "Usuario no encontrado. Por favor, verifica tu email.",
+                lobby_subtitle: "El Grand Platform Hotel",
+                tools_floor: "Piso de Herramientas",
+                analysis_floor: "Piso de Análisis",
+                strategy_floor: "Piso de Estrategia",
+                room_number: "Habitación",
+                enter_room: "Entrar a la Habitación",
+                close: "Cerrar",
+                back_office: "Oficina Trasera",
+                logout: "Cerrar Sesión",
+                uploaded_by: "Subido por",
+                access_level: "Nivel de Acceso",
+                full_access: "Acceso Completo",
+                view_only: "Solo Visualización",
+                use_access: "Puede Usar",
+                no_access: "Sin Acceso",
+                back_to_lobby: "Volver al Lobby",
+                upload_platform: "Subir Plataforma",
+                guest_registry: "Registro de Huéspedes",
+                score_analysis: "Análisis de Puntuaciones",
+                ai_discrepancies: "Discrepancias IA",
+                step1_upload: "Subir Archivo",
+                step2_details: "Detalles",
+                step3_preview: "Previsualización",
+                drop_files: "Suelta tu archivo de código aquí",
+                drop_hint: "o haz clic para seleccionar",
+                file_name: "Nombre del Archivo",
+                file_size: "Tamaño del Archivo",
+                platform_name: "Nombre de la Plataforma",
+                section: "Sección",
+                tools: "Herramientas",
+                analysis: "Análisis",
+                strategy: "Estrategia",
+                description: "Descripción",
+                url: "URL de la Plataforma",
+                access_roles: "Roles de Acceso",
+                publish: "Publicar",
+                add_user: "Agregar Nuevo Usuario",
+                user_name: "Nombre",
+                user_email: "Email",
+                user_role: "Rol",
+                user_role_bellboy: "Botones",
+                user_role_concierge: "Conserje",
+                user_role_guest: "Huésped",
+                add: "Agregar",
+                platform: "Plataforma",
+                raw_score: "Puntuación Bruta",
+                normalized_score: "Puntuación Normalizada",
+                discrepancy_title: "Alta Discrepancia de Puntuación Detectada",
+                discrepancy_msg: "Revisa y audita estas plataformas para consistencia",
+                celebration_msg1: "¡Otra obra maestra registrada!",
+                celebration_msg2: "¡El penthouse acaba de mejorar!",
+                celebration_msg3: "Servicio a la habitación: ¡excelencia entregada!",
+                celebration_msg4: "¡Cinco estrellas y contando!",
+                celebration_msg5: "¡Nivel de excelencia: logrado!",
+                toast_published: "¡Plataforma publicada exitosamente!",
+                toast_user_added: "¡Usuario agregado exitosamente!",
+                toast_user_deleted: "¡Usuario eliminado exitosamente!",
+                toast_platform_deleted: "¡Plataforma eliminada exitosamente!",
+                confirm_delete_user: "Eliminar Usuario",
+                confirm_delete_user_msg: "¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.",
+                confirm_delete_platform: "Eliminar Plataforma",
+                confirm_delete_platform_msg: "¿Estás seguro de que deseas eliminar esta plataforma? Esta acción no se puede deshacer.",
+                cannot_delete_yourself: "No puedes eliminarte a ti mismo.",
+            }
+        };
+
+        function t(key, lang) {
+            return translations[lang]?.[key] || translations.en[key] || key;
+        }
+
         const initialUsers = [
             { id: 1, name: "Rafa Vázquez", email: "r.vazquez@sesametime.com", role: "bellboy", avatar: "RV" },
             { id: 2, name: "Carlos Méndez", email: "c.mendez@sesametime.com", role: "concierge", avatar: "CM" },
@@ -1125,413 +1419,294 @@
             ],
         };
 
-        const getPlatformImage = (platform, section) => {
+        function getPlatformImage(platform, section) {
             const images = hotelImages[section] || hotelImages.tools;
             const seed = (platform.name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) + (platform.id || 0);
             return images[seed % images.length];
-        };
+        }
 
-        const translations = {
-            en: {
-                aiLobby: 'AI LOBBY',
-                subtitle: 'The Grand Platform Hotel',
-                emailPlaceholder: 'Enter your email',
-                enterButton: 'Enter Lobby',
-                languageEnglish: 'EN',
-                languageSpanish: 'ES',
-                userNotFound: 'User not found',
-                logout: 'Logout',
-                backOffice: 'Back Office',
-                toolsFloor: 'Tools Floor',
-                analysisFloor: 'Analysis Floor',
-                strategyFloor: 'Strategy Floor',
-                uploadPlatform: 'Upload Platform',
-                guestRegistry: 'Guest Registry',
-                scoreAnalysis: 'Score Analysis',
-                discrepancyDetector: 'AI Discrepancy Detector',
-                step1: 'Upload File',
-                step2: 'Details',
-                step3: 'Preview',
-                dragDropFile: 'Drag & drop your file here',
-                orClickToSelect: 'or click to select',
-                platformName: 'Platform Name',
-                platformSection: 'Section',
-                platformDescription: 'Description',
-                platformURL: 'Platform URL',
-                allowedRoles: 'Allowed Roles',
-                roleGuest: 'Guest',
-                roleConcierge: 'Concierge',
-                roleBellboy: 'Bellboy',
-                publish: 'Publish Platform',
-                cancel: 'Cancel',
-                next: 'Next',
-                back: 'Back',
-                addUser: 'Add User',
-                userName: 'Name',
-                userEmail: 'Email',
-                userRole: 'Role',
-                delete: 'Delete',
-                noUsersYet: 'No users yet',
-                platformName: 'Platform',
-                platformScore: 'Score',
-                uploadedBy: 'Uploaded by',
-                fileSize: 'File Size',
-                uploadedDate: 'Uploaded Date',
-                accessFull: 'Full Access',
-                accessView: 'View Only',
-                accessUse: 'Use Only',
-                accessNoAccess: 'No Access',
-                enterRoom: 'Enter Room',
-                close: 'Close',
-                nameField: 'Name',
-                emailField: 'Email',
-                roleField: 'Role',
-                deleteConfirm: 'Delete User',
-                deleteMessage: 'Are you sure you want to delete this user? This action cannot be undone.',
-                confirm: 'Delete',
-                platformAdded: 'Platform published successfully!',
-                userAdded: 'User added successfully!',
-                userDeleted: 'User deleted successfully!',
-                celebration1: 'Excellent work, friend!',
-                celebration2: 'What a magnificent platform!',
-                celebration3: 'Simply magnificent!',
-                celebration4: 'Stunning achievement!',
-                celebration5: 'Your platform is exquisite!',
-                discrepancyTitle: 'Score Discrepancy Alert',
-                discrepancyMsg: 'Large gaps detected in this category',
-                loadingMessage: 'Loading AI Lobby...',
-                connectingNetwork: 'Connecting to hotel network',
-            },
-            es: {
-                aiLobby: 'VESTÍBULO IA',
-                subtitle: 'El Gran Hotel de Plataformas',
-                emailPlaceholder: 'Ingrese su correo',
-                enterButton: 'Entrar al Vestíbulo',
-                languageEnglish: 'EN',
-                languageSpanish: 'ES',
-                userNotFound: 'Usuario no encontrado',
-                logout: 'Cerrar Sesión',
-                backOffice: 'Oficina Administrativa',
-                toolsFloor: 'Piso de Herramientas',
-                analysisFloor: 'Piso de Análisis',
-                strategyFloor: 'Piso de Estrategia',
-                uploadPlatform: 'Subir Plataforma',
-                guestRegistry: 'Registro de Huéspedes',
-                scoreAnalysis: 'Análisis de Puntuación',
-                discrepancyDetector: 'Detector IA de Discrepancias',
-                step1: 'Cargar Archivo',
-                step2: 'Detalles',
-                step3: 'Vista Previa',
-                dragDropFile: 'Arrastre y suelte su archivo aquí',
-                orClickToSelect: 'o haga clic para seleccionar',
-                platformName: 'Nombre de Plataforma',
-                platformSection: 'Sección',
-                platformDescription: 'Descripción',
-                platformURL: 'URL de Plataforma',
-                allowedRoles: 'Roles Permitidos',
-                roleGuest: 'Huésped',
-                roleConcierge: 'Conserje',
-                roleBellboy: 'Botones',
-                publish: 'Publicar Plataforma',
-                cancel: 'Cancelar',
-                next: 'Siguiente',
-                back: 'Atrás',
-                addUser: 'Agregar Usuario',
-                userName: 'Nombre',
-                userEmail: 'Correo',
-                userRole: 'Rol',
-                delete: 'Eliminar',
-                noUsersYet: 'Sin usuarios aún',
-                platformName: 'Plataforma',
-                platformScore: 'Puntuación',
-                uploadedBy: 'Subido por',
-                fileSize: 'Tamaño de Archivo',
-                uploadedDate: 'Fecha de Carga',
-                accessFull: 'Acceso Completo',
-                accessView: 'Solo Lectura',
-                accessUse: 'Solo Uso',
-                accessNoAccess: 'Sin Acceso',
-                enterRoom: 'Entrar a la Sala',
-                close: 'Cerrar',
-                nameField: 'Nombre',
-                emailField: 'Correo',
-                roleField: 'Rol',
-                deleteConfirm: 'Eliminar Usuario',
-                deleteMessage: 'Está seguro que desea eliminar este usuario? Esta acción no se puede deshacer.',
-                confirm: 'Eliminar',
-                platformAdded: '¡Plataforma publicada exitosamente!',
-                userAdded: '¡Usuario agregado exitosamente!',
-                userDeleted: '¡Usuario eliminado exitosamente!',
-                celebration1: '¡Excelente trabajo, amigo!',
-                celebration2: '¡Qué plataforma magnífica!',
-                celebration3: '¡Simplemente magnífico!',
-                celebration4: '¡Logro impresionante!',
-                celebration5: '¡Tu plataforma es exquisita!',
-                discrepancyTitle: 'Alerta de Discrepancia de Puntuación',
-                discrepancyMsg: 'Brechas grandes detectadas en esta categoría',
-                loadingMessage: 'Cargando Vestíbulo IA...',
-                connectingNetwork: 'Conectando a la red del hotel',
-            }
-        };
-
-        // ===== LANGUAGE CONTEXT =====
-        const LangContext = createContext();
-        const useLang = () => useContext(LangContext);
-        const useT = () => {
-            const { lang } = useLang();
-            return (key) => translations[lang][key] || key;
-        };
-
-        // ===== CODE COMPLEXITY ANALYSIS =====
-        const analyzeCodeComplexity = (fileContent) => {
+        function analyzeCodeComplexity(fileContent) {
+            if (!fileContent) return 1;
             let score = 0;
-            const patterns = {
-                functions: /function\s+\w+|\w+\s*:\s*function|const\s+\w+\s*=\s*\(|const\s+\w+\s*=\s*async/gi,
-                htmlTags: /<[^>]+>/g,
-                cssRules: /[{};]/g,
-                imports: /import\s+|require\s*\(/gi,
-                conditionals: /if\s*\(|else|switch\s*\(|ternary/gi,
-                loops: /for\s*\(|while\s*\(|forEach|map\s*\(|reduce\s*\(/gi,
-                hooks: /useState|useEffect|useContext|useCallback|useRef/gi,
-                apiCalls: /fetch\s*\(|axios\s*\(|\.get\s*\(|\.post\s*\(/gi,
-                eventHandlers: /onClick|onChange|onSubmit|addEventListener/gi,
-                comments: /\/\/|\/\*|\*\//g,
-                errorHandling: /try|catch|throw|error|Error/gi,
-            };
-            score += (fileContent.match(patterns.functions) || []).length * 5;
-            score += (fileContent.match(patterns.htmlTags) || []).length * 2;
-            score += (fileContent.match(patterns.cssRules) || []).length * 1;
-            score += (fileContent.match(patterns.imports) || []).length * 3;
-            score += (fileContent.match(patterns.conditionals) || []).length * 4;
-            score += (fileContent.match(patterns.loops) || []).length * 4;
-            score += (fileContent.match(patterns.hooks) || []).length * 6;
-            score += (fileContent.match(patterns.apiCalls) || []).length * 7;
-            score += (fileContent.match(patterns.eventHandlers) || []).length * 3;
-            score += (fileContent.match(patterns.comments) || []).length * 1;
-            score += (fileContent.match(patterns.errorHandling) || []).length * 2;
-            score += Math.ceil(fileContent.length / 1000) * 2;
-            return Math.ceil(score);
-        };
+            const lines = fileContent.split('\n').length;
+            score += Math.min(lines / 10, 30);
+            const functions = (fileContent.match(/function\s|=>\s*\{|\.prototype\./g) || []).length;
+            score += functions * 2;
+            const htmlTags = (fileContent.match(/<[a-zA-Z][^>]*>/g) || []).length;
+            score += Math.min(htmlTags / 5, 15);
+            const cssRules = (fileContent.match(/[{][^}]*[:][^}]*[}]/g) || []).length;
+            score += Math.min(cssRules, 10);
+            const imports = (fileContent.match(/import\s|require\(/g) || []).length;
+            score += imports * 1.5;
+            const conditionals = (fileContent.match(/if\s*\(|switch\s*\(|\?\s*.*:/g) || []).length;
+            score += conditionals * 1.5;
+            const loops = (fileContent.match(/for\s*\(|while\s*\(|\.map\(|\.forEach\(|\.filter\(|\.reduce\(/g) || []).length;
+            score += loops * 2;
+            const hooks = (fileContent.match(/use[A-Z]\w*\(/g) || []).length;
+            score += hooks * 2;
+            const apiCalls = (fileContent.match(/fetch\(|axios\.|\.ajax\(|XMLHttpRequest/g) || []).length;
+            score += apiCalls * 3;
+            const events = (fileContent.match(/addEventListener|on[A-Z]\w+\s*=/g) || []).length;
+            score += events * 1.5;
+            const comments = (fileContent.match(/\/\/.*|\/\*[\s\S]*?\*\//g) || []).length;
+            score += Math.min(comments / 5, 5);
+            const errorHandling = (fileContent.match(/try\s*{|catch\s*\(|\.catch\(/g) || []).length;
+            score += errorHandling * 2;
+            score += Math.min(fileContent.length / 1000, 20);
+            return Math.max(1, Math.ceil(score));
+        }
 
-        const calcScores = (platforms) => {
+        function calcScores(platforms) {
             if (platforms.length === 0) return platforms;
-            const rawScores = platforms.map(p => ({
+            const maxRaw = Math.max(...platforms.map(p => p.rawScore || 1));
+            return platforms.map(p => ({
                 ...p,
-                rawScore: analyzeCodeComplexity(p.fileContent || '')
+                score: Math.max(1, Math.round(((p.rawScore || 1) / maxRaw) * 100))
             }));
-            const maxRaw = Math.max(...rawScores.map(p => p.rawScore));
-            return rawScores.map(p => ({
-                ...p,
-                score: maxRaw > 0 ? Math.ceil((p.rawScore / maxRaw) * 100) : 50
-            }));
-        };
+        }
 
-        // ===== COMPONENTS =====
-        const LoginScreen = ({ onLogin, users }) => {
+        function Toast({ message, lang }) {
+            return <div className="toast">{t(message, lang)}</div>;
+        }
+
+        function Celebration({ lang }) {
+            const phrases = [
+                'celebration_msg1',
+                'celebration_msg2',
+                'celebration_msg3',
+                'celebration_msg4',
+                'celebration_msg5',
+            ];
+            const msg = phrases[Math.floor(Math.random() * phrases.length)];
+
+            useEffect(() => {
+                const timer = setTimeout(() => {
+                    window.location.reload();
+                }, 6000);
+                return () => clearTimeout(timer);
+            }, []);
+
+            return (
+                <div className="celebration-overlay">
+                    <div className="celebration-card">
+                        <div className="celebration-emoji">🥂</div>
+                        <div className="celebration-message">{t(msg, lang)}</div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ConfirmDialog({ title, message, onConfirm, onCancel, lang }) {
+            return (
+                <div className="dialog-overlay">
+                    <div className="dialog-card">
+                        <div className="dialog-emoji">⚠️</div>
+                        <div className="dialog-title">{t(title, lang)}</div>
+                        <div className="dialog-message">{t(message, lang)}</div>
+                        <div className="dialog-buttons">
+                            <button className="dialog-button dialog-confirm" onClick={onConfirm}>
+                                {t('confirm_delete_user', lang)}
+                            </button>
+                            <button className="dialog-button dialog-cancel" onClick={onCancel}>
+                                {t('close', lang)}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function LoginScreen({ onLogin, t: tFunc, lang, setLang, users }) {
             const [email, setEmail] = useState('');
             const [error, setError] = useState('');
-            const { lang, setLang } = useLang();
-            const t = useT();
 
-            const handleLogin = () => {
-                const trimmedEmail = email.trim().toLowerCase();
-                const user = users.find(u => u.email.toLowerCase() === trimmedEmail);
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const user = users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
                 if (user) {
                     onLogin(user);
                 } else {
-                    setError(t('userNotFound'));
+                    setError('login_error');
                 }
             };
 
             return (
                 <div className="login-container">
-                    <button
-                        className="lang-toggle-top"
-                        onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
-                    >
-                        {lang === 'en' ? t('languageSpanish') : t('languageEnglish')}
+                    <button className="lang-toggle-btn" onClick={() => setLang(lang === 'en' ? 'es' : 'en')}>
+                        {lang === 'en' ? '🇪🇸' : '🇬🇧'}
                     </button>
                     <div className="login-card">
                         <div className="login-header">
-                            <span className="login-bell">🔔</span>
-                            <h1 className="login-title">{t('aiLobby')}</h1>
-                            <p className="login-subtitle">{t('subtitle')}</p>
+                            <div className="login-bell">🔔</div>
+                            <div className="login-title">{tFunc('login_title', lang)}</div>
+                            <div className="login-subtitle">{tFunc('login_subtitle', lang)}</div>
                         </div>
-                        <div className="login-form">
-                            <input
-                                type="email"
-                                placeholder={t('emailPlaceholder')}
-                                value={email}
-                                onChange={(e) => {
-                                    setEmail(e.target.value);
-                                    setError('');
-                                }}
-                                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                            />
-                            <button onClick={handleLogin}>{t('enterButton')}</button>
-                            {error && <div className="login-error">{error}</div>}
-                        </div>
+                        <form onSubmit={handleSubmit} className="login-form">
+                            <div className="form-group">
+                                <label className="form-label">{tFunc('login_email', lang)}</label>
+                                <input
+                                    type="email"
+                                    className="form-input"
+                                    placeholder="example@sesametime.com"
+                                    value={email}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+                                        setError('');
+                                    }}
+                                />
+                            </div>
+                            {error && <div className="login-error">{tFunc(error, lang)}</div>}
+                            <button type="submit" className="login-button">
+                                {tFunc('login_submit', lang)}
+                            </button>
+                        </form>
                     </div>
                 </div>
             );
-        };
+        }
 
-        const ConfirmDialog = ({ title, message, emoji, onConfirm, onCancel }) => {
-            const t = useT();
-            return (
-                <div className="modal-overlay" onClick={onCancel}>
-                    <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
-                        <div className="confirm-emoji">{emoji}</div>
-                        <h2 className="confirm-title">{title}</h2>
-                        <p className="confirm-message">{message}</p>
-                        <div className="confirm-buttons">
-                            <button className="btn-confirm" onClick={onConfirm}>{t('confirm')}</button>
-                            <button className="btn-cancel" onClick={onCancel}>{t('cancel')}</button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const Toast = ({ message }) => (
-            <div className="toast">{message}</div>
-        );
-
-        const CelebrationPopup = ({ phrase, onDismiss }) => {
-            useEffect(() => {
-                const timer = setTimeout(onDismiss, 6000);
-                return () => clearTimeout(timer);
-            }, [onDismiss]);
-
-            return (
-                <div className="celebration-popup">
-                    <div className="celebration-emoji">🥂</div>
-                    <div className="celebration-text">{phrase}</div>
-                </div>
-            );
-        };
-
-        const ExpandedRoom = ({ platform, section, onClose, currentUser }) => {
-            const t = useT();
-            const access = accessMatrix[currentUser.role][section] || 'no-access';
+        function ExpandedRoom({ platform, section, onClose, lang, t: tFunc, currentUser }) {
             const image = getPlatformImage(platform, section);
+            const access = accessMatrix[currentUser.role];
+            const sectionKey = section === 'tools' ? 'tools_floor' : section === 'analysis' ? 'analysis_floor' : 'strategy_floor';
 
-            let accessLabel = t('accessNoAccess');
-            let accessClass = 'access-none';
-            if (access === 'full') {
-                accessLabel = t('accessFull');
-                accessClass = 'access-full';
-            } else if (access === 'view-only' || access === 'use') {
-                accessLabel = t('accessView');
-                accessClass = 'access-view';
-            }
+            let accessText = 'full_access';
+            if (access[section] === 'view-only') accessText = 'view_only';
+            else if (access[section] === 'use') accessText = 'use_access';
+            else if (access[section] === 'no-access') accessText = 'no_access';
 
             return (
                 <div className="modal-overlay" onClick={onClose}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <img src={image} alt={platform.name} className="modal-image" />
-                        <div className="modal-body">
-                            <div className="modal-badge">{section}</div>
-                            <h2 className="modal-title">{platform.name}</h2>
-                            <p className="modal-description">{platform.description}</p>
-                            <div className="modal-meta">
-                                <div className="meta-item"><span className="meta-label">{t('uploadedBy')}:</span> {platform.uploadedBy}</div>
-                                <div className="meta-item"><span className="meta-label">{t('uploadedDate')}:</span> {new Date(platform.uploadedDate).toLocaleDateString()}</div>
-                                <div className="meta-item"><span className="meta-label">{t('fileSize')}:</span> {platform.fileSize}</div>
+                    <div className="expanded-room" onClick={(e) => e.stopPropagation()}>
+                        <img src={image} alt={platform.name} className="expanded-image" />
+                        <div className="expanded-content">
+                            <h2 className="expanded-title">{platform.name}</h2>
+                            <p className="expanded-description">{platform.description}</p>
+
+                            <div className="expanded-meta">
+                                <div className="meta-chip">
+                                    {tFunc('uploaded_by', lang)}: {platform.uploadedBy || 'Unknown'}
+                                </div>
+                                <div className="meta-chip">
+                                    {new Date(platform.createdAt || 0).toLocaleDateString()}
+                                </div>
+                                <div className="meta-chip">
+                                    {platform.fileSize || '—'}
+                                </div>
                             </div>
-                            <div className={`access-badge ${accessClass}`}>{accessLabel}</div>
-                            <div className="modal-buttons">
-                                <a href={platform.url} target="_blank" rel="noopener noreferrer" className="btn-enter" style={{textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>{t('enterRoom')}</a>
-                                <button className="btn-close" onClick={onClose}>{t('close')}</button>
+
+                            <div className="access-badge">{tFunc(accessText, lang)}</div>
+
+                            <div className="expanded-buttons">
+                                <a href={platform.url} target="_blank" rel="noopener noreferrer" className="enter-button">
+                                    {tFunc('enter_room', lang)}
+                                </a>
+                                <button className="close-button" onClick={onClose}>
+                                    {tFunc('close', lang)}
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             );
-        };
+        }
 
-        const RoomDoor = ({ platform, section, onClick }) => {
-            const image = getPlatformImage(platform, section);
-            return (
-                <div className="room-door" onClick={onClick}>
-                    <img src={image} alt={platform.name} className="room-image" />
-                    <div className="room-content">
-                        <span className="room-badge">{section}</span>
-                        <div className="room-number">Room {platform.id}</div>
-                        <h3 className="room-name">{platform.name}</h3>
-                        <p className="room-description">{platform.description}</p>
-                    </div>
-                </div>
-            );
-        };
-
-        const LobbyScreen = ({ currentUser, onLogout, platforms, onShowBackOffice }) => {
-            const t = useT();
+        function Lobby({ currentUser, platforms, lang, setLang, onLogout, onBackOffice, t: tFunc, users }) {
             const [activeSection, setActiveSection] = useState('tools');
             const [expandedRoom, setExpandedRoom] = useState(null);
-            const { lang, setLang } = useLang();
-
-            const sections = {
-                tools: t('toolsFloor'),
-                analysis: t('analysisFloor'),
-                strategy: t('strategyFloor'),
-            };
 
             const sectionPlatforms = platforms.filter(p => p.section === activeSection);
 
             return (
                 <div className="lobby-container">
                     <div className="lobby-header">
-                        <div className="lobby-title-block">
-                            <h1 className="lobby-title">{t('aiLobby')}</h1>
-                            <p className="lobby-subtitle">{t('subtitle')}</p>
-                        </div>
-                        <div className="lobby-user-section">
-                            <div>
-                                <div className="user-avatar">{currentUser.avatar}</div>
-                            </div>
-                            <div className="user-info">
-                                <div className="user-name">{currentUser.name}</div>
-                                <div className="user-role">{currentUser.role}</div>
-                            </div>
-                            <div className="lobby-buttons">
-                                {accessMatrix[currentUser.role].config && (
-                                    <button className="btn-secondary" onClick={onShowBackOffice}>{t('backOffice')}</button>
-                                )}
-                                <button className="btn-secondary btn-logout" onClick={onLogout}>{t('logout')}</button>
-                                <button
-                                    className="btn-secondary"
-                                    onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
-                                >
-                                    {lang === 'en' ? t('languageSpanish') : t('languageEnglish')}
-                                </button>
+                        <div className="lobby-title-section">
+                            <div className="lobby-bell">🔔</div>
+                            <div className="lobby-titles">
+                                <div className="lobby-main-title">AI LOBBY</div>
+                                <div className="lobby-subtitle">{tFunc('lobby_subtitle', lang)}</div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="lobby-nav">
-                        {Object.entries(sections).map(([key, label]) => (
-                            <button
-                                key={key}
-                                className={`nav-tab ${activeSection === key ? 'active' : ''}`}
-                                onClick={() => setActiveSection(key)}
-                            >
-                                {label}
+                        <div className="lobby-header-right">
+                            <div className="user-info">
+                                <div className="user-avatar">{currentUser.avatar}</div>
+                                <div className="user-details">
+                                    <div className="user-name">{currentUser.name}</div>
+                                    <div className="user-role">{tFunc(`user_role_${currentUser.role}`, lang)}</div>
+                                </div>
+                            </div>
+
+                            {accessMatrix[currentUser.role].config && (
+                                <button className="header-button" onClick={onBackOffice}>
+                                    {tFunc('back_office', lang)}
+                                </button>
+                            )}
+
+                            <button className="lang-toggle-btn" onClick={() => setLang(lang === 'en' ? 'es' : 'en')}>
+                                {lang === 'en' ? '🇪🇸' : '🇬🇧'}
                             </button>
-                        ))}
+
+                            <button className="header-button" onClick={onLogout}>
+                                {tFunc('logout', lang)}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="lobby-content">
-                        <div className="platform-grid">
-                            {sectionPlatforms.map(platform => (
-                                <RoomDoor
+                        <div className="floor-tabs">
+                            <button
+                                className={`floor-tab ${activeSection === 'tools' ? 'active' : ''}`}
+                                onClick={() => setActiveSection('tools')}
+                            >
+                                🔧 {tFunc('tools_floor', lang)}
+                            </button>
+                            <button
+                                className={`floor-tab ${activeSection === 'analysis' ? 'active' : ''}`}
+                                onClick={() => setActiveSection('analysis')}
+                            >
+                                📊 {tFunc('analysis_floor', lang)}
+                            </button>
+                            <button
+                                className={`floor-tab ${activeSection === 'strategy' ? 'active' : ''}`}
+                                onClick={() => setActiveSection('strategy')}
+                            >
+                                🎯 {tFunc('strategy_floor', lang)}
+                            </button>
+                        </div>
+
+                        <div className="rooms-grid">
+                            {sectionPlatforms.map((platform, idx) => (
+                                <div
                                     key={platform.id}
-                                    platform={platform}
-                                    section={activeSection}
+                                    className="room-card"
                                     onClick={() => setExpandedRoom(platform)}
-                                />
+                                >
+                                    <div style={{ position: 'relative', height: '180px' }}>
+                                        <img
+                                            src={getPlatformImage(platform, activeSection)}
+                                            alt={platform.name}
+                                            className="room-image"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                        <div className="room-badge">{activeSection.toUpperCase()}</div>
+                                    </div>
+                                    <div className="room-info">
+                                        <div className="room-number">
+                                            {tFunc('room_number', lang)} #{idx + 1}
+                                        </div>
+                                        <div className="room-name">{platform.name}</div>
+                                    </div>
+                                </div>
                             ))}
                         </div>
+
+                        {sectionPlatforms.length === 0 && (
+                            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--rose)' }}>
+                                <div style={{ fontSize: '48px', marginBottom: '20px' }}>🏨</div>
+                                <div>No platforms available in this section yet.</div>
+                            </div>
+                        )}
                     </div>
 
                     {expandedRoom && (
@@ -1539,497 +1714,679 @@
                             platform={expandedRoom}
                             section={activeSection}
                             onClose={() => setExpandedRoom(null)}
+                            lang={lang}
+                            t={tFunc}
                             currentUser={currentUser}
                         />
                     )}
                 </div>
             );
-        };
+        }
 
-        const UploadPlatformTab = ({ currentUser, onPlatformAdded }) => {
-            const t = useT();
-            const [step, setStep] = useState(1);
-            const [fileContent, setFileContent] = useState('');
-            const [fileName, setFileName] = useState('');
-            const [formData, setFormData] = useState({
+        function BackOffice({ currentUser, platforms, users, lang, setLang, onBack, onLogout, t: tFunc }) {
+            const [activeTab, setActiveTab] = useState('upload');
+            const [uploadStep, setUploadStep] = useState(1);
+            const [uploadFile, setUploadFile] = useState(null);
+            const [uploadData, setUploadData] = useState({
                 name: '',
                 section: 'tools',
                 description: '',
                 url: '',
-                roles: { guest: false, concierge: true, bellboy: true }
+                accessRoles: ['bellboy', 'concierge', 'guest']
             });
-            const [dragOver, setDragOver] = useState(false);
+            const [toast, setToast] = useState(null);
+            const [celebration, setCelebration] = useState(false);
+            const [newUser, setNewUser] = useState({ name: '', email: '', role: 'guest' });
+            const [confirmDialog, setConfirmDialog] = useState(null);
+            const fileInputRef = useRef(null);
 
-            const handleFileDrop = (e) => {
+            const handleFileUpload = (file) => {
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setUploadFile({
+                        name: file.name,
+                        size: file.size,
+                        content: e.target.result
+                    });
+                };
+                reader.readAsText(file);
+            };
+
+            const handleDrop = (e) => {
                 e.preventDefault();
-                setDragOver(false);
+                e.stopPropagation();
                 const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    const file = files[0];
-                    setFileName(file.name);
-                    const reader = new FileReader();
-                    reader.onload = (evt) => {
-                        setFileContent(evt.target.result);
-                    };
-                    reader.readAsText(file);
-                }
+                if (files.length > 0) handleFileUpload(files[0]);
             };
 
             const handlePublish = () => {
+                if (!uploadFile || !uploadData.name || !uploadData.url) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+
+                const rawScore = analyzeCodeComplexity(uploadFile.content);
                 const newPlatform = {
                     id: Date.now(),
-                    name: formData.name,
-                    section: formData.section,
-                    description: formData.description,
-                    url: formData.url,
+                    ...uploadData,
+                    rawScore,
                     uploadedBy: currentUser.name,
-                    uploadedDate: new Date().toISOString(),
-                    fileSize: fileContent.length + ' bytes',
-                    fileContent: fileContent,
-                    allowedRoles: Object.keys(formData.roles).filter(r => formData.roles[r])
+                    createdAt: new Date().getTime(),
+                    fileSize: (uploadFile.size / 1024).toFixed(2) + ' KB'
                 };
+
+                const updatedPlatforms = [...platforms, newPlatform];
+                const scoredPlatforms = calcScores(updatedPlatforms);
                 const platformsObj = {};
-                platformsObj[newPlatform.id] = newPlatform;
-                db.ref('platforms/' + newPlatform.id).set(newPlatform);
-                onPlatformAdded();
-                setStep(1);
-                setFileContent('');
-                setFileName('');
-                setFormData({ name: '', section: 'tools', description: '', url: '', roles: { guest: false, concierge: true, bellboy: true } });
+                scoredPlatforms.forEach(p => {
+                    platformsObj[p.id] = p;
+                });
+
+                window.db.ref('platforms').set(platformsObj).then(() => {
+                    setCelebration(true);
+                });
             };
-
-            return (
-                <div className="upload-wizard">
-                    <div className="step-indicator">
-                        {[1, 2, 3].map(s => (
-                            <div key={s} className={`step-dot ${step === s ? 'active' : ''}`}>{s}</div>
-                        ))}
-                    </div>
-
-                    {step === 1 && (
-                        <div className="wizard-step active">
-                            <h3 style={{color: '#D4A843', marginBottom: '20px'}}>{t('step1')}</h3>
-                            <div
-                                className={`drag-drop-zone ${dragOver ? 'dragover' : ''}`}
-                                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                                onDragLeave={() => setDragOver(false)}
-                                onDrop={handleFileDrop}
-                            >
-                                <div className="drag-drop-icon">📁</div>
-                                <div className="drag-drop-text">{t('dragDropFile')}</div>
-                                <div className="drag-drop-hint">{t('orClickToSelect')}</div>
-                            </div>
-                            {fileName && <div style={{marginTop: '15px', color: '#C7959B'}}>Selected: {fileName}</div>}
-                            <div style={{marginTop: '25px', display: 'flex', gap: '10px'}}>
-                                <button className="btn-secondary" onClick={() => setStep(2)} disabled={!fileContent} style={{flex: 1}}>
-                                    {t('next')}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {step === 2 && (
-                        <div className="wizard-step active">
-                            <h3 style={{color: '#D4A843', marginBottom: '20px'}}>{t('step2')}</h3>
-                            <div className="upload-form">
-                                <div className="form-group">
-                                    <label className="form-label">{t('platformName')}</label>
-                                    <input className="form-input" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">{t('platformSection')}</label>
-                                    <select className="form-select" value={formData.section} onChange={(e) => setFormData({...formData, section: e.target.value})}>
-                                        <option value="tools">{t('toolsFloor')}</option>
-                                        <option value="analysis">{t('analysisFloor')}</option>
-                                        <option value="strategy">{t('strategyFloor')}</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">{t('platformDescription')}</label>
-                                    <textarea className="form-textarea" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">{t('platformURL')}</label>
-                                    <input className="form-input" type="url" value={formData.url} onChange={(e) => setFormData({...formData, url: e.target.value})} />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">{t('allowedRoles')}</label>
-                                    <div className="checkboxes-group">
-                                        {['guest', 'concierge', 'bellboy'].map(role => (
-                                            <div key={role} className="checkbox-item">
-                                                <input
-                                                    type="checkbox"
-                                                    id={role}
-                                                    checked={formData.roles[role]}
-                                                    onChange={(e) => setFormData({...formData, roles: {...formData.roles, [role]: e.target.checked}})}
-                                                />
-                                                <label htmlFor={role}>{t('role' + role.charAt(0).toUpperCase() + role.slice(1))}</label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{marginTop: '25px', display: 'flex', gap: '10px'}}>
-                                <button className="btn-secondary" onClick={() => setStep(1)} style={{flex: 1}}>{t('back')}</button>
-                                <button className="btn-secondary" onClick={() => setStep(3)} style={{flex: 1}}>{t('next')}</button>
-                            </div>
-                        </div>
-                    )}
-
-                    {step === 3 && (
-                        <div className="wizard-step active">
-                            <h3 style={{color: '#D4A843', marginBottom: '20px'}}>{t('step3')}</h3>
-                            <div className="preview-box">
-                                <div className="preview-item">
-                                    <span className="preview-label">{t('platformName')}:</span>
-                                    <span>{formData.name}</span>
-                                </div>
-                                <div className="preview-item">
-                                    <span className="preview-label">{t('platformSection')}:</span>
-                                    <span>{formData.section}</span>
-                                </div>
-                                <div className="preview-item">
-                                    <span className="preview-label">{t('platformDescription')}:</span>
-                                    <span>{formData.description}</span>
-                                </div>
-                                <div className="preview-item">
-                                    <span className="preview-label">{t('platformURL')}:</span>
-                                    <span>{formData.url}</span>
-                                </div>
-                            </div>
-                            <div style={{marginTop: '25px', display: 'flex', gap: '10px'}}>
-                                <button className="btn-secondary" onClick={() => setStep(2)} style={{flex: 1}}>{t('back')}</button>
-                                <button className="btn-secondary" onClick={handlePublish} style={{flex: 1}}>{t('publish')}</button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        const GuestRegistryTab = ({ users, currentUser, onUserAdded, onUserDeleted }) => {
-            const t = useT();
-            const [newUser, setNewUser] = useState({ name: '', email: '', role: 'guest' });
-            const [confirmDelete, setConfirmDelete] = useState(null);
 
             const handleAddUser = () => {
-                if (newUser.name && newUser.email) {
-                    const user = {
-                        id: Date.now(),
-                        name: newUser.name,
-                        email: newUser.email,
-                        role: newUser.role,
-                        avatar: newUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
-                    };
-                    db.ref('users/' + user.id).set(user);
-                    onUserAdded();
-                    setNewUser({ name: '', email: '', role: 'guest' });
+                if (!newUser.name || !newUser.email) {
+                    alert('Please fill in all fields');
+                    return;
                 }
+
+                const userId = Date.now();
+                const userToAdd = {
+                    id: userId,
+                    ...newUser,
+                    avatar: newUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
+                };
+
+                window.db.ref('users/' + userId).set(userToAdd).then(() => {
+                    setNewUser({ name: '', email: '', role: 'guest' });
+                    setToast('toast_user_added');
+                    setTimeout(() => setToast(null), 3000);
+                });
             };
 
-            const handleDeleteUser = (userId) => {
-                db.ref('users/' + userId).remove();
-                onUserDeleted();
-                setConfirmDelete(null);
+            const handleDeleteUser = (userId, userName) => {
+                if (userId === currentUser.id) {
+                    alert(tFunc('cannot_delete_yourself', lang));
+                    return;
+                }
+                setConfirmDialog({
+                    title: 'confirm_delete_user',
+                    message: 'confirm_delete_user_msg',
+                    onConfirm: () => {
+                        window.db.ref('users/' + userId).remove().then(() => {
+                            setConfirmDialog(null);
+                            setToast('toast_user_deleted');
+                            setTimeout(() => setToast(null), 3000);
+                        });
+                    }
+                });
             };
 
-            return (
-                <div>
-                    <h3 style={{color: '#D4A843', marginBottom: '20px'}}>{t('addUser')}</h3>
-                    <div className="upload-form" style={{marginBottom: '40px'}}>
-                        <div className="form-group">
-                            <label className="form-label">{t('userName')}</label>
-                            <input className="form-input" value={newUser.name} onChange={(e) => setNewUser({...newUser, name: e.target.value})} />
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label">{t('userEmail')}</label>
-                            <input className="form-input" type="email" value={newUser.email} onChange={(e) => setNewUser({...newUser, email: e.target.value})} />
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label">{t('userRole')}</label>
-                            <select className="form-select" value={newUser.role} onChange={(e) => setNewUser({...newUser, role: e.target.value})}>
-                                <option value="guest">{t('roleGuest')}</option>
-                                <option value="concierge">{t('roleConcierge')}</option>
-                                <option value="bellboy">{t('roleBellboy')}</option>
-                            </select>
-                        </div>
-                        <button className="btn-secondary" onClick={handleAddUser}>{t('addUser')}</button>
-                    </div>
+            const handleDeletePlatform = (platformId) => {
+                setConfirmDialog({
+                    title: 'confirm_delete_platform',
+                    message: 'confirm_delete_platform_msg',
+                    onConfirm: () => {
+                        window.db.ref('platforms/' + platformId).remove().then(() => {
+                            setConfirmDialog(null);
+                            setToast('toast_platform_deleted');
+                            setTimeout(() => setToast(null), 3000);
+                        });
+                    }
+                });
+            };
 
-                    <h3 style={{color: '#D4A843', marginBottom: '20px'}}>{t('guestRegistry')}</h3>
-                    <div className="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t('userName')}</th>
-                                    <th>{t('userEmail')}</th>
-                                    <th>{t('userRole')}</th>
-                                    <th>{t('delete')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {users.map(user => (
-                                    <tr key={user.id}>
-                                        <td>{user.name}</td>
-                                        <td>{user.email}</td>
-                                        <td style={{textTransform: 'capitalize'}}>{user.role}</td>
-                                        <td>
-                                            {currentUser.role === 'bellboy' && (
-                                                <button className="btn-small btn-delete" onClick={() => setConfirmDelete(user)}>
-                                                    {t('delete')}
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    {confirmDelete && (
-                        <ConfirmDialog
-                            title={t('deleteConfirm')}
-                            message={t('deleteMessage')}
-                            emoji="⚠️"
-                            onConfirm={() => handleDeleteUser(confirmDelete.id)}
-                            onCancel={() => setConfirmDelete(null)}
-                        />
-                    )}
-                </div>
-            );
-        };
-
-        const ScoreAnalysisTab = ({ platforms }) => {
-            const t = useT();
-            const scoredPlatforms = calcScores(platforms);
-            const grouped = {};
-            scoredPlatforms.forEach(p => {
-                if (!grouped[p.section]) grouped[p.section] = [];
-                grouped[p.section].push(p);
-            });
-
-            const detectDiscrepancies = (section) => {
-                const sectionPlatforms = grouped[section] || [];
-                const scores = sectionPlatforms.map(p => p.score);
-                if (scores.length < 2) return [];
+            const detectDiscrepancies = () => {
                 const discrepancies = [];
-                for (let i = 0; i < scores.length; i++) {
-                    for (let j = i + 1; j < scores.length; j++) {
-                        if (Math.abs(scores[i] - scores[j]) > 30) {
-                            discrepancies.push({
-                                platform1: sectionPlatforms[i].name,
-                                platform2: sectionPlatforms[j].name,
-                                diff: Math.abs(scores[i] - scores[j])
-                            });
+                const sections = ['tools', 'analysis', 'strategy'];
+                sections.forEach(section => {
+                    const sectionPlats = platforms.filter(p => p.section === section);
+                    for (let i = 0; i < sectionPlats.length; i++) {
+                        for (let j = i + 1; j < sectionPlats.length; j++) {
+                            const gap = Math.abs((sectionPlats[i].score || 0) - (sectionPlats[j].score || 0));
+                            if (gap > 30) {
+                                discrepancies.push({
+                                    section,
+                                    plat1: sectionPlats[i],
+                                    plat2: sectionPlats[j],
+                                    gap
+                                });
+                            }
                         }
                     }
-                }
+                });
                 return discrepancies;
             };
 
-            return (
-                <div>
-                    {Object.entries(grouped).map(([section, sectionPlats]) => (
-                        <div key={section} style={{marginBottom: '40px'}}>
-                            <h3 style={{color: '#D4A843', marginBottom: '20px', textTransform: 'capitalize'}}>{section}</h3>
-
-                            {(() => {
-                                const disc = detectDiscrepancies(section);
-                                return disc.length > 0 ? (
-                                    <div className="discrepancy-alert">
-                                        <strong>{t('discrepancyTitle')}:</strong> {t('discrepancyMsg')} - {disc[0].platform1} vs {disc[0].platform2} ({disc[0].diff} pts)
-                                    </div>
-                                ) : null;
-                            })()}
-
-                            <div className="table-container">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>{t('platformName')}</th>
-                                            <th>{t('platformScore')}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {sectionPlats.map(platform => (
-                                            <tr key={platform.id}>
-                                                <td>{platform.name}</td>
-                                                <td>
-                                                    <div className="score-value">{platform.score}</div>
-                                                    <div className="score-bar">
-                                                        <div className="score-fill" style={{width: platform.score + '%'}}></div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            );
-        };
-
-        const BackOfficeScreen = ({ currentUser, platforms, users, onLogout, onTabChange }) => {
-            const t = useT();
-            const [activeTab, setActiveTab] = useState('upload');
-            const [toast, setToast] = useState(null);
-
-            const showToast = (msg) => {
-                setToast(msg);
-                setTimeout(() => setToast(null), 3000);
-            };
-
-            const handleLogout = () => {
-                localStorage.removeItem('ailobby_lang');
-                onLogout();
-            };
+            if (celebration) {
+                return <Celebration lang={lang} />;
+            }
 
             return (
                 <div className="backoffice-container">
                     <div className="backoffice-header">
-                        <h1 className="backoffice-title">{t('backOffice')}</h1>
-                        <button className="btn-secondary btn-logout" onClick={handleLogout}>{t('logout')}</button>
-                    </div>
-
-                    <div className="backoffice-tabs">
-                        {['upload', 'guests', 'scores', 'discrepancy'].map(tab => (
-                            <button
-                                key={tab}
-                                className={`bo-tab-btn ${activeTab === tab ? 'active' : ''}`}
-                                onClick={() => setActiveTab(tab)}
-                            >
-                                {tab === 'upload' && t('uploadPlatform')}
-                                {tab === 'guests' && t('guestRegistry')}
-                                {tab === 'scores' && t('scoreAnalysis')}
-                                {tab === 'discrepancy' && t('discrepancyDetector')}
+                        <div className="backoffice-title">{tFunc('back_office', lang)}</div>
+                        <div className="backoffice-controls">
+                            <button className="lang-toggle-btn" onClick={() => setLang(lang === 'en' ? 'es' : 'en')}>
+                                {lang === 'en' ? '🇪🇸' : '🇬🇧'}
                             </button>
-                        ))}
+                            <button className="header-button" onClick={onBack}>
+                                {tFunc('back_to_lobby', lang)}
+                            </button>
+                            <button className="header-button" onClick={onLogout}>
+                                {tFunc('logout', lang)}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="backoffice-content">
-                        {activeTab === 'upload' && <UploadPlatformTab currentUser={currentUser} onPlatformAdded={() => showToast(t('platformAdded'))} />}
-                        {activeTab === 'guests' && <GuestRegistryTab users={users} currentUser={currentUser} onUserAdded={() => showToast(t('userAdded'))} onUserDeleted={() => showToast(t('userDeleted'))} />}
-                        {activeTab === 'scores' && <ScoreAnalysisTab platforms={platforms} />}
+                        <div className="backoffice-tabs">
+                            <button
+                                className={`backoffice-tab ${activeTab === 'upload' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('upload')}
+                            >
+                                {tFunc('upload_platform', lang)}
+                            </button>
+                            <button
+                                className={`backoffice-tab ${activeTab === 'users' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('users')}
+                            >
+                                {tFunc('guest_registry', lang)}
+                            </button>
+                            <button
+                                className={`backoffice-tab ${activeTab === 'scores' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('scores')}
+                            >
+                                {tFunc('score_analysis', lang)}
+                            </button>
+                            <button
+                                className={`backoffice-tab ${activeTab === 'discrepancies' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('discrepancies')}
+                            >
+                                {tFunc('ai_discrepancies', lang)}
+                            </button>
+                        </div>
+
+                        <div className="backoffice-panel">
+                            {activeTab === 'upload' && (
+                                <div>
+                                    <div className="wizard-steps">
+                                        <div className={`wizard-step ${uploadStep >= 1 ? 'active' : ''} ${uploadStep > 1 ? 'completed' : ''}`}>
+                                            <div className="step-number">1</div>
+                                            <div className="step-label">{tFunc('step1_upload', lang)}</div>
+                                        </div>
+                                        <div className={`wizard-step ${uploadStep >= 2 ? 'active' : ''} ${uploadStep > 2 ? 'completed' : ''}`}>
+                                            <div className="step-number">2</div>
+                                            <div className="step-label">{tFunc('step2_details', lang)}</div>
+                                        </div>
+                                        <div className={`wizard-step ${uploadStep >= 3 ? 'active' : ''} ${uploadStep > 3 ? 'completed' : ''}`}>
+                                            <div className="step-number">3</div>
+                                            <div className="step-label">{tFunc('step3_preview', lang)}</div>
+                                        </div>
+                                    </div>
+
+                                    {uploadStep === 1 && (
+                                        <div>
+                                            <div
+                                                className="drop-zone"
+                                                onDragOver={(e) => e.preventDefault()}
+                                                onDragLeave={(e) => e.preventDefault()}
+                                                onDrop={handleDrop}
+                                                onClick={() => fileInputRef.current?.click()}
+                                            >
+                                                <div className="drop-zone-icon">📁</div>
+                                                <div className="drop-zone-text">{tFunc('drop_files', lang)}</div>
+                                                <div className="drop-zone-hint">{tFunc('drop_hint', lang)}</div>
+                                            </div>
+                                            <input
+                                                ref={fileInputRef}
+                                                type="file"
+                                                className="file-input"
+                                                onChange={(e) => handleFileUpload(e.target.files?.[0])}
+                                            />
+                                            {uploadFile && (
+                                                <div className="file-preview">
+                                                    <div className="file-preview-name">📄 {uploadFile.name}</div>
+                                                    <div className="file-preview-size">
+                                                        {tFunc('file_size', lang)}: {(uploadFile.size / 1024).toFixed(2)} KB
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <button
+                                                className="login-button"
+                                                onClick={() => setUploadStep(2)}
+                                                style={{ marginTop: '24px', width: '100%' }}
+                                                disabled={!uploadFile}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {uploadStep === 2 && (
+                                        <div>
+                                            <div className="form-row">
+                                                <div className="form-group">
+                                                    <label className="form-label">{tFunc('platform_name', lang)}</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        value={uploadData.name}
+                                                        onChange={(e) => setUploadData({ ...uploadData, name: e.target.value })}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-label">{tFunc('section', lang)}</label>
+                                                    <select
+                                                        className="select"
+                                                        value={uploadData.section}
+                                                        onChange={(e) => setUploadData({ ...uploadData, section: e.target.value })}
+                                                    >
+                                                        <option value="tools">{tFunc('tools', lang)}</option>
+                                                        <option value="analysis">{tFunc('analysis', lang)}</option>
+                                                        <option value="strategy">{tFunc('strategy', lang)}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="form-row full">
+                                                <div className="form-group">
+                                                    <label className="form-label">{tFunc('description', lang)}</label>
+                                                    <textarea
+                                                        className="textarea"
+                                                        value={uploadData.description}
+                                                        onChange={(e) => setUploadData({ ...uploadData, description: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="form-row full">
+                                                <div className="form-group">
+                                                    <label className="form-label">{tFunc('url', lang)}</label>
+                                                    <input
+                                                        type="url"
+                                                        className="form-input"
+                                                        value={uploadData.url}
+                                                        onChange={(e) => setUploadData({ ...uploadData, url: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="form-row full">
+                                                <div className="form-group">
+                                                    <label className="form-label">{tFunc('access_roles', lang)}</label>
+                                                    <div className="checkbox-group">
+                                                        {['bellboy', 'concierge', 'guest'].map(role => (
+                                                            <div key={role} className="checkbox-item">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    id={`role-${role}`}
+                                                                    checked={uploadData.accessRoles.includes(role)}
+                                                                    onChange={(e) => {
+                                                                        if (e.target.checked) {
+                                                                            setUploadData({
+                                                                                ...uploadData,
+                                                                                accessRoles: [...uploadData.accessRoles, role]
+                                                                            });
+                                                                        } else {
+                                                                            setUploadData({
+                                                                                ...uploadData,
+                                                                                accessRoles: uploadData.accessRoles.filter(r => r !== role)
+                                                                            });
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <label htmlFor={`role-${role}`}>
+                                                                    {tFunc(`user_role_${role}`, lang)}
+                                                                </label>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+                                                <button
+                                                    className="login-button"
+                                                    onClick={() => setUploadStep(1)}
+                                                    style={{ flex: 1, background: 'transparent', color: 'var(--gold)', border: '1px solid var(--gold)' }}
+                                                >
+                                                    Back
+                                                </button>
+                                                <button
+                                                    className="login-button"
+                                                    onClick={() => setUploadStep(3)}
+                                                    style={{ flex: 1 }}
+                                                >
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {uploadStep === 3 && (
+                                        <div>
+                                            <div className="preview-card">
+                                                <div className="preview-row">
+                                                    <div className="preview-label">{tFunc('platform_name', lang)}</div>
+                                                    <div className="preview-value">{uploadData.name}</div>
+                                                </div>
+                                                <div className="preview-row">
+                                                    <div className="preview-label">{tFunc('section', lang)}</div>
+                                                    <div className="preview-value">{uploadData.section}</div>
+                                                </div>
+                                                <div className="preview-row">
+                                                    <div className="preview-label">{tFunc('description', lang)}</div>
+                                                    <div className="preview-value">{uploadData.description}</div>
+                                                </div>
+                                                <div className="preview-row">
+                                                    <div className="preview-label">{tFunc('url', lang)}</div>
+                                                    <div className="preview-value">{uploadData.url}</div>
+                                                </div>
+                                                <div className="preview-row">
+                                                    <div className="preview-label">{tFunc('access_roles', lang)}</div>
+                                                    <div className="preview-value">
+                                                        {uploadData.accessRoles.map(r => tFunc(`user_role_${r}`, lang)).join(', ')}
+                                                    </div>
+                                                </div>
+                                                <div className="preview-row">
+                                                    <div className="preview-label">{tFunc('file_name', lang)}</div>
+                                                    <div className="preview-value">{uploadFile?.name}</div>
+                                                </div>
+                                                <div className="preview-row">
+                                                    <div className="preview-label">{tFunc('file_size', lang)}</div>
+                                                    <div className="preview-value">{(uploadFile?.size || 0) / 1024} KB</div>
+                                                </div>
+                                            </div>
+
+                                            <div style={{ display: 'flex', gap: '12px' }}>
+                                                <button
+                                                    className="login-button"
+                                                    onClick={() => setUploadStep(2)}
+                                                    style={{ flex: 1, background: 'transparent', color: 'var(--gold)', border: '1px solid var(--gold)' }}
+                                                >
+                                                    Back
+                                                </button>
+                                                <button
+                                                    className="login-button"
+                                                    onClick={handlePublish}
+                                                    style={{ flex: 1 }}
+                                                >
+                                                    {tFunc('publish', lang)}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {activeTab === 'users' && (
+                                <div>
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Avatar</th>
+                                                <th>{tFunc('user_name', lang)}</th>
+                                                <th>{tFunc('user_email', lang)}</th>
+                                                <th>{tFunc('user_role', lang)}</th>
+                                                {currentUser.role === 'bellboy' && <th>Action</th>}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {users.map(user => (
+                                                <tr key={user.id}>
+                                                    <td><div className="user-avatar">{user.avatar}</div></td>
+                                                    <td>{user.name}</td>
+                                                    <td>{user.email}</td>
+                                                    <td>{tFunc(`user_role_${user.role}`, lang)}</td>
+                                                    {currentUser.role === 'bellboy' && (
+                                                        <td>
+                                                            <button
+                                                                className="delete-button"
+                                                                onClick={() => handleDeleteUser(user.id, user.name)}
+                                                                title="Delete"
+                                                            >
+                                                                🗑️
+                                                            </button>
+                                                        </td>
+                                                    )}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+
+                                    <div className="add-user-section">
+                                        <div className="add-user-title">{tFunc('add_user', lang)}</div>
+                                        <div className="add-user-form">
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                placeholder={tFunc('user_name', lang)}
+                                                value={newUser.name}
+                                                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                                            />
+                                            <input
+                                                type="email"
+                                                className="form-input"
+                                                placeholder={tFunc('user_email', lang)}
+                                                value={newUser.email}
+                                                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                                            />
+                                            <select
+                                                className="select"
+                                                value={newUser.role}
+                                                onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                                            >
+                                                <option value="bellboy">{tFunc('user_role_bellboy', lang)}</option>
+                                                <option value="concierge">{tFunc('user_role_concierge', lang)}</option>
+                                                <option value="guest">{tFunc('user_role_guest', lang)}</option>
+                                            </select>
+                                            <button className="action-button" onClick={handleAddUser}>
+                                                {tFunc('add', lang)}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'scores' && (
+                                <div>
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{tFunc('platform', lang)}</th>
+                                                <th>{tFunc('section', lang)}</th>
+                                                <th>{tFunc('raw_score', lang)}</th>
+                                                <th>{tFunc('normalized_score', lang)}</th>
+                                                <th>{tFunc('uploaded_by', lang)}</th>
+                                                {currentUser.role === 'bellboy' && <th>Action</th>}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {platforms.map(platform => (
+                                                <tr key={platform.id}>
+                                                    <td>{platform.name}</td>
+                                                    <td>{platform.section}</td>
+                                                    <td className="score-cell">{platform.rawScore || 0}</td>
+                                                    <td className="score-cell">{platform.score || 0}</td>
+                                                    <td>{platform.uploadedBy}</td>
+                                                    {currentUser.role === 'bellboy' && (
+                                                        <td>
+                                                            <button
+                                                                className="delete-button"
+                                                                onClick={() => handleDeletePlatform(platform.id)}
+                                                                title="Delete"
+                                                            >
+                                                                🗑️
+                                                            </button>
+                                                        </td>
+                                                    )}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+
+                            {activeTab === 'discrepancies' && (
+                                <div>
+                                    {detectDiscrepancies().length === 0 ? (
+                                        <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--rose)' }}>
+                                            <div style={{ fontSize: '48px', marginBottom: '20px' }}>✅</div>
+                                            <div>All scores are consistent. No discrepancies detected.</div>
+                                        </div>
+                                    ) : (
+                                        detectDiscrepancies().map((disc, idx) => (
+                                            <div key={idx} style={{
+                                                background: 'rgba(212, 168, 67, 0.1)',
+                                                border: '1px solid rgba(212, 168, 67, 0.3)',
+                                                borderRadius: '8px',
+                                                padding: '16px',
+                                                marginBottom: '16px'
+                                            }}>
+                                                <div style={{ color: 'var(--gold)', fontWeight: 600, marginBottom: '8px' }}>
+                                                    ⚠️ {tFunc('discrepancy_title', lang)}
+                                                </div>
+                                                <div style={{ color: 'var(--cream)', fontSize: '13px', marginBottom: '12px' }}>
+                                                    {disc.plat1.name} ({disc.plat1.score}) vs {disc.plat2.name} ({disc.plat2.score}) - Gap: {disc.gap}
+                                                </div>
+                                                <div style={{ color: 'var(--rose)', fontSize: '12px' }}>
+                                                    {tFunc('discrepancy_msg', lang)}
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    {toast && <Toast message={toast} />}
+                    {toast && <Toast message={toast} lang={lang} />}
+                    {confirmDialog && (
+                        <ConfirmDialog
+                            title={confirmDialog.title}
+                            message={confirmDialog.message}
+                            onConfirm={confirmDialog.onConfirm}
+                            onCancel={() => setConfirmDialog(null)}
+                            lang={lang}
+                        />
+                    )}
                 </div>
             );
-        };
+        }
 
-        const LoadingScreen = () => {
-            const t = useT();
-            return (
-                <div className="loading-screen">
-                    <div className="loading-content">
-                        <div className="loading-icon">🔔</div>
-                        <div className="loading-text">{t('loadingMessage')}</div>
-                        <div className="loading-subtitle">{t('connectingNetwork')}</div>
-                    </div>
-                </div>
-            );
-        };
-
-        // ===== MAIN APP =====
-        const App = () => {
+        function App() {
             const [lang, setLang] = useState(() => localStorage.getItem('ailobby_lang') || 'en');
             const [currentUser, setCurrentUser] = useState(null);
             const [platforms, setPlatforms] = useState([]);
             const [users, setUsers] = useState(initialUsers);
             const [showBackOffice, setShowBackOffice] = useState(false);
-            const [firebaseReady, setFirebaseReady] = useState(false);
-            const [celebration, setCelebration] = useState(null);
+            const [firebaseReady, setFirebaseReady] = useState(window.firebaseReady || false);
 
             useEffect(() => {
                 localStorage.setItem('ailobby_lang', lang);
             }, [lang]);
 
             useEffect(() => {
-                const platformsRef = db.ref('platforms');
-                platformsRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        setPlatforms(Object.values(data));
-                    } else {
-                        setPlatforms([]);
-                    }
+                if (!window.db) {
+                    setTimeout(() => setFirebaseReady(true), 1000);
+                    return;
+                }
+
+                try {
+                    const platformsRef = window.db.ref('platforms');
+                    platformsRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        setPlatforms(data ? calcScores(Object.values(data)) : []);
+                        setFirebaseReady(true);
+                    });
+
+                    const usersRef = window.db.ref('users');
+                    usersRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            const fbUsers = Object.values(data);
+                            const merged = [...initialUsers];
+                            fbUsers.forEach(u => {
+                                if (!merged.find(m => m.email === u.email)) merged.push(u);
+                            });
+                            setUsers(merged);
+                        }
+                    });
+
+                    return () => {
+                        platformsRef.off();
+                        usersRef.off();
+                    };
+                } catch (error) {
+                    console.error('Firebase error:', error);
                     setFirebaseReady(true);
-                });
-
-                const usersRef = db.ref('users');
-                usersRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        const userList = Object.values(data);
-                        const mergedUsers = [...initialUsers];
-                        userList.forEach(fbUser => {
-                            if (!mergedUsers.find(u => u.email === fbUser.email)) {
-                                mergedUsers.push(fbUser);
-                            }
-                        });
-                        setUsers(mergedUsers);
-                    }
-                });
-
-                return () => {
-                    platformsRef.off();
-                    usersRef.off();
-                };
+                }
             }, []);
+
+            const handleLogout = () => {
+                setCurrentUser(null);
+                setShowBackOffice(false);
+                localStorage.removeItem('ailobby_lang');
+                window.location.reload();
+            };
 
             if (!firebaseReady) {
                 return (
-                    <LangContext.Provider value={{ lang, setLang }}>
-                        <LoadingScreen />
-                    </LangContext.Provider>
+                    <div className="loading-container">
+                        <div className="loading-bell">🔔</div>
+                        <div className="loading-text">Loading AI Lobby...</div>
+                    </div>
+                );
+            }
+
+            if (!currentUser) {
+                return (
+                    <LoginScreen
+                        onLogin={setCurrentUser}
+                        t={t}
+                        lang={lang}
+                        setLang={setLang}
+                        users={users}
+                    />
+                );
+            }
+
+            if (showBackOffice && accessMatrix[currentUser.role].config) {
+                return (
+                    <BackOffice
+                        currentUser={currentUser}
+                        platforms={platforms}
+                        users={users}
+                        lang={lang}
+                        setLang={setLang}
+                        onBack={() => setShowBackOffice(false)}
+                        onLogout={handleLogout}
+                        t={t}
+                    />
                 );
             }
 
             return (
-                <LangContext.Provider value={{ lang, setLang }}>
-                    {!currentUser ? (
-                        <>
-                            <LoginScreen onLogin={setCurrentUser} users={users} />
-                            {celebration && <CelebrationPopup phrase={celebration.phrase} onDismiss={() => setCelebration(null)} />}
-                        </>
-                    ) : showBackOffice ? (
-                        <>
-                            <BackOfficeScreen
-                                currentUser={currentUser}
-                                platforms={platforms}
-                                users={users}
-                                onLogout={() => setCurrentUser(null)}
-                                onTabChange={() => {}}
-                            />
-                            {celebration && <CelebrationPopup phrase={celebration.phrase} onDismiss={() => setCelebration(null)} />}
-                        </>
-                    ) : (
-                        <>
-                            <LobbyScreen
-                                currentUser={currentUser}
-                                onLogout={() => setCurrentUser(null)}
-                                platforms={platforms}
-                                onShowBackOffice={() => {
-                                    const celebPhrases = [
-                                        translations[lang]['celebration1'],
-                                        translations[lang]['celebration2'],
-                                        translations[lang]['celebration3'],
-                                        translations[lang]['celebration4'],
-                                        translations[lang]['celebration5'],
-                                    ];
-                                    setCelebration({ phrase: celebPhrases[Math.floor(Math.random() * celebPhrases.length)] });
-                                    setShowBackOffice(true);
-                                }}
-                            />
-                            {celebration && <CelebrationPopup phrase={celebration.phrase} onDismiss={() => setCelebration(null)} />}
-                        </>
-                    )}
-                </LangContext.Provider>
+                <Lobby
+                    currentUser={currentUser}
+                    platforms={platforms}
+                    lang={lang}
+                    setLang={setLang}
+                    onLogout={handleLogout}
+                    onBackOffice={() => setShowBackOffice(true)}
+                    t={t}
+                    users={users}
+                />
             );
-        };
+        }
 
-        ReactDOM.render(<App />, document.getElementById('root'));
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
