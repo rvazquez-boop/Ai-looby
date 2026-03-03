@@ -14,13 +14,9 @@ input,select,textarea{font-family:inherit;background:rgba(139,69,19,0.2);border:
 input:focus,select:focus,textarea:focus{outline:none;border-color:#d4a853}
 input::placeholder,textarea::placeholder{color:#8b6f47}
 select option{background:#2d1117;color:#f5e6c8}
-
-/* Loading */
 .loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:20px}
 .bell{font-size:3rem;animation:swing 1s ease-in-out infinite}
 @keyframes swing{0%,100%{transform:rotate(0)}25%{transform:rotate(15deg)}75%{transform:rotate(-15deg)}}
-
-/* Login */
 .login-wrap{display:flex;align-items:center;justify-content:center;height:100vh}
 .login-card{background:rgba(0,0,0,0.5);border:2px solid rgba(212,168,83,0.4);border-radius:16px;padding:48px 40px;text-align:center;max-width:420px;width:90%;position:relative}
 .login-card h1{font-size:2.2rem;margin-bottom:6px}
@@ -35,14 +31,10 @@ select option{background:#2d1117;color:#f5e6c8}
 .btn-outline:hover{background:rgba(212,168,83,0.15)}
 .btn-danger-sm{background:rgba(220,53,69,0.8);color:#fff;padding:6px 14px;border-radius:6px;font-size:.8rem}
 .btn-danger-sm:hover{background:rgba(220,53,69,1)}
-
-/* Top bar */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;background:rgba(0,0,0,0.6);border-bottom:1px solid rgba(212,168,83,0.25);height:54px;flex-shrink:0}
 .topbar h2{font-size:1.2rem;white-space:nowrap}
 .topbar-right{display:flex;align-items:center;gap:10px}
 .avatar-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#d4a853,#b8860b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#1a0a0a;font-size:.75rem}
-
-/* ===== PIPELINE LOBBY ===== */
 .lobby{display:flex;flex-direction:column;height:calc(100vh - 54px)}
 .pipeline{display:flex;flex:1;min-height:0}
 .pipeline-col{flex:1;display:flex;flex-direction:column;border-right:1px solid rgba(212,168,83,0.12);min-width:0}
@@ -53,8 +45,6 @@ select option{background:#2d1117;color:#f5e6c8}
 .col-body{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:10px;min-height:0}
 .col-body::-webkit-scrollbar{width:5px}
 .col-body::-webkit-scrollbar-thumb{background:rgba(212,168,83,0.3);border-radius:3px}
-
-/* Platform card */
 .pcard{background:rgba(139,69,19,0.12);border:1px solid rgba(212,168,83,0.18);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s;flex-shrink:0}
 .pcard:hover{border-color:#d4a853;transform:translateY(-2px);box-shadow:0 6px 24px rgba(212,168,83,0.15)}
 .pcard-img{width:100%;height:90px;object-fit:cover;opacity:.75}
@@ -66,8 +56,6 @@ select option{background:#2d1117;color:#f5e6c8}
 .pcard-url{display:block;font-size:.68rem;color:#d4a853;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}
 .pcard-url:hover{text-decoration:underline}
 .empty-col{text-align:center;color:#8b6f47;padding:40px 12px;font-style:italic;font-size:.9rem}
-
-/* Room popup */
 .popup-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;animation:fadeIn .2s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .popup-card{background:linear-gradient(145deg,#1e0e0e,#2d1117,#1a0a0a);border:2px solid rgba(212,168,83,0.5);border-radius:16px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
@@ -78,22 +66,18 @@ select option{background:#2d1117;color:#f5e6c8}
 .popup-section-badge{display:inline-block;font-size:.72rem;padding:3px 10px;border-radius:10px;background:rgba(212,168,83,0.2);color:#d4a853;margin-bottom:14px}
 .popup-info{margin-bottom:10px;font-size:.9rem;line-height:1.5;color:#e0d0b0}
 .popup-info strong{color:#d4a853}
-.popup-link{display:inline-flex;align-items:center;gap:6px;color:#d4a853;text-decoration:none;font-size:.9rem;word-break:break-all;margin-bottom:12px}
-.popup-link:hover{text-decoration:underline}
 .popup-file{font-size:.82rem;color:#c4a265;margin-bottom:12px}
 .popup-divider{border:none;border-top:1px solid rgba(212,168,83,0.2);margin:16px 0}
 .popup-actions{display:flex;gap:12px}
-.btn-enter{flex:1;background:linear-gradient(135deg,#d4a853,#b8860b);color:#1a0a0a;padding:14px;border-radius:10px;font-weight:700;font-size:1rem;font-family:'Playfair Display',serif;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-enter{flex:1;background:linear-gradient(135deg,#d4a853,#b8860b);color:#1a0a0a;padding:14px;border-radius:10px;font-weight:700;font-size:1rem;font-family:'Playfair Display',serif;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
 .btn-enter:hover{box-shadow:0 4px 20px rgba(212,168,83,0.5);transform:translateY(-1px)}
 .btn-close-popup{background:transparent;border:1px solid rgba(212,168,83,0.4);color:#d4a853;padding:14px 20px;border-radius:10px;font-size:.9rem}
 .btn-close-popup:hover{background:rgba(212,168,83,0.1)}
-.access-badge{font-size:.7rem;padding:3px 10px;border-radius:10px;font-weight:600;display:inline-block;margin-left:8px}
+.access-badge{font-size:.7rem;padding:3px 10px;border-radius:10px;font-weight:600;display:inline-block}
 .access-full{background:rgba(40,167,69,0.25);color:#5cb85c}
 .access-view{background:rgba(255,193,7,0.25);color:#ffc107}
 .access-use{background:rgba(23,162,184,0.25);color:#17a2b8}
 .access-no{background:rgba(220,53,69,0.25);color:#dc3545}
-
-/* ===== BACK OFFICE ===== */
 .backoffice{display:flex;height:calc(100vh - 54px)}
 .bo-side{width:210px;background:rgba(0,0,0,0.4);border-right:1px solid rgba(212,168,83,0.15);display:flex;flex-direction:column;padding:18px 10px;gap:4px;flex-shrink:0}
 .bo-side h3{font-size:1rem;margin-bottom:10px;padding-left:6px}
@@ -103,11 +87,7 @@ select option{background:#2d1117;color:#f5e6c8}
 .bo-bottom{margin-top:auto;display:flex;flex-direction:column;gap:6px}
 .btn-back{background:transparent;border:1px solid rgba(212,168,83,0.4);color:#d4a853;padding:10px;border-radius:8px;font-size:.85rem;width:100%}
 .btn-back:hover{background:rgba(212,168,83,0.1)}
-.btn-logout{background:rgba(220,53,69,0.7);color:#fff;padding:10px;border-radius:8px;font-size:.85rem;width:100%}
-.btn-logout:hover{background:rgba(220,53,69,0.9)}
 .bo-main{flex:1;overflow-y:auto;padding:24px 28px}
-
-/* Upload */
 .up-boxes{display:flex;gap:16px;margin-bottom:20px}
 .up-drop{flex:1;background:rgba(0,0,0,0.25);border:2px dashed rgba(212,168,83,0.35);border-radius:12px;padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:170px;transition:all .2s;cursor:pointer}
 .up-drop:hover,.up-drop.dragover{border-color:#d4a853;background:rgba(212,168,83,0.06)}
@@ -132,8 +112,6 @@ textarea{resize:vertical;min-height:70px}
 .preview-box{background:rgba(0,0,0,0.15);border:1px solid rgba(212,168,83,0.15);border-radius:10px;padding:16px;margin-bottom:14px}
 .preview-box h4{margin-bottom:8px}
 .preview-box p{font-size:.88rem;margin-bottom:4px}
-
-/* Registry */
 .reg-table{width:100%;border-collapse:collapse;margin-top:14px}
 .reg-table th{text-align:left;padding:10px 12px;border-bottom:2px solid rgba(212,168,83,0.3);color:#d4a853;font-size:.82rem}
 .reg-table td{padding:10px 12px;border-bottom:1px solid rgba(212,168,83,0.08);font-size:.88rem}
@@ -144,53 +122,36 @@ textarea{resize:vertical;min-height:70px}
 .badge-bellboy{background:rgba(212,168,83,0.25);color:#d4a853}
 .badge-concierge{background:rgba(23,162,184,0.25);color:#17a2b8}
 .badge-guest{background:rgba(108,117,125,0.25);color:#adb5bd}
-
-/* Score table */
 .sc-table{width:100%;border-collapse:collapse;margin-top:14px}
 .sc-table th{text-align:left;padding:10px 12px;border-bottom:2px solid rgba(212,168,83,0.3);color:#d4a853;font-size:.82rem}
 .sc-table td{padding:10px 12px;border-bottom:1px solid rgba(212,168,83,0.08);font-size:.88rem}
-
-/* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:rgba(0,0,0,0.88);border:1px solid rgba(212,168,83,0.5);color:#f5e6c8;padding:14px 24px;border-radius:10px;z-index:200;animation:slideR .3s ease}
 @keyframes slideR{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
-
-/* Confirm */
 .confirm-ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:150}
 .confirm-box{background:linear-gradient(135deg,#1a0a0a,#2d1117);border:2px solid rgba(212,168,83,0.4);border-radius:14px;padding:28px;text-align:center;max-width:360px}
 .confirm-box h3{margin-bottom:10px}
 .confirm-box p{margin-bottom:20px;color:#c4a265}
 .confirm-btns{display:flex;gap:12px;justify-content:center}
-
-/* Celebration */
 .celeb{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:200;animation:fadeIn .3s}
 .celeb-inner{text-align:center;animation:popIn .5s ease}
 @keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-
 @media(max-width:768px){
-  .pipeline{flex-direction:column}
-  .pipeline-col{border-right:none;border-bottom:1px solid rgba(212,168,83,0.12)}
-  .col-body{max-height:260px}
-  .backoffice{flex-direction:column}
-  .bo-side{width:100%;flex-direction:row;flex-wrap:wrap;padding:10px;gap:4px}
-  .bo-side h3{width:100%}
-  .bo-bottom{flex-direction:row;width:100%;margin-top:6px}
-  .up-boxes{flex-direction:column}
+.pipeline{flex-direction:column}.pipeline-col{border-right:none;border-bottom:1px solid rgba(212,168,83,0.12)}.col-body{max-height:260px}
+.backoffice{flex-direction:column}.bo-side{width:100%;flex-direction:row;flex-wrap:wrap;padding:10px;gap:4px}.bo-side h3{width:100%}.bo-bottom{flex-direction:row;width:100%;margin-top:6px}
+.up-boxes{flex-direction:column}
 }
 </style>
 </head>
 <body>
 <div id="root"></div>
-
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <script>
 var db=null;
 try{firebase.initializeApp({apiKey:"AIzaSyDRWcexkV2fPtam-RmSzO0fac6cLwAPmeM",authDomain:"ai-lobby.firebaseapp.com",databaseURL:"https://ai-lobby-default-rtdb.europe-west1.firebasedatabase.app",projectId:"ai-lobby",storageBucket:"ai-lobby.firebasestorage.app",messagingSenderId:"252396863420",appId:"1:252396863420:web:db0624a69b8f75b73675b9"});db=firebase.database();console.log("Firebase OK")}catch(e){console.error("Firebase err:",e)}
-
 var initialUsers=[
 {id:1,name:"Rafa Vázquez",email:"r.vazquez@sesametime.com",role:"bellboy",avatar:"RV"},
 {id:2,name:"Carlos Méndez",email:"c.mendez@sesametime.com",role:"concierge",avatar:"CM"},
@@ -211,392 +172,148 @@ var initialUsers=[
 {id:17,name:"Majo",email:"majo@sesametime.com",role:"concierge",avatar:"MA"},
 {id:18,name:"F. Berta",email:"f.berta@sesametime.com",role:"concierge",avatar:"FB"}
 ];
-
 var AM={bellboy:{tools:"full",analysis:"full",strategy:"full",config:true},concierge:{tools:"full",analysis:"full",strategy:"view-only",config:true},guest:{tools:"use",analysis:"view-only",strategy:"no-access",config:false}};
-
 var HI={tools:["https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=300&fit=crop"],analysis:["https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop"],strategy:["https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=300&fit=crop"]};
-
-/* Room number generator: Tools=100s, Analysis=200s, Strategy=300s */
 var FLOOR_BASE={tools:100,analysis:200,strategy:300};
-
-function getRoomNumber(section,index){
-  var base=FLOOR_BASE[section]||100;
-  return base+index+1;
-}
-
+function getRoomNumber(s,i){return(FLOOR_BASE[s]||100)+i+1}
 function _t(lang,key){
-var en={title:"AI LOBBY",subtitle:"The Grand Platform Hotel",login:"Check In",emailPh:"Enter your email...",loginErr:"Email not registered",langBtn:"ES",logout:"Logout",backOffice:"Back Office",backToLobby:"Back to Lobby",
-colTools:"Tools",colAnalysis:"Analysis",colStrategy:"Strategy",emptyCol:"No platforms yet",floor:"Floor",
-room:"Room",enterRoom:"Enter Room","accessFull":"Full Access",accessView:"View Only",accessUse:"Use",accessNo:"No Access",
-uploadedBy:"Uploaded by",date:"Date",description:"Description",platformLink:"Platform Link",noLink:"No link",fileAttached:"File attached",close:"Close",
-tabUpload:"Upload Platform",tabRegistry:"Guest Registry",tabScores:"Score Analysis",tabDisc:"AI Discrepancies",
-dragTitle:"Upload File",dragText:"Drag & drop here",dragSub:"or click to browse",linkTitle:"Paste Link",linkPh:"https://platform-link.com",
-nameLabel:"Platform Name",namePh:"e.g. ChatGPT, Midjourney...",sectionLabel:"Section",descLabel:"Description",descPh:"What does this platform do?",rolesLabel:"Access Roles",
-secTools:"Tools",secAnalysis:"Analysis",secStrategy:"Strategy",publish:"Publish to Lobby",platformAdded:"Platform checked in!",
-nameCol:"Name",emailCol:"Email",roleCol:"Role",actionsCol:"Actions",addUser:"Add User",userAdded:"Guest registered!",userRemoved:"Guest removed",
-confirmTitle:"Remove Guest?",confirmMsg:"This guest will lose access.",confirm:"Confirm",cancel:"Cancel",
-platformCol:"Platform",rawCol:"Raw",scoreCol:"Score",byCol:"By",removeBtn:"Remove",noDisc:"No discrepancies",discAlert:"Score gap",
-continueDetails:"Continue with details",yourAccess:"Your access",hostedBy:"Hosted by",visitPlatform:"Visit Platform"};
-
-var es={title:"AI LOBBY",subtitle:"El Gran Hotel de Plataformas",login:"Entrar",emailPh:"Escribe tu email...",loginErr:"Email no registrado",langBtn:"EN",logout:"Salir",backOffice:"Back Office",backToLobby:"Volver al Lobby",
-colTools:"Herramientas",colAnalysis:"Análisis",colStrategy:"Estrategia",emptyCol:"Aún no hay plataformas",floor:"Piso",
-room:"Habitación",enterRoom:"Entrar a la Habitación",accessFull:"Acceso Total",accessView:"Solo Ver",accessUse:"Usar",accessNo:"Sin Acceso",
-uploadedBy:"Subido por",date:"Fecha",description:"Descripción",platformLink:"Enlace de la Plataforma",noLink:"Sin enlace",fileAttached:"Archivo adjunto",close:"Cerrar",
-tabUpload:"Subir Plataforma",tabRegistry:"Registro de Usuarios",tabScores:"Análisis de Scores",tabDisc:"Discrepancias IA",
-dragTitle:"Subir Archivo",dragText:"Arrastra y suelta aquí",dragSub:"o haz clic para buscar",linkTitle:"Pegar Enlace",linkPh:"https://enlace-plataforma.com",
-nameLabel:"Nombre de la Plataforma",namePh:"ej. ChatGPT, Midjourney...",sectionLabel:"Sección",descLabel:"Descripción",descPh:"¿Qué hace esta plataforma?",rolesLabel:"Roles de Acceso",
-secTools:"Herramientas",secAnalysis:"Análisis",secStrategy:"Estrategia",publish:"Publicar en el Lobby",platformAdded:"¡Plataforma registrada!",
-nameCol:"Nombre",emailCol:"Email",roleCol:"Rol",actionsCol:"Acciones",addUser:"Agregar",userAdded:"¡Usuario registrado!",userRemoved:"Usuario eliminado",
-confirmTitle:"¿Eliminar usuario?",confirmMsg:"Perderá el acceso.",confirm:"Confirmar",cancel:"Cancelar",
-platformCol:"Plataforma",rawCol:"Raw",scoreCol:"Score",byCol:"Por",removeBtn:"Eliminar",noDisc:"Sin discrepancias",discAlert:"Diferencia de score",
-continueDetails:"Continuar con los detalles",yourAccess:"Tu acceso",hostedBy:"Registrado por",visitPlatform:"Visitar Plataforma"};
-
-var dict=(lang==="es")?es:en;
-return(dict[key]!==undefined)?dict[key]:((en[key]!==undefined)?en[key]:key);
-}
-
+var en={title:"AI LOBBY",subtitle:"The Grand Platform Hotel",login:"Check In",emailPh:"Enter your email...",loginErr:"Email not registered",langBtn:"ES",logout:"Logout",backOffice:"Back Office",backToLobby:"Back to Lobby",colTools:"Tools",colAnalysis:"Analysis",colStrategy:"Strategy",emptyCol:"No platforms yet",floor:"Floor",room:"Room",enterRoom:"Enter Room",accessFull:"Full Access",accessView:"View Only",accessUse:"Use",accessNo:"No Access",uploadedBy:"Uploaded by",date:"Date",description:"Description",platformLink:"Platform Link",noLink:"No link provided",fileAttached:"File attached",close:"Close",tabUpload:"Upload Platform",tabRegistry:"Guest Registry",tabScores:"Score Analysis",tabDisc:"AI Discrepancies",dragTitle:"Upload File",dragText:"Drag & drop here",dragSub:"or click to browse",linkTitle:"Paste Link",linkPh:"https://platform-link.com",nameLabel:"Platform Name",namePh:"e.g. ChatGPT, Midjourney...",sectionLabel:"Section",descLabel:"Description",descPh:"What does this platform do?",rolesLabel:"Access Roles",secTools:"Tools",secAnalysis:"Analysis",secStrategy:"Strategy",publish:"Publish to Lobby",platformAdded:"Platform checked in!",nameCol:"Name",emailCol:"Email",roleCol:"Role",actionsCol:"Actions",addUser:"Add User",userAdded:"Guest registered!",userRemoved:"Guest removed",confirmTitle:"Remove Guest?",confirmMsg:"This guest will lose access.",confirm:"Confirm",cancel:"Cancel",platformCol:"Platform",rawCol:"Raw",scoreCol:"Score",byCol:"By",removeBtn:"Remove",noDisc:"No discrepancies",discAlert:"Score gap",continueDetails:"Continue with details",hostedBy:"Hosted by",visitPlatform:"Visit Platform"};
+var es={title:"AI LOBBY",subtitle:"El Gran Hotel de Plataformas",login:"Entrar",emailPh:"Escribe tu email...",loginErr:"Email no registrado",langBtn:"EN",logout:"Salir",backOffice:"Back Office",backToLobby:"Volver al Lobby",colTools:"Herramientas",colAnalysis:"Análisis",colStrategy:"Estrategia",emptyCol:"Aún no hay plataformas",floor:"Piso",room:"Habitación",enterRoom:"Entrar a la Habitación",accessFull:"Acceso Total",accessView:"Solo Ver",accessUse:"Usar",accessNo:"Sin Acceso",uploadedBy:"Subido por",date:"Fecha",description:"Descripción",platformLink:"Enlace de la Plataforma",noLink:"Sin enlace",fileAttached:"Archivo adjunto",close:"Cerrar",tabUpload:"Subir Plataforma",tabRegistry:"Registro de Usuarios",tabScores:"Análisis de Scores",tabDisc:"Discrepancias IA",dragTitle:"Subir Archivo",dragText:"Arrastra y suelta aquí",dragSub:"o haz clic para buscar",linkTitle:"Pegar Enlace",linkPh:"https://enlace-plataforma.com",nameLabel:"Nombre de la Plataforma",namePh:"ej. ChatGPT, Midjourney...",sectionLabel:"Sección",descLabel:"Descripción",descPh:"¿Qué hace esta plataforma?",rolesLabel:"Roles de Acceso",secTools:"Herramientas",secAnalysis:"Análisis",secStrategy:"Estrategia",publish:"Publicar en el Lobby",platformAdded:"¡Plataforma registrada!",nameCol:"Nombre",emailCol:"Email",roleCol:"Rol",actionsCol:"Acciones",addUser:"Agregar",userAdded:"¡Usuario registrado!",userRemoved:"Usuario eliminado",confirmTitle:"¿Eliminar usuario?",confirmMsg:"Perderá el acceso.",confirm:"Confirmar",cancel:"Cancelar",platformCol:"Plataforma",rawCol:"Raw",scoreCol:"Score",byCol:"Por",removeBtn:"Eliminar",noDisc:"Sin discrepancias",discAlert:"Diferencia de score",continueDetails:"Continuar con los detalles",hostedBy:"Registrado por",visitPlatform:"Visitar Plataforma"};
+var dict=(lang==="es")?es:en;return(dict[key]!==undefined)?dict[key]:((en[key]!==undefined)?en[key]:key)}
 function calcScores(arr){return arr.map(function(p){if(p.scores)return p;var raw=Math.floor(Math.random()*40)+60;return Object.assign({},p,{scores:{raw:raw,normalized:Math.round(raw*0.85),final:Math.min(100,Math.round(raw*0.85*1.1)),by:"AI Engine v2"}})})}
 </script>
-
 <script type="text/babel">
 var useState=React.useState,useEffect=React.useEffect;
-
-class ErrorBoundary extends React.Component{
-  constructor(p){super(p);this.state={err:null}}
-  static getDerivedStateFromError(e){return{err:e}}
-  render(){if(this.state.err)return React.createElement("div",{style:{padding:40,textAlign:"center",color:"#ff6b6b"}},React.createElement("h2",null,"Error"),React.createElement("p",null,this.state.err.message),React.createElement("button",{onClick:function(){location.reload()},className:"btn-gold",style:{marginTop:20,width:"auto"}},"Reload"));return this.props.children}
-}
+class ErrorBoundary extends React.Component{constructor(p){super(p);this.state={err:null}}static getDerivedStateFromError(e){return{err:e}}render(){if(this.state.err)return React.createElement("div",{style:{padding:40,textAlign:"center",color:"#ff6b6b"}},React.createElement("h2",null,"Error"),React.createElement("p",null,this.state.err.message),React.createElement("button",{onClick:function(){location.reload()},className:"btn-gold",style:{marginTop:20,width:"auto"}},"Reload"));return this.props.children}}
 
 function App(){
-  var[lang,setLang]=useState("es");
-  var[user,setUser]=useState(null);
-  var[view,setView]=useState("lobby");
-  var[platforms,setPlatforms]=useState([]);
-  var[users,setUsers]=useState(initialUsers.slice());
-  var[ready,setReady]=useState(false);
-  var[toast,setToast]=useState(null);
-  var L=(lang==="es")?"es":"en";
-
-  function showToast(m){setToast(m);setTimeout(function(){setToast(null)},3000)}
-  function toggleLang(){var n=(lang==="es")?"en":"es";setLang(n);try{localStorage.setItem("ailobby_lang",n)}catch(e){}}
-
-  useEffect(function(){
-    try{var s=localStorage.getItem("ailobby_lang");if(s==="en"||s==="es")setLang(s)}catch(e){}
-    if(!db){setReady(true);return}
-    try{
-      db.ref("platforms").on("value",function(snap){try{var d=snap.val();setPlatforms(d?calcScores(Object.values(d)):[]);setReady(true)}catch(e){console.error(e);setReady(true)}},function(){setReady(true)});
-      db.ref("users").on("value",function(snap){try{var d=snap.val();if(d){var fb=Object.values(d),m=initialUsers.slice();for(var i=0;i<fb.length;i++){var ex=false;for(var j=0;j<m.length;j++){if(m[j].email===fb[i].email){ex=true;break}}if(!ex)m.push(fb[i])}setUsers(m)}}catch(e){console.error(e)}},function(e){console.error(e)});
-    }catch(e){console.error(e);setReady(true)}
-  },[]);
-
-  function handleLogin(email){
-    var found=null;
-    for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===email.toLowerCase()){found=users[i];break}}
-    if(found){setUser(found);setView("lobby")}
-    return found;
-  }
-  function addPlatform(p){
-    var np=Object.assign({},p,{id:Date.now().toString(),date:new Date().toISOString().split("T")[0],uploadedBy:user?user.name:"Unknown"});
-    var scored=calcScores([np])[0];
-    var all=platforms.concat([scored]);
-    setPlatforms(all);
-    if(db){var o={};all.forEach(function(x){o[x.id]=x});try{db.ref("platforms").set(o)}catch(e){console.error(e)}}
-    showToast(_t(L,"platformAdded")+" 🎉");
-  }
-  function removePlatform(id){
-    var all=platforms.filter(function(p){return p.id!==id});
-    setPlatforms(all);
-    if(db){try{db.ref("platforms/"+id).remove()}catch(e){console.error(e)}}
-  }
-  function addUser(u){
-    var nu=Object.assign({},u,{id:Date.now()});
-    setUsers(users.concat([nu]));
-    if(db){try{db.ref("users/"+nu.id).set(nu)}catch(e){console.error(e)}}
-    showToast(_t(L,"userAdded")+" 🔑");
-  }
-  function removeUser(id){
-    setUsers(users.filter(function(u){return u.id!==id}));
-    if(db){try{db.ref("users/"+id).remove()}catch(e){console.error(e)}}
-    showToast(_t(L,"userRemoved"));
-  }
-
-  if(!ready)return(<div className="loading-screen"><h1 className="gold">AI LOBBY</h1><div className="bell">🔔</div><p>Loading...</p></div>);
-  if(!user)return(<LoginScreen lang={L} onLogin={handleLogin} onToggleLang={toggleLang}/>);
-
-  return(<>
-    <TopBar lang={L} user={user} view={view} setView={setView} onLogout={function(){setUser(null);setView("lobby")}} onToggleLang={toggleLang}/>
-    {view==="lobby"&&<Lobby lang={L} platforms={platforms} user={user} setView={setView}/>}
-    {view==="backoffice"&&<BackOffice lang={L} user={user} users={users} platforms={platforms} onAddPlatform={addPlatform} onRemovePlatform={removePlatform} onAddUser={addUser} onRemoveUser={removeUser} setView={setView} showToast={showToast}/>}
-    {toast&&<div className="toast">{toast}</div>}
-  </>);
+var[lang,setLang]=useState("es");var[user,setUser]=useState(null);var[view,setView]=useState("lobby");var[platforms,setPlatforms]=useState([]);var[users,setUsers]=useState(initialUsers.slice());var[ready,setReady]=useState(false);var[toast,setToast]=useState(null);
+var L=(lang==="es")?"es":"en";
+function showToast(m){setToast(m);setTimeout(function(){setToast(null)},3000)}
+function toggleLang(){var n=(lang==="es")?"en":"es";setLang(n);try{localStorage.setItem("ailobby_lang",n)}catch(e){}}
+useEffect(function(){
+try{var s=localStorage.getItem("ailobby_lang");if(s==="en"||s==="es")setLang(s)}catch(e){}
+if(!db){setReady(true);return}
+try{
+db.ref("platforms").on("value",function(snap){try{var d=snap.val();setPlatforms(d?calcScores(Object.values(d)):[]);setReady(true)}catch(e){console.error(e);setReady(true)}},function(){setReady(true)});
+db.ref("users").on("value",function(snap){try{var d=snap.val();if(d){var fb=Object.values(d),m=initialUsers.slice();for(var i=0;i<fb.length;i++){var ex=false;for(var j=0;j<m.length;j++){if(m[j].email===fb[i].email){ex=true;break}}if(!ex)m.push(fb[i])}setUsers(m)}}catch(e){console.error(e)}},function(e){console.error(e)});
+}catch(e){console.error(e);setReady(true)}
+},[]);
+function handleLogin(email){var found=null;for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===email.toLowerCase()){found=users[i];break}}if(found){setUser(found);setView("lobby")}return found}
+function addPlatform(p){var np=Object.assign({},p,{id:Date.now().toString(),date:new Date().toISOString().split("T")[0],uploadedBy:user?user.name:"Unknown"});var scored=calcScores([np])[0];var all=platforms.concat([scored]);setPlatforms(all);if(db){var o={};all.forEach(function(x){o[x.id]=x});try{db.ref("platforms").set(o)}catch(e){console.error(e)}}showToast(_t(L,"platformAdded")+" 🎉")}
+function removePlatform(id){var all=platforms.filter(function(p){return p.id!==id});setPlatforms(all);if(db){try{db.ref("platforms/"+id).remove()}catch(e){console.error(e)}}}
+function addUser(u){var nu=Object.assign({},u,{id:Date.now()});setUsers(users.concat([nu]));if(db){try{db.ref("users/"+nu.id).set(nu)}catch(e){console.error(e)}}showToast(_t(L,"userAdded")+" 🔑")}
+function removeUser(id){setUsers(users.filter(function(u){return u.id!==id}));if(db){try{db.ref("users/"+id).remove()}catch(e){console.error(e)}}showToast(_t(L,"userRemoved"))}
+if(!ready)return(<div className="loading-screen"><h1 className="gold">AI LOBBY</h1><div className="bell">🔔</div><p>Loading...</p></div>);
+if(!user)return(<LoginScreen lang={L} onLogin={handleLogin} onToggleLang={toggleLang}/>);
+return(<><TopBar lang={L} user={user} view={view} setView={setView} onLogout={function(){setUser(null);setView("lobby")}} onToggleLang={toggleLang}/>{view==="lobby"&&<Lobby lang={L} platforms={platforms} user={user}/>}{view==="backoffice"&&<BackOffice lang={L} user={user} users={users} platforms={platforms} onAddPlatform={addPlatform} onRemovePlatform={removePlatform} onAddUser={addUser} onRemoveUser={removeUser} setView={setView}/>}{toast&&<div className="toast">{toast}</div>}</>);
 }
 
-/* LOGIN */
 function LoginScreen({lang,onLogin,onToggleLang}){
-  var[email,setEmail]=useState("");
-  var[err,setErr]=useState("");
-  function submit(e){e.preventDefault();if(!email.trim())return;if(!onLogin(email.trim()))setErr(_t(lang,"loginErr"))}
-  return(<div className="login-wrap"><div className="login-card">
-    <div style={{position:"absolute",top:14,right:16}}><button className="btn-sm btn-outline" onClick={onToggleLang}>{_t(lang,"langBtn")}</button></div>
-    <div style={{fontSize:"3rem",marginBottom:10}}>🏨</div>
-    <h1>{_t(lang,"title")}</h1>
-    <p>{_t(lang,"subtitle")}</p>
-    <form onSubmit={submit}>
-      <input value={email} onChange={function(e){setEmail(e.target.value);setErr("")}} placeholder={_t(lang,"emailPh")}/>
-      {err&&<div className="error">{err}</div>}
-      <button type="submit" className="btn-gold">{_t(lang,"login")} 🗝️</button>
-    </form>
-  </div></div>);
+var[email,setEmail]=useState("");var[err,setErr]=useState("");
+function submit(e){e.preventDefault();if(!email.trim())return;if(!onLogin(email.trim()))setErr(_t(lang,"loginErr"))}
+return(<div className="login-wrap"><div className="login-card"><div style={{position:"absolute",top:14,right:16}}><button className="btn-sm btn-outline" onClick={onToggleLang}>{_t(lang,"langBtn")}</button></div><div style={{fontSize:"3rem",marginBottom:10}}>🏨</div><h1>{_t(lang,"title")}</h1><p>{_t(lang,"subtitle")}</p><form onSubmit={submit}><input value={email} onChange={function(e){setEmail(e.target.value);setErr("")}} placeholder={_t(lang,"emailPh")}/>{err&&<div className="error">{err}</div>}<button type="submit" className="btn-gold">{_t(lang,"login")} 🗝️</button></form></div></div>);
 }
 
-/* TOP BAR */
 function TopBar({lang,user,view,setView,onLogout,onToggleLang}){
-  var ac=AM[user.role]||AM.guest;
-  return(<div className="topbar">
-    <h2 className="gold">🏨 {_t(lang,"title")}</h2>
-    <div className="topbar-right">
-      {view==="lobby"&&ac.config&&<button className="btn-sm btn-outline" onClick={function(){setView("backoffice")}}>{_t(lang,"backOffice")}</button>}
-      {view==="backoffice"&&<button className="btn-sm btn-outline" onClick={function(){setView("lobby")}}>← {_t(lang,"backToLobby")}</button>}
-      <button className="btn-sm btn-outline" onClick={onToggleLang}>{_t(lang,"langBtn")}</button>
-      <div className="avatar-circle">{user.avatar}</div>
-      <button className="btn-danger-sm" onClick={onLogout}>{_t(lang,"logout")}</button>
-    </div>
-  </div>);
+var ac=AM[user.role]||AM.guest;
+return(<div className="topbar"><h2 className="gold">🏨 {_t(lang,"title")}</h2><div className="topbar-right">{view==="lobby"&&ac.config&&<button className="btn-sm btn-outline" onClick={function(){setView("backoffice")}}>{_t(lang,"backOffice")}</button>}{view==="backoffice"&&<button className="btn-sm btn-outline" onClick={function(){setView("lobby")}}>← {_t(lang,"backToLobby")}</button>}<button className="btn-sm btn-outline" onClick={onToggleLang}>{_t(lang,"langBtn")}</button><div className="avatar-circle">{user.avatar}</div><button className="btn-danger-sm" onClick={onLogout}>{_t(lang,"logout")}</button></div></div>);
 }
 
-/* ====== LOBBY — 3 COLUMN PIPELINE ====== */
-function Lobby({lang,platforms,user,setView}){
-  var[popup,setPopup]=useState(null);
-  var access=AM[user.role]||AM.guest;
-  var sections=["tools","analysis","strategy"];
-  var icons={tools:"🔧",analysis:"📊",strategy:"🎯"};
-  var floorNames={tools:_t(lang,"colTools"),analysis:_t(lang,"colAnalysis"),strategy:_t(lang,"colStrategy")};
-
-  function getAccess(sec){
-    var a=access[sec];
-    if(a==="full")return{label:_t(lang,"accessFull"),cls:"access-full"};
-    if(a==="view-only")return{label:_t(lang,"accessView"),cls:"access-view"};
-    if(a==="use")return{label:_t(lang,"accessUse"),cls:"access-use"};
-    return{label:_t(lang,"accessNo"),cls:"access-no"};
-  }
-
-  return(<div className="lobby">
-    <div className="pipeline">
-      {sections.map(function(sec){
-        var items=platforms.filter(function(p){return p.section===sec});
-        var imgs=HI[sec]||HI.tools;
-        var acc=getAccess(sec);
-        return(<div key={sec} className="pipeline-col">
-          <div className="col-header">
-            <h3>{icons[sec]} {floorNames[sec]}</h3>
-            <div className="col-count">{_t(lang,"floor")} {FLOOR_BASE[sec]/100} · {items.length} platforms · <span className={"access-badge "+acc.cls}>{acc.label}</span></div>
-          </div>
-          <div className="col-body">
-            {items.length===0&&<div className="empty-col">{_t(lang,"emptyCol")}</div>}
-            {items.map(function(p,idx){
-              var roomNum=getRoomNumber(sec,idx);
-              return(<div key={p.id} className="pcard" onClick={function(){setPopup({platform:p,roomNum:roomNum,sec:sec,acc:acc})}}>
-                <img className="pcard-img" src={imgs[idx%imgs.length]} alt="" loading="lazy"/>
-                <div className="pcard-body">
-                  <div className="pcard-room">{_t(lang,"room")} {roomNum}</div>
-                  <div className="pcard-name">{p.name}</div>
-                  {p.description&&<div className="pcard-desc">{p.description}</div>}
-                  {p.url&&<a className="pcard-url" href={p.url} target="_blank" rel="noopener" onClick={function(e){e.stopPropagation()}}>🔗 {p.url}</a>}
-                  <div className="pcard-meta">
-                    <span>{p.uploadedBy}</span>
-                    <span>{p.date}</span>
-                  </div>
-                </div>
-              </div>);
-            })}
-          </div>
-        </div>);
-      })}
-    </div>
-
-    {popup&&<RoomPopup lang={lang} data={popup} onClose={function(){setPopup(null)}}/>}
-  </div>);
+function Lobby({lang,platforms,user}){
+var[popup,setPopup]=useState(null);
+var access=AM[user.role]||AM.guest;
+var sections=["tools","analysis","strategy"];
+var icons={tools:"🔧",analysis:"📊",strategy:"🎯"};
+var floorNames={tools:_t(lang,"colTools"),analysis:_t(lang,"colAnalysis"),strategy:_t(lang,"colStrategy")};
+function getAccess(sec){var a=access[sec];if(a==="full")return{label:_t(lang,"accessFull"),cls:"access-full"};if(a==="view-only")return{label:_t(lang,"accessView"),cls:"access-view"};if(a==="use")return{label:_t(lang,"accessUse"),cls:"access-use"};return{label:_t(lang,"accessNo"),cls:"access-no"}}
+return(<div className="lobby"><div className="pipeline">{sections.map(function(sec){
+var items=platforms.filter(function(p){return p.section===sec});var imgs=HI[sec]||HI.tools;var acc=getAccess(sec);
+return(<div key={sec} className="pipeline-col"><div className="col-header"><h3>{icons[sec]} {floorNames[sec]}</h3><div className="col-count">{_t(lang,"floor")} {FLOOR_BASE[sec]/100} · {items.length} platforms · <span className={"access-badge "+acc.cls}>{acc.label}</span></div></div>
+<div className="col-body">{items.length===0&&<div className="empty-col">{_t(lang,"emptyCol")}</div>}{items.map(function(p,idx){var roomNum=getRoomNumber(sec,idx);return(<div key={p.id} className="pcard" onClick={function(){setPopup({platform:p,roomNum:roomNum,sec:sec,acc:acc})}}>
+<img className="pcard-img" src={imgs[idx%imgs.length]} alt="" loading="lazy"/>
+<div className="pcard-body"><div className="pcard-room">🚪 {_t(lang,"room")} {roomNum}</div><div className="pcard-name">{p.name}</div>{p.description&&<div className="pcard-desc">{p.description}</div>}{p.url&&<a className="pcard-url" href={p.url} target="_blank" rel="noopener" onClick={function(e){e.stopPropagation()}}>🔗 {p.url}</a>}<div className="pcard-meta"><span>{p.uploadedBy}</span><span>{p.date}</span></div></div>
+</div>)})}</div></div>)})}</div>
+{popup&&<RoomPopup lang={lang} data={popup} onClose={function(){setPopup(null)}}/>}
+</div>);
 }
 
-/* ROOM POPUP */
 function RoomPopup({lang,data,onClose}){
-  var p=data.platform,roomNum=data.roomNum,sec=data.sec,acc=data.acc;
-  var imgs=HI[sec]||HI.tools;
-  var icons={tools:"🔧",analysis:"📊",strategy:"🎯"};
-  var floorNames={tools:_t(lang,"colTools"),analysis:_t(lang,"colAnalysis"),strategy:_t(lang,"colStrategy")};
-
-  return(<div className="popup-overlay" onClick={onClose}>
-    <div className="popup-card" onClick={function(e){e.stopPropagation()}}>
-      <img className="popup-img" src={imgs[0]} alt=""/>
-      <div className="popup-room-badge">🚪 {_t(lang,"room")} {roomNum}</div>
-      <div className="popup-body">
-        <h2>{p.name}</h2>
-        <span className="popup-section-badge">{icons[sec]} {floorNames[sec]}</span>
-        <span className={"access-badge "+acc.cls} style={{marginLeft:8}}>{acc.label}</span>
-
-        {p.description&&<div className="popup-info" style={{marginTop:12}}><strong>{_t(lang,"description")}:</strong> {p.description}</div>}
-        <div className="popup-info"><strong>{_t(lang,"hostedBy")}:</strong> {p.uploadedBy} · <strong>{_t(lang,"date")}:</strong> {p.date}</div>
-        {p.fileName&&<div className="popup-file">📎 {p.fileName}</div>}
-
-        <hr className="popup-divider"/>
-
-        <div className="popup-actions">
-          {p.url?<a href={p.url} target="_blank" rel="noopener" className="btn-enter" style={{textDecoration:"none"}}>🚪 {_t(lang,"enterRoom")} →</a>:<div className="btn-enter" style={{opacity:.5,cursor:"default"}}>🔗 {_t(lang,"noLink")}</div>}
-          <button className="btn-close-popup" onClick={onClose}>{_t(lang,"close")}</button>
-        </div>
-      </div>
-    </div>
-  </div>);
+var p=data.platform,roomNum=data.roomNum,sec=data.sec,acc=data.acc;
+var imgs=HI[sec]||HI.tools;var icons={tools:"🔧",analysis:"📊",strategy:"🎯"};var floorNames={tools:_t(lang,"colTools"),analysis:_t(lang,"colAnalysis"),strategy:_t(lang,"colStrategy")};
+return(<div className="popup-overlay" onClick={onClose}><div className="popup-card" onClick={function(e){e.stopPropagation()}}>
+<img className="popup-img" src={imgs[0]} alt=""/>
+<div className="popup-room-badge">🚪 {_t(lang,"room")} {roomNum}</div>
+<div className="popup-body">
+<h2>{p.name}</h2>
+<span className="popup-section-badge">{icons[sec]} {floorNames[sec]}</span><span className={"access-badge "+acc.cls} style={{marginLeft:8}}>{acc.label}</span>
+{p.description&&<div className="popup-info" style={{marginTop:12}}><strong>{_t(lang,"description")}:</strong> {p.description}</div>}
+<div className="popup-info"><strong>{_t(lang,"hostedBy")}:</strong> {p.uploadedBy} · <strong>{_t(lang,"date")}:</strong> {p.date}</div>
+{p.fileName&&<div className="popup-file">📎 {p.fileName}</div>}
+<hr className="popup-divider"/>
+<div className="popup-actions">
+{p.url?<a href={p.url} target="_blank" rel="noopener" className="btn-enter">🚪 {_t(lang,"enterRoom")} →</a>:<div className="btn-enter" style={{opacity:.5,cursor:"default"}}>🔗 {_t(lang,"noLink")}</div>}
+<button className="btn-close-popup" onClick={onClose}>{_t(lang,"close")}</button>
+</div></div></div></div>);
 }
 
-/* ====== BACK OFFICE ====== */
-function BackOffice({lang,user,users,platforms,onAddPlatform,onRemovePlatform,onAddUser,onRemoveUser,setView,showToast}){
-  var[tab,setTab]=useState("upload");
-  var tabs=[{id:"upload",label:_t(lang,"tabUpload")},{id:"registry",label:_t(lang,"tabRegistry")},{id:"scores",label:_t(lang,"tabScores")},{id:"disc",label:_t(lang,"tabDisc")}];
-  return(<div className="backoffice">
-    <div className="bo-side">
-      <h3 className="gold">{_t(lang,"backOffice")}</h3>
-      {tabs.map(function(t){return <button key={t.id} className={"bo-btn"+(tab===t.id?" active":"")} onClick={function(){setTab(t.id)}}>{t.label}</button>})}
-      <div className="bo-bottom">
-        <button className="btn-back" onClick={function(){setView("lobby")}}>← {_t(lang,"backToLobby")}</button>
-      </div>
-    </div>
-    <div className="bo-main">
-      {tab==="upload"&&<UploadTab lang={lang} onAdd={onAddPlatform}/>}
-      {tab==="registry"&&<RegistryTab lang={lang} users={users} onAdd={onAddUser} onRemove={onRemoveUser}/>}
-      {tab==="scores"&&<ScoresTab lang={lang} platforms={platforms}/>}
-      {tab==="disc"&&<DiscTab lang={lang} platforms={platforms}/>}
-    </div>
-  </div>);
+function BackOffice({lang,user,users,platforms,onAddPlatform,onRemovePlatform,onAddUser,onRemoveUser,setView}){
+var[tab,setTab]=useState("upload");
+var tabs=[{id:"upload",label:_t(lang,"tabUpload")},{id:"registry",label:_t(lang,"tabRegistry")},{id:"scores",label:_t(lang,"tabScores")},{id:"disc",label:_t(lang,"tabDisc")}];
+return(<div className="backoffice"><div className="bo-side"><h3 className="gold">{_t(lang,"backOffice")}</h3>{tabs.map(function(t){return <button key={t.id} className={"bo-btn"+(tab===t.id?" active":"")} onClick={function(){setTab(t.id)}}>{t.label}</button>})}<div className="bo-bottom"><button className="btn-back" onClick={function(){setView("lobby")}}>← {_t(lang,"backToLobby")}</button></div></div>
+<div className="bo-main">{tab==="upload"&&<UploadTab lang={lang} onAdd={onAddPlatform}/>}{tab==="registry"&&<RegistryTab lang={lang} users={users} onAdd={onAddUser} onRemove={onRemoveUser}/>}{tab==="scores"&&<ScoresTab lang={lang} platforms={platforms}/>}{tab==="disc"&&<DiscTab lang={lang} platforms={platforms}/>}</div></div>);
 }
 
-/* UPLOAD */
 function UploadTab({lang,onAdd}){
-  var[file,setFile]=useState(null);
-  var[url,setUrl]=useState("");
-  var[name,setName]=useState("");
-  var[section,setSection]=useState("tools");
-  var[desc,setDesc]=useState("");
-  var[roles,setRoles]=useState(["bellboy","concierge","guest"]);
-  var[dragOver,setDragOver]=useState(false);
-  var[showForm,setShowForm]=useState(false);
-  var[celeb,setCeleb]=useState(false);
-
-  var hasContent=file||url.trim();
-  var canPublish=hasContent&&name.trim();
-
-  function handleDrop(e){e.preventDefault();setDragOver(false);if(e.dataTransfer.files&&e.dataTransfer.files[0])setFile(e.dataTransfer.files[0])}
-  function handleFileInput(e){if(e.target.files&&e.target.files[0])setFile(e.target.files[0])}
-  function toggleRole(r){roles.indexOf(r)>=0?setRoles(roles.filter(function(x){return x!==r})):setRoles(roles.concat([r]))}
-
-  function publish(){
-    if(!canPublish)return;
-    onAdd({name:name,section:section,description:desc,url:url.trim(),fileName:file?file.name:"",fileSize:file?file.size:0,roles:roles});
-    setCeleb(true);
-    setTimeout(function(){setCeleb(false);setFile(null);setUrl("");setName("");setDesc("");setSection("tools");setRoles(["bellboy","concierge","guest"]);setShowForm(false)},2500);
-  }
-
-  return(<div>
-    <h2 className="gold" style={{marginBottom:18}}>📦 {_t(lang,"tabUpload")}</h2>
-
-    <div className="up-boxes">
-      <div className={"up-drop"+(dragOver?" dragover":"")} onDragOver={function(e){e.preventDefault();setDragOver(true)}} onDragLeave={function(){setDragOver(false)}} onDrop={handleDrop}>
-        <input type="file" id="fu" onChange={handleFileInput} style={{display:"none"}}/>
-        <label htmlFor="fu" style={{cursor:"pointer",textAlign:"center"}}>
-          <div className="icon">📁</div>
-          <h4 className="gold">{_t(lang,"dragTitle")}</h4>
-          <div className="hint">{_t(lang,"dragText")}</div>
-          <div className="hint">{_t(lang,"dragSub")}</div>
-        </label>
-        {file&&<div className="file-ok">✓ {file.name}</div>}
-      </div>
-
-      <div className="up-link">
-        <div className="icon">🔗</div>
-        <h4 className="gold">{_t(lang,"linkTitle")}</h4>
-        <input type="url" value={url} onChange={function(e){setUrl(e.target.value)}} placeholder={_t(lang,"linkPh")}/>
-        {url.trim()&&<div className="file-ok" style={{marginTop:8}}>✓ Link</div>}
-      </div>
-    </div>
-
-    {hasContent&&!showForm&&<div style={{textAlign:"center",marginBottom:18}}>
-      <button className="btn-gold" style={{width:"auto",padding:"12px 36px"}} onClick={function(){setShowForm(true)}}>→ {_t(lang,"continueDetails")}</button>
-    </div>}
-
-    {showForm&&<div className="up-form">
-      <div className="fr">
-        <div className="fg"><label>{_t(lang,"nameLabel")}</label><input value={name} onChange={function(e){setName(e.target.value)}} placeholder={_t(lang,"namePh")}/></div>
-        <div className="fg"><label>{_t(lang,"sectionLabel")}</label>
-          <select value={section} onChange={function(e){setSection(e.target.value)}}>
-            <option value="tools">🔧 {_t(lang,"secTools")}</option>
-            <option value="analysis">📊 {_t(lang,"secAnalysis")}</option>
-            <option value="strategy">🎯 {_t(lang,"secStrategy")}</option>
-          </select>
-        </div>
-      </div>
-      <div className="fg"><label>{_t(lang,"descLabel")}</label><textarea value={desc} onChange={function(e){setDesc(e.target.value)}} placeholder={_t(lang,"descPh")}/></div>
-      <div className="fg"><label>{_t(lang,"rolesLabel")}</label>
-        <div className="roles-row">
-          {["bellboy","concierge","guest"].map(function(r){return <button key={r} className={"rchip"+(roles.indexOf(r)>=0?" on":"")} onClick={function(){toggleRole(r)}}>{r==="bellboy"?"🔑 Bellboy":r==="concierge"?"🛎️ Concierge":"👤 Guest"}</button>})}
-        </div>
-      </div>
-
-      <div className="preview-box">
-        <h4 className="gold">{lang==="es"?"Vista previa":"Preview"}</h4>
-        <p><strong>{_t(lang,"nameLabel")}:</strong> {name||"—"}</p>
-        <p><strong>{_t(lang,"sectionLabel")}:</strong> {section}</p>
-        {desc&&<p><strong>{_t(lang,"descLabel")}:</strong> {desc}</p>}
-        {url.trim()&&<p><strong>🔗:</strong> {url}</p>}
-        {file&&<p><strong>📁:</strong> {file.name}</p>}
-      </div>
-
-      <button className="btn-gold" disabled={!canPublish} onClick={publish} style={{fontSize:"1.05rem",padding:"14px"}}>🥂 {_t(lang,"publish")}</button>
-    </div>}
-
-    {celeb&&<div className="celeb"><div className="celeb-inner"><div style={{fontSize:"4rem"}}>🥂🎉</div><div style={{fontSize:"1.3rem",color:"#d4a853",marginTop:10}}>{_t(lang,"platformAdded")}</div></div></div>}
-  </div>);
+var[file,setFile]=useState(null);var[url,setUrl]=useState("");var[name,setName]=useState("");var[section,setSection]=useState("tools");var[desc,setDesc]=useState("");var[roles,setRoles]=useState(["bellboy","concierge","guest"]);var[dragOver,setDragOver]=useState(false);var[showForm,setShowForm]=useState(false);var[celeb,setCeleb]=useState(false);
+var hasContent=file||url.trim();var canPublish=hasContent&&name.trim();
+function handleDrop(e){e.preventDefault();setDragOver(false);if(e.dataTransfer.files&&e.dataTransfer.files[0])setFile(e.dataTransfer.files[0])}
+function handleFileInput(e){if(e.target.files&&e.target.files[0])setFile(e.target.files[0])}
+function toggleRole(r){roles.indexOf(r)>=0?setRoles(roles.filter(function(x){return x!==r})):setRoles(roles.concat([r]))}
+function publish(){if(!canPublish)return;onAdd({name:name,section:section,description:desc,url:url.trim(),fileName:file?file.name:"",fileSize:file?file.size:0,roles:roles});setCeleb(true);setTimeout(function(){setCeleb(false);setFile(null);setUrl("");setName("");setDesc("");setSection("tools");setRoles(["bellboy","concierge","guest"]);setShowForm(false)},2500)}
+return(<div><h2 className="gold" style={{marginBottom:18}}>📦 {_t(lang,"tabUpload")}</h2>
+<div className="up-boxes">
+<div className={"up-drop"+(dragOver?" dragover":"")} onDragOver={function(e){e.preventDefault();setDragOver(true)}} onDragLeave={function(){setDragOver(false)}} onDrop={handleDrop}><input type="file" id="fu" onChange={handleFileInput} style={{display:"none"}}/><label htmlFor="fu" style={{cursor:"pointer",textAlign:"center"}}><div className="icon">📁</div><h4 className="gold">{_t(lang,"dragTitle")}</h4><div className="hint">{_t(lang,"dragText")}</div><div className="hint">{_t(lang,"dragSub")}</div></label>{file&&<div className="file-ok">✓ {file.name}</div>}</div>
+<div className="up-link"><div className="icon">🔗</div><h4 className="gold">{_t(lang,"linkTitle")}</h4><input type="url" value={url} onChange={function(e){setUrl(e.target.value)}} placeholder={_t(lang,"linkPh")}/>{url.trim()&&<div className="file-ok" style={{marginTop:8}}>✓ Link</div>}</div>
+</div>
+{hasContent&&!showForm&&<div style={{textAlign:"center",marginBottom:18}}><button className="btn-gold" style={{width:"auto",padding:"12px 36px"}} onClick={function(){setShowForm(true)}}>→ {_t(lang,"continueDetails")}</button></div>}
+{showForm&&<div className="up-form">
+<div className="fr"><div className="fg"><label>{_t(lang,"nameLabel")}</label><input value={name} onChange={function(e){setName(e.target.value)}} placeholder={_t(lang,"namePh")}/></div><div className="fg"><label>{_t(lang,"sectionLabel")}</label><select value={section} onChange={function(e){setSection(e.target.value)}}><option value="tools">🔧 {_t(lang,"secTools")}</option><option value="analysis">📊 {_t(lang,"secAnalysis")}</option><option value="strategy">🎯 {_t(lang,"secStrategy")}</option></select></div></div>
+<div className="fg"><label>{_t(lang,"descLabel")}</label><textarea value={desc} onChange={function(e){setDesc(e.target.value)}} placeholder={_t(lang,"descPh")}/></div>
+<div className="fg"><label>{_t(lang,"rolesLabel")}</label><div className="roles-row">{["bellboy","concierge","guest"].map(function(r){return <button key={r} className={"rchip"+(roles.indexOf(r)>=0?" on":"")} onClick={function(){toggleRole(r)}}>{r==="bellboy"?"🔑 Bellboy":r==="concierge"?"🛎️ Concierge":"👤 Guest"}</button>})}</div></div>
+<div className="preview-box"><h4 className="gold">{lang==="es"?"Vista previa":"Preview"}</h4><p><strong>{_t(lang,"nameLabel")}:</strong> {name||"—"}</p><p><strong>{_t(lang,"sectionLabel")}:</strong> {section}</p>{desc&&<p><strong>{_t(lang,"descLabel")}:</strong> {desc}</p>}{url.trim()&&<p><strong>🔗:</strong> {url}</p>}{file&&<p><strong>📁:</strong> {file.name}</p>}</div>
+<button className="btn-gold" disabled={!canPublish} onClick={publish} style={{fontSize:"1.05rem",padding:"14px"}}>🥂 {_t(lang,"publish")}</button>
+</div>}
+{celeb&&<div className="celeb"><div className="celeb-inner"><div style={{fontSize:"4rem"}}>🥂🎉</div><div style={{fontSize:"1.3rem",color:"#d4a853",marginTop:10}}>{_t(lang,"platformAdded")}</div></div></div>}
+</div>);
 }
 
-/* REGISTRY */
 function RegistryTab({lang,users,onAdd,onRemove}){
-  var[nn,setNn]=useState("");var[ne,setNe]=useState("");var[nr,setNr]=useState("concierge");var[conf,setConf]=useState(null);
-  function add(){if(!ne.trim()||!nn.trim())return;var av=nn.trim().split(" ").map(function(w){return w[0]}).join("").toUpperCase().slice(0,2);onAdd({name:nn.trim(),email:ne.trim(),role:nr,avatar:av});setNn("");setNe("");setNr("concierge")}
-  return(<div>
-    <h2 className="gold" style={{marginBottom:16}}>📋 {_t(lang,"tabRegistry")}</h2>
-    <div className="add-row">
-      <input value={nn} onChange={function(e){setNn(e.target.value)}} placeholder={_t(lang,"nameCol")}/>
-      <input value={ne} onChange={function(e){setNe(e.target.value)}} placeholder={_t(lang,"emailCol")}/>
-      <select value={nr} onChange={function(e){setNr(e.target.value)}}><option value="bellboy">Bellboy</option><option value="concierge">Concierge</option><option value="guest">Guest</option></select>
-      <button className="btn-gold" style={{width:"auto",whiteSpace:"nowrap"}} onClick={add}>{_t(lang,"addUser")}</button>
-    </div>
-    <table className="reg-table"><thead><tr><th>{_t(lang,"nameCol")}</th><th>{_t(lang,"emailCol")}</th><th>{_t(lang,"roleCol")}</th><th>{_t(lang,"actionsCol")}</th></tr></thead>
-    <tbody>{users.map(function(u){return(<tr key={u.id||u.email}>
-      <td><span className="avatar-circle" style={{display:"inline-flex",width:26,height:26,fontSize:".68rem",marginRight:6,verticalAlign:"middle"}}>{u.avatar}</span>{u.name}</td>
-      <td>{u.email}</td>
-      <td><span className={"badge-role badge-"+u.role}>{u.role}</span></td>
-      <td>{u.id>6?<button className="btn-danger-sm" onClick={function(){setConf(u.id)}}>{_t(lang,"removeBtn")}</button>:"—"}</td>
-    </tr>)})}</tbody></table>
-    {conf&&<div className="confirm-ov"><div className="confirm-box"><h3 className="gold">{_t(lang,"confirmTitle")}</h3><p>{_t(lang,"confirmMsg")}</p><div className="confirm-btns"><button className="btn-gold" style={{width:"auto"}} onClick={function(){onRemove(conf);setConf(null)}}>{_t(lang,"confirm")}</button><button className="btn-sm btn-outline" onClick={function(){setConf(null)}}>{_t(lang,"cancel")}</button></div></div></div>}
-  </div>);
+var[nn,setNn]=useState("");var[ne,setNe]=useState("");var[nr,setNr]=useState("concierge");var[conf,setConf]=useState(null);
+function add(){if(!ne.trim()||!nn.trim())return;var av=nn.trim().split(" ").map(function(w){return w[0]}).join("").toUpperCase().slice(0,2);onAdd({name:nn.trim(),email:ne.trim(),role:nr,avatar:av});setNn("");setNe("");setNr("concierge")}
+return(<div><h2 className="gold" style={{marginBottom:16}}>📋 {_t(lang,"tabRegistry")}</h2>
+<div className="add-row"><input value={nn} onChange={function(e){setNn(e.target.value)}} placeholder={_t(lang,"nameCol")}/><input value={ne} onChange={function(e){setNe(e.target.value)}} placeholder={_t(lang,"emailCol")}/><select value={nr} onChange={function(e){setNr(e.target.value)}}><option value="bellboy">Bellboy</option><option value="concierge">Concierge</option><option value="guest">Guest</option></select><button className="btn-gold" style={{width:"auto",whiteSpace:"nowrap"}} onClick={add}>{_t(lang,"addUser")}</button></div>
+<table className="reg-table"><thead><tr><th>{_t(lang,"nameCol")}</th><th>{_t(lang,"emailCol")}</th><th>{_t(lang,"roleCol")}</th><th>{_t(lang,"actionsCol")}</th></tr></thead>
+<tbody>{users.map(function(u){return(<tr key={u.id||u.email}><td><span className="avatar-circle" style={{display:"inline-flex",width:26,height:26,fontSize:".68rem",marginRight:6,verticalAlign:"middle"}}>{u.avatar}</span>{u.name}</td><td>{u.email}</td><td><span className={"badge-role badge-"+u.role}>{u.role}</span></td><td>{u.id>6?<button className="btn-danger-sm" onClick={function(){setConf(u.id)}}>{_t(lang,"removeBtn")}</button>:"—"}</td></tr>)})}</tbody></table>
+{conf&&<div className="confirm-ov"><div className="confirm-box"><h3 className="gold">{_t(lang,"confirmTitle")}</h3><p>{_t(lang,"confirmMsg")}</p><div className="confirm-btns"><button className="btn-gold" style={{width:"auto"}} onClick={function(){onRemove(conf);setConf(null)}}>{_t(lang,"confirm")}</button><button className="btn-sm btn-outline" onClick={function(){setConf(null)}}>{_t(lang,"cancel")}</button></div></div></div>}
+</div>);
 }
 
-/* SCORES */
 function ScoresTab({lang,platforms}){
-  return(<div><h2 className="gold" style={{marginBottom:16}}>📊 {_t(lang,"tabScores")}</h2>
-    {platforms.length===0?<p style={{color:"#8b6f47"}}>{_t(lang,"emptyCol")}</p>:
-    <table className="sc-table"><thead><tr><th>{_t(lang,"platformCol")}</th><th>{_t(lang,"sectionLabel")}</th><th>{_t(lang,"rawCol")}</th><th>{_t(lang,"scoreCol")}</th><th>{_t(lang,"byCol")}</th></tr></thead>
-    <tbody>{platforms.map(function(p){var s=p.scores||{};return(<tr key={p.id}><td>{p.name}</td><td>{p.section}</td><td>{s.raw||"—"}</td><td style={{color:s.final>=80?"#5cb85c":s.final>=60?"#ffc107":"#dc3545",fontWeight:700}}>{s.final||"—"}</td><td>{s.by||"—"}</td></tr>)})}</tbody></table>}
-  </div>);
+return(<div><h2 className="gold" style={{marginBottom:16}}>📊 {_t(lang,"tabScores")}</h2>
+{platforms.length===0?<p style={{color:"#8b6f47"}}>{_t(lang,"emptyCol")}</p>:
+<table className="sc-table"><thead><tr><th>{_t(lang,"platformCol")}</th><th>{_t(lang,"sectionLabel")}</th><th>{_t(lang,"rawCol")}</th><th>{_t(lang,"scoreCol")}</th><th>{_t(lang,"byCol")}</th></tr></thead>
+<tbody>{platforms.map(function(p){var s=p.scores||{};return(<tr key={p.id}><td>{p.name}</td><td>{p.section}</td><td>{s.raw||"—"}</td><td style={{color:s.final>=80?"#5cb85c":s.final>=60?"#ffc107":"#dc3545",fontWeight:700}}>{s.final||"—"}</td><td>{s.by||"—"}</td></tr>)})}</tbody></table>}
+</div>);
 }
 
-/* DISCREPANCIES */
 function DiscTab({lang,platforms}){
-  var discs=platforms.filter(function(p){return p.scores&&Math.abs(p.scores.raw-p.scores.final)>15});
-  return(<div><h2 className="gold" style={{marginBottom:16}}>⚠️ {_t(lang,"tabDisc")}</h2>
-    {discs.length===0?<p style={{color:"#5cb85c"}}>✨ {_t(lang,"noDisc")}</p>:
-    <table className="sc-table"><thead><tr><th>{_t(lang,"platformCol")}</th><th>{_t(lang,"rawCol")}</th><th>{_t(lang,"scoreCol")}</th><th>Gap</th></tr></thead>
-    <tbody>{discs.map(function(p){var s=p.scores;return(<tr key={p.id}><td>{p.name}</td><td>{s.raw}</td><td>{s.final}</td><td style={{color:"#ff6b6b",fontWeight:700}}>{Math.abs(s.raw-s.final)}</td></tr>)})}</tbody></table>}
-  </div>);
+var discs=platforms.filter(function(p){return p.scores&&Math.abs(p.scores.raw-p.scores.final)>15});
+return(<div><h2 className="gold" style={{marginBottom:16}}>⚠️ {_t(lang,"tabDisc")}</h2>
+{discs.length===0?<p style={{color:"#5cb85c"}}>✨ {_t(lang,"noDisc")}</p>:
+<table className="sc-table"><thead><tr><th>{_t(lang,"platformCol")}</th><th>{_t(lang,"rawCol")}</th><th>{_t(lang,"scoreCol")}</th><th>Gap</th></tr></thead>
+<tbody>{discs.map(function(p){var s=p.scores;return(<tr key={p.id}><td>{p.name}</td><td>{s.raw}</td><td>{s.final}</td><td style={{color:"#ff6b6b",fontWeight:700}}>{Math.abs(s.raw-s.final)}</td></tr>)})}</tbody></table>}
+</div>);
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App/></ErrorBoundary>);
