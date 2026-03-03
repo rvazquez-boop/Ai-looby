@@ -1,723 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI LOBBY - Platform Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--wine:#9B2335;--burgundy:#5A1A2A;--gold:#D4A843;--cream:#FAF0E4;--dark:#1A0A0E;--brown:#3E1C11;--rose:#C7959B;--green:#2A5A3A}
-        body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--cream);overflow-x:hidden}
-
-        .loading-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--dark));text-align:center}
-        .loading-screen .bell{font-size:4rem;margin-bottom:20px;animation:bounce 1s infinite}
-        .loading-screen h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:2rem}
-        .loading-screen p{color:var(--rose);margin-top:10px;font-size:.85rem}
-        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-
-        .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--dark));padding:20px}
-        .login-card{background:rgba(26,10,14,.9);border:2px solid var(--gold);border-radius:16px;padding:40px;max-width:420px;width:100%;text-align:center;position:relative}
-        .login-card .bell{font-size:3.5rem;margin-bottom:10px}
-        .login-card h1{font-family:'Playfair Display',serif;color:var(--gold);font-size:2.2rem;margin-bottom:5px}
-        .login-card h3{color:var(--rose);font-weight:400;font-size:.9rem;margin-bottom:30px;font-style:italic}
-        .login-card input{width:100%;padding:14px;border:1px solid var(--gold);border-radius:8px;background:rgba(255,255,255,.05);color:var(--cream);font-size:1rem;margin-bottom:15px;outline:none}
-        .login-card input:focus{border-color:var(--wine);box-shadow:0 0 10px rgba(155,35,53,.3)}
-        .login-btn{width:100%;padding:14px;background:var(--wine);color:var(--cream);border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s}
-        .login-btn:hover{background:var(--burgundy);transform:translateY(-2px)}
-        .login-error{color:#ff6b6b;font-size:.85rem;margin-bottom:10px}
-        .lang-toggle{position:absolute;top:15px;right:15px;background:none;border:1px solid var(--gold);color:var(--gold);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.8rem}
-
-        .lobby-header{background:linear-gradient(135deg,var(--burgundy),var(--dark));padding:20px 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);flex-wrap:wrap;gap:10px}
-        .lobby-title h1{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.8rem}
-        .lobby-title p{color:var(--rose);font-size:.8rem;font-style:italic}
-        .lobby-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-        .user-badge{display:flex;align-items:center;gap:8px}
-        .avatar{width:36px;height:36px;border-radius:50%;background:var(--wine);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;border:2px solid var(--gold)}
-        .role-tag{background:var(--gold);color:var(--dark);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600;text-transform:uppercase}
-        .btn{padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .3s}
-        .btn-gold{background:var(--gold);color:var(--dark)}
-        .btn-wine{background:var(--wine);color:var(--cream)}
-        .btn-outline{background:none;border:1px solid var(--gold);color:var(--gold)}
-        .btn:hover{transform:translateY(-2px);opacity:.9}
-
-        .floor-tabs{display:flex;justify-content:center;gap:10px;padding:20px;background:rgba(90,26,42,.3);flex-wrap:wrap}
-        .floor-tab{padding:12px 24px;border:2px solid transparent;border-radius:10px;background:rgba(255,255,255,.05);color:var(--rose);cursor:pointer;font-weight:600;transition:all .3s}
-        .floor-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,.1)}
-        .floor-tab:hover{border-color:var(--rose)}
-
-        .room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:30px;max-width:1200px;margin:0 auto}
-        .room-card{border-radius:12px;overflow:hidden;border:2px solid rgba(212,168,67,.2);background:rgba(26,10,14,.8);cursor:pointer;transition:all .3s}
-        .room-card:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 8px 30px rgba(212,168,67,.2)}
-        .room-img{height:160px;background-size:cover;background-position:center;position:relative}
-        .room-badge{position:absolute;top:10px;right:10px;background:var(--wine);color:var(--cream);padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:600;text-transform:uppercase}
-        .room-info{padding:15px}
-        .room-number{color:var(--gold);font-size:.75rem;font-weight:700}
-        .room-name{font-family:'Playfair Display',serif;font-size:1.1rem;margin-top:4px}
-        .empty-floor{text-align:center;padding:60px;color:var(--rose);grid-column:1/-1}
-        .empty-floor .icon{font-size:3rem;margin-bottom:15px}
-
-        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
-        .modal-card{background:var(--dark);border:2px solid var(--gold);border-radius:16px;max-width:550px;width:100%;max-height:90vh;overflow-y:auto}
-        .modal-img{height:200px;background-size:cover;background-position:center;border-radius:14px 14px 0 0;position:relative}
-        .modal-close{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);color:var(--cream);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.2rem}
-        .modal-body{padding:25px}
-        .modal-body h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin-bottom:10px}
-        .modal-body .desc{color:var(--rose);margin-bottom:15px;line-height:1.5}
-        .meta-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-        .meta-chip{background:rgba(212,168,67,.1);border:1px solid var(--gold);padding:4px 10px;border-radius:6px;font-size:.75rem;color:var(--gold)}
-        .access-badge{display:inline-block;padding:4px 12px;border-radius:6px;font-size:.8rem;font-weight:600;margin-bottom:15px}
-        .access-full{background:var(--green);color:white}
-        .access-view{background:var(--gold);color:var(--dark)}
-        .access-no{background:#666;color:#ccc}
-        .enter-btn{display:block;width:100%;padding:14px;background:var(--wine);color:var(--cream);border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;text-align:center;text-decoration:none}
-        .enter-btn:hover{background:var(--burgundy)}
-
-        .bo-wrap{display:flex;min-height:100vh}
-        .bo-sidebar{width:220px;background:linear-gradient(180deg,var(--burgundy),var(--dark));padding:20px;border-right:2px solid var(--gold)}
-        .bo-sidebar h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.3rem;margin-bottom:20px}
-        .bo-nav-item{padding:12px;border-radius:8px;color:var(--rose);cursor:pointer;margin-bottom:5px;transition:all .2s;font-size:.9rem}
-        .bo-nav-item.active{background:rgba(212,168,67,.15);color:var(--gold);border-left:3px solid var(--gold)}
-        .bo-nav-item:hover{background:rgba(255,255,255,.05)}
-        .bo-content{flex:1;padding:30px;overflow-y:auto}
-        .bo-content h3{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.4rem;margin-bottom:20px}
-
-        .upload-steps{display:flex;gap:10px;margin-bottom:25px}
-        .step-indicator{padding:8px 16px;border-radius:20px;font-size:.8rem;font-weight:600}
-        .step-active{background:var(--gold);color:var(--dark)}
-        .step-inactive{background:rgba(255,255,255,.1);color:var(--rose)}
-        .dropzone{border:3px dashed var(--gold);border-radius:12px;padding:60px;text-align:center;cursor:pointer;transition:all .3s}
-        .dropzone:hover,.dropzone.dragging{background:rgba(212,168,67,.1);border-color:var(--wine)}
-        .dropzone .icon{font-size:3rem;margin-bottom:10px}
-        .form-group{margin-bottom:15px}
-        .form-group label{display:block;color:var(--gold);font-weight:600;margin-bottom:5px;font-size:.85rem}
-        .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;border:1px solid rgba(212,168,67,.3);border-radius:8px;background:rgba(255,255,255,.05);color:var(--cream);font-size:.9rem;outline:none;font-family:'Inter',sans-serif}
-        .form-group textarea{height:100px;resize:vertical}
-        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
-        .checkbox-group{display:flex;gap:15px;flex-wrap:wrap}
-        .checkbox-group label{display:flex;align-items:center;gap:5px;color:var(--cream);font-size:.85rem;cursor:pointer}
-
-        .bo-table{width:100%;border-collapse:collapse}
-        .bo-table th{text-align:left;padding:12px;color:var(--gold);border-bottom:2px solid var(--gold);font-size:.85rem}
-        .bo-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem}
-        .bo-table tr:hover{background:rgba(212,168,67,.05)}
-        .del-btn{background:none;border:1px solid #ff6b6b;color:#ff6b6b;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem}
-        .del-btn:hover{background:#ff6b6b;color:white}
-        .add-form{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap;align-items:flex-end}
-        .add-form input,.add-form select{padding:8px;border:1px solid rgba(212,168,67,.3);border-radius:6px;background:rgba(255,255,255,.05);color:var(--cream);font-size:.85rem;outline:none}
-
-        .celebration{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:2000}
-        .celebration-card{text-align:center;animation:popIn .5s ease}
-        .celebration-card .emoji{font-size:5rem;animation:bounce .8s infinite}
-        .celebration-card .phrase{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin-top:15px;max-width:350px}
-        @keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
-
-        .toast{position:fixed;bottom:20px;right:20px;background:var(--gold);color:var(--dark);padding:12px 20px;border-radius:8px;font-weight:600;z-index:3000;animation:slideIn .3s ease}
-        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-
-        .confirm-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:2500}
-        .confirm-card{background:var(--dark);border:2px solid var(--wine);border-radius:12px;padding:30px;text-align:center;max-width:350px}
-        .confirm-card .emoji{font-size:2.5rem;margin-bottom:10px}
-        .confirm-card h4{color:var(--cream);margin-bottom:10px}
-        .confirm-card p{color:var(--rose);font-size:.85rem;margin-bottom:20px}
-        .confirm-btns{display:flex;gap:10px;justify-content:center}
-        .disc-card{background:rgba(155,35,53,.1);border:1px solid var(--wine);border-radius:8px;padding:15px;margin-bottom:10px}
-        .disc-card h4{color:var(--gold);margin-bottom:5px}
-        .disc-card p{color:var(--rose);font-size:.85rem}
-
-        .error-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--dark));text-align:center;padding:20px}
-        .error-screen pre{background:rgba(0,0,0,.5);padding:15px;border-radius:8px;color:#ff6b6b;font-size:.8rem;max-width:500px;overflow-x:auto;text-align:left;margin-top:15px}
-
-        @media(max-width:768px){
-            .bo-wrap{flex-direction:column}
-            .bo-sidebar{width:100%;border-right:none;border-bottom:2px solid var(--gold)}
-            .lobby-header{flex-direction:column;text-align:center}
-            .room-grid{grid-template-columns:1fr;padding:15px}
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI LOBBY</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--wine:#9B2335;--burgundy:#5A1A2A;--gold:#D4A843;--cream:#FAF0E4;--dark:#1A0A0E;--brown:#3E1C11;--rose:#C7959B;--green:#2A5A3A}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--cream);overflow-x:hidden}
+.loading-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--dark));text-align:center}
+.loading-screen .bell{font-size:4rem;margin-bottom:20px;animation:bounce 1s infinite}
+.loading-screen h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:2rem}
+.loading-screen p{color:var(--rose);margin-top:10px;font-size:.85rem}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--dark));padding:20px}
+.login-card{background:rgba(26,10,14,.9);border:2px solid var(--gold);border-radius:16px;padding:40px;max-width:420px;width:100%;text-align:center;position:relative}
+.login-card .bell{font-size:3.5rem;margin-bottom:10px}
+.login-card h1{font-family:'Playfair Display',serif;color:var(--gold);font-size:2.2rem;margin-bottom:5px}
+.login-card h3{color:var(--rose);font-weight:400;font-size:.9rem;margin-bottom:30px;font-style:italic}
+.login-card input{width:100%;padding:14px;border:1px solid var(--gold);border-radius:8px;background:rgba(255,255,255,.05);color:var(--cream);font-size:1rem;margin-bottom:15px;outline:none}
+.login-card input:focus{border-color:var(--wine);box-shadow:0 0 10px rgba(155,35,53,.3)}
+.login-btn{width:100%;padding:14px;background:var(--wine);color:var(--cream);border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s}
+.login-btn:hover{background:var(--burgundy);transform:translateY(-2px)}
+.login-error{color:#ff6b6b;font-size:.85rem;margin-bottom:10px}
+.lang-toggle{position:absolute;top:15px;right:15px;background:none;border:1px solid var(--gold);color:var(--gold);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.8rem}
+.lobby-header{background:linear-gradient(135deg,var(--burgundy),var(--dark));padding:20px 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);flex-wrap:wrap;gap:10px}
+.lobby-title h1{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.8rem}
+.lobby-title p{color:var(--rose);font-size:.8rem;font-style:italic}
+.lobby-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.user-badge{display:flex;align-items:center;gap:8px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--wine);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;border:2px solid var(--gold)}
+.role-tag{background:var(--gold);color:var(--dark);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600;text-transform:uppercase}
+.btn{padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .3s}
+.btn-gold{background:var(--gold);color:var(--dark)}
+.btn-wine{background:var(--wine);color:var(--cream)}
+.btn-outline{background:none;border:1px solid var(--gold);color:var(--gold)}
+.btn:hover{transform:translateY(-2px);opacity:.9}
+.floor-tabs{display:flex;justify-content:center;gap:10px;padding:20px;background:rgba(90,26,42,.3);flex-wrap:wrap}
+.floor-tab{padding:12px 24px;border:2px solid transparent;border-radius:10px;background:rgba(255,255,255,.05);color:var(--rose);cursor:pointer;font-weight:600;transition:all .3s}
+.floor-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,.1)}
+.floor-tab:hover{border-color:var(--rose)}
+.room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:30px;max-width:1200px;margin:0 auto}
+.room-card{border-radius:12px;overflow:hidden;border:2px solid rgba(212,168,67,.2);background:rgba(26,10,14,.8);cursor:pointer;transition:all .3s}
+.room-card:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 8px 30px rgba(212,168,67,.2)}
+.room-img{height:160px;background-size:cover;background-position:center;position:relative}
+.room-badge{position:absolute;top:10px;right:10px;background:var(--wine);color:var(--cream);padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:600;text-transform:uppercase}
+.room-info{padding:15px}
+.room-number{color:var(--gold);font-size:.75rem;font-weight:700}
+.room-name{font-family:'Playfair Display',serif;font-size:1.1rem;margin-top:4px}
+.empty-floor{text-align:center;padding:60px;color:var(--rose);grid-column:1/-1}
+.empty-floor .icon{font-size:3rem;margin-bottom:15px}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-card{background:var(--dark);border:2px solid var(--gold);border-radius:16px;max-width:550px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-img{height:200px;background-size:cover;background-position:center;border-radius:14px 14px 0 0;position:relative}
+.modal-close{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);color:var(--cream);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.2rem}
+.modal-body{padding:25px}
+.modal-body h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin-bottom:10px}
+.modal-body .desc{color:var(--rose);margin-bottom:15px;line-height:1.5}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.meta-chip{background:rgba(212,168,67,.1);border:1px solid var(--gold);padding:4px 10px;border-radius:6px;font-size:.75rem;color:var(--gold)}
+.access-badge{display:inline-block;padding:4px 12px;border-radius:6px;font-size:.8rem;font-weight:600;margin-bottom:15px}
+.access-full{background:var(--green);color:white}
+.access-view{background:var(--gold);color:var(--dark)}
+.access-no{background:#666;color:#ccc}
+.enter-btn{display:block;width:100%;padding:14px;background:var(--wine);color:var(--cream);border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;text-align:center;text-decoration:none}
+.enter-btn:hover{background:var(--burgundy)}
+.bo-wrap{display:flex;min-height:100vh}
+.bo-sidebar{width:220px;background:linear-gradient(180deg,var(--burgundy),var(--dark));padding:20px;border-right:2px solid var(--gold)}
+.bo-sidebar h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.3rem;margin-bottom:20px}
+.bo-nav-item{padding:12px;border-radius:8px;color:var(--rose);cursor:pointer;margin-bottom:5px;transition:all .2s;font-size:.9rem}
+.bo-nav-item.active{background:rgba(212,168,67,.15);color:var(--gold);border-left:3px solid var(--gold)}
+.bo-nav-item:hover{background:rgba(255,255,255,.05)}
+.bo-content{flex:1;padding:30px;overflow-y:auto}
+.bo-content h3{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.4rem;margin-bottom:20px}
+.upload-steps{display:flex;gap:10px;margin-bottom:25px}
+.step-indicator{padding:8px 16px;border-radius:20px;font-size:.8rem;font-weight:600}
+.step-active{background:var(--gold);color:var(--dark)}
+.step-inactive{background:rgba(255,255,255,.1);color:var(--rose)}
+.dropzone{border:3px dashed var(--gold);border-radius:12px;padding:60px;text-align:center;cursor:pointer;transition:all .3s}
+.dropzone:hover,.dropzone.dragging{background:rgba(212,168,67,.1);border-color:var(--wine)}
+.dropzone .icon{font-size:3rem;margin-bottom:10px}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;color:var(--gold);font-weight:600;margin-bottom:5px;font-size:.85rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;border:1px solid rgba(212,168,67,.3);border-radius:8px;background:rgba(255,255,255,.05);color:var(--cream);font-size:.9rem;outline:none;font-family:'Inter',sans-serif}
+.form-group textarea{height:100px;resize:vertical}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
+.checkbox-group{display:flex;gap:15px;flex-wrap:wrap}
+.checkbox-group label{display:flex;align-items:center;gap:5px;color:var(--cream);font-size:.85rem;cursor:pointer}
+.bo-table{width:100%;border-collapse:collapse}
+.bo-table th{text-align:left;padding:12px;color:var(--gold);border-bottom:2px solid var(--gold);font-size:.85rem}
+.bo-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem}
+.bo-table tr:hover{background:rgba(212,168,67,.05)}
+.del-btn{background:none;border:1px solid #ff6b6b;color:#ff6b6b;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem}
+.del-btn:hover{background:#ff6b6b;color:white}
+.add-form{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap;align-items:flex-end}
+.add-form input,.add-form select{padding:8px;border:1px solid rgba(212,168,67,.3);border-radius:6px;background:rgba(255,255,255,.05);color:var(--cream);font-size:.85rem;outline:none}
+.celebration{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:2000}
+.celebration-card{text-align:center;animation:popIn .5s ease}
+.celebration-card .emoji{font-size:5rem;animation:bounce .8s infinite}
+.celebration-card .phrase{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin-top:15px;max-width:350px}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--gold);color:var(--dark);padding:12px 20px;border-radius:8px;font-weight:600;z-index:3000;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.confirm-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:2500}
+.confirm-card{background:var(--dark);border:2px solid var(--wine);border-radius:12px;padding:30px;text-align:center;max-width:350px}
+.confirm-card .emoji{font-size:2.5rem;margin-bottom:10px}
+.confirm-card h4{color:var(--cream);margin-bottom:10px}
+.confirm-card p{color:var(--rose);font-size:.85rem;margin-bottom:20px}
+.confirm-btns{display:flex;gap:10px;justify-content:center}
+.disc-card{background:rgba(155,35,53,.1);border:1px solid var(--wine);border-radius:8px;padding:15px;margin-bottom:10px}
+.disc-card h4{color:var(--gold);margin-bottom:5px}
+.disc-card p{color:var(--rose);font-size:.85rem}
+.error-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--dark));text-align:center;padding:20px}
+.error-screen pre{background:rgba(0,0,0,.5);padding:15px;border-radius:8px;color:#ff6b6b;font-size:.8rem;max-width:500px;overflow-x:auto;text-align:left;margin-top:15px}
+@media(max-width:768px){.bo-wrap{flex-direction:column}.bo-sidebar{width:100%;border-right:none;border-bottom:2px solid var(--gold)}.lobby-header{flex-direction:column;text-align:center}.room-grid{grid-template-columns:1fr;padding:15px}}
+</style>
 </head>
 <body>
-    <div id="root">
-        <div class="loading-screen">
-            <div>
-                <div class="bell" style="font-size:4rem;margin-bottom:20px">🔔</div>
-                <h2 style="font-family:'Playfair Display',serif;color:#D4A843;font-size:2rem">Loading AI Lobby...</h2>
-                <p style="color:#C7959B;margin-top:10px">Connecting to hotel network</p>
-            </div>
+<div id="root"><div class="loading-screen"><div><div style="font-size:4rem;margin-bottom:20px" class="bell">🔔</div><h2 style="font-family:Playfair Display,serif;color:#D4A843">Loading AI Lobby...</h2></div></div></div>
+<script>
+var db=null;
+try{firebase.initializeApp({apiKey:"AIzaSyDRWcexkV2fPtam-RmSzO0fac6cLwAPmeM",authDomain:"ai-lobby.firebaseapp.com",databaseURL:"https://ai-lobby-default-rtdb.europe-west1.firebasedatabase.app",projectId:"ai-lobby",storageBucket:"ai-lobby.firebasestorage.app",messagingSenderId:"252396863420",appId:"1:252396863420:web:db0624a69b8f75b73675b9"});db=firebase.database();console.log("Firebase OK")}catch(e){console.error("Firebase err:",e)}
+</script>
+<script type="text/babel">
+var useState=React.useState,useEffect=React.useEffect;
+
+var TR={en:{title:"AI LOBBY",subtitle:"The Grand Platform Hotel",login:"Check In",emailPh:"Enter your email...",loginErr:"Email not registered. Contact a Bellboy.",langBtn:"ES",logout:"Logout",floorTools:"Tools Floor 🔧",floorAnalysis:"Analysis Floor 📊",floorStrategy:"Strategy Floor 🎯",backOffice:"Back Office",backToLobby:"← Back to Lobby",emptyFloor:"No platforms on this floor yet",enterRoom:"Enter Room",accessFull:"Full Access",accessView:"View Only",accessUse:"Use",accessNo:"No Access",uploadedBy:"Uploaded by",date:"Date",size:"Size",tabUpload:"Upload Platform",tabRegistry:"Guest Registry",tabScores:"Score Analysis",tabDisc:"AI Discrepancies",step1:"Upload File",step2:"Details",step3:"Publish",dropText:"Drag & drop your file here",dropSub:"or click to browse",fileLabel:"File",sizeLabel:"Size",nameLabel:"Platform Name",sectionLabel:"Section",descLabel:"Description",urlLabel:"URL",rolesLabel:"Access Roles",secTools:"Tools",secAnalysis:"Analysis",secStrategy:"Strategy",preview:"Preview",publish:"Publish to Lobby",next:"Next",back:"Back",platformAdded:"Platform checked in! 🎉",nameCol:"Name",emailCol:"Email",roleCol:"Role",actionsCol:"Actions",addUser:"Add User",userAdded:"Guest registered! 🔑",userRemoved:"Guest checked out 🚪",confirmTitle:"Check Out Guest?",confirmMsg:"This guest will lose access.",confirm:"Confirm",cancel:"Cancel",platformCol:"Platform",rawCol:"Raw",scoreCol:"Score",byCol:"By",removeBtn:"Remove",noDisc:"No discrepancies. All balanced! ✨",discAlert:"Score gap detected",discRec:"Review complexity difference.",celebs:["Another masterpiece checked in! 🏨","The penthouse just got an upgrade! ✨","Room service: excellence delivered! 🛎️","A new jewel in our collection! 💎","The Grand Hotel welcomes a star! ⭐"]},es:{title:"AI LOBBY",subtitle:"El Gran Hotel de Plataformas",login:"Registrarse",emailPh:"Ingresa tu correo...",loginErr:"Correo no registrado. Contacta a un Bellboy.",langBtn:"EN",logout:"Salir",floorTools:"Piso Herramientas 🔧",floorAnalysis:"Piso Análisis 📊",floorStrategy:"Piso Estrategia 🎯",backOffice:"Back Office",backToLobby:"← Volver al Lobby",emptyFloor:"No hay plataformas en este piso",enterRoom:"Entrar",accessFull:"Acceso Completo",accessView:"Solo Vista",accessUse:"Uso",accessNo:"Sin Acceso",uploadedBy:"Subido por",date:"Fecha",size:"Tamaño",tabUpload:"Subir Plataforma",tabRegistry:"Registro Huéspedes",tabScores:"Análisis Puntajes",tabDisc:"Discrepancias IA",step1:"Subir Archivo",step2:"Detalles",step3:"Publicar",dropText:"Arrastra tu archivo aquí",dropSub:"o haz clic para buscar",fileLabel:"Archivo",sizeLabel:"Tamaño",nameLabel:"Nombre Plataforma",sectionLabel:"Sección",descLabel:"Descripción",urlLabel:"URL",rolesLabel:"Roles Acceso",secTools:"Herramientas",secAnalysis:"Análisis",secStrategy:"Estrategia",preview:"Vista Previa",publish:"Publicar en Lobby",next:"Siguiente",back:"Atrás",platformAdded:"¡Plataforma registrada! 🎉",nameCol:"Nombre",emailCol:"Correo",roleCol:"Rol",actionsCol:"Acciones",addUser:"Agregar",userAdded:"¡Huésped registrado! 🔑",userRemoved:"Huésped dado de baja 🚪",confirmTitle:"¿Dar de baja?",confirmMsg:"Perderá acceso al hotel.",confirm:"Confirmar",cancel:"Cancelar",platformCol:"Plataforma",rawCol:"Bruto",scoreCol:"Puntaje",byCol:"Por",removeBtn:"Eliminar",noDisc:"Sin discrepancias. ¡Equilibrado! ✨",discAlert:"Brecha de puntaje",discRec:"Revisa la diferencia.",celebs:["¡Otra obra maestra! 🏨","¡El penthouse mejoró! ✨","¡Excelencia entregada! 🛎️","¡Nueva joya! 💎","¡Bienvenida una estrella! ⭐"]}};
+
+function t(lang,key){var tr=TR[lang]||TR.en;return tr[key]!==undefined?tr[key]:(TR.en[key]!==undefined?TR.en[key]:key)}
+
+var initialUsers=[
+{id:1,name:"Rafa Vázquez",email:"r.vazquez@sesametime.com",role:"bellboy",avatar:"RV"},
+{id:2,name:"Carlos Méndez",email:"c.mendez@sesametime.com",role:"concierge",avatar:"CM"},
+{id:3,name:"Laura García",email:"l.garcia@sesametime.com",role:"concierge",avatar:"LG"},
+{id:4,name:"Ana López",email:"a.lopez@sesametime.com",role:"guest",avatar:"AL"},
+{id:5,name:"Miguel Torres",email:"m.torres@sesametime.com",role:"guest",avatar:"MT"},
+{id:6,name:"Sofía Ruiz",email:"s.ruiz@sesametime.com",role:"guest",avatar:"SR"},
+{id:7,name:"I. Herrero",email:"i.herrero@sesametime.com",role:"concierge",avatar:"IH"},
+{id:8,name:"L. Bahía",email:"l.bahia@sesametime.com",role:"concierge",avatar:"LB"},
+{id:9,name:"M. Díaz",email:"m.diaz@sesametime.com",role:"concierge",avatar:"MD"},
+{id:10,name:"J. Corpus",email:"j.corpus@sesametime.com",role:"bellboy",avatar:"JC"},
+{id:11,name:"A. Sevillano",email:"a.sevillano@sesametime.com",role:"concierge",avatar:"AS"},
+{id:12,name:"A. Céfalo",email:"a.cefalo@sesametime.com",role:"concierge",avatar:"AC"},
+{id:13,name:"V. Herrera",email:"v.herrera@sesametime.com",role:"concierge",avatar:"VH"},
+{id:14,name:"J. Herrera",email:"j.herrera@sesametime.com",role:"concierge",avatar:"JH"},
+{id:15,name:"W. Moreira",email:"w.moreira@sesametime.com",role:"concierge",avatar:"WM"},
+{id:16,name:"C. Edo",email:"c.edo@sesametime.com",role:"concierge",avatar:"CE"},
+{id:17,name:"Majo",email:"majo@sesametime.com",role:"concierge",avatar:"MA"},
+{id:18,name:"F. Berta",email:"f.berta@sesametime.com",role:"concierge",avatar:"FB"}
+];
+
+var AM={bellboy:{tools:"full",analysis:"full",strategy:"full",config:true},concierge:{tools:"full",analysis:"full",strategy:"view-only",config:true},guest:{tools:"use",analysis:"view-only",strategy:"no-access",config:false}};
+
+var HI={tools:["https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&h=300&fit=crop"],analysis:["https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1496065187959-7f07b8353c55?w=600&h=300&fit=crop"],strategy:["https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1577412647305-991150c7d163?w=600&h=300&fit=crop"]};
+
+function getImg(p,s){var i=HI[s]||HI.tools;var seed=0;var n=p.name||"";for(var x=0;x<n.length;x++)seed+=n.charCodeAt(x);seed+=(p.id||0);return i[seed%i.length]}
+function analyzeCode(c){if(!c)return 1;var s=0;s+=Math.min(c.split("\n").length/10,30);s+=((c.match(/function\s|=>\s*\{/g)||[]).length)*2;s+=Math.min((c.match(/<[a-zA-Z][^>]*>/g)||[]).length/5,15);s+=((c.match(/import\s|require\(/g)||[]).length)*1.5;s+=((c.match(/if\s*\(|switch\s*\(/g)||[]).length)*1.5;s+=((c.match(/for\s*\(|while\s*\(|\.map\(|\.forEach\(/g)||[]).length)*2;s+=((c.match(/use[A-Z]\w*\(/g)||[]).length)*2;s+=((c.match(/fetch\(|axios\./g)||[]).length)*3;s+=Math.min(c.length/1000,20);return Math.max(1,Math.ceil(s))}
+function calcScores(a){if(!a||!a.length)return[];var m=0;for(var i=0;i<a.length;i++){var r=a[i].rawScore||1;if(r>m)m=r}if(m===0)m=1;return a.map(function(p){return Object.assign({},p,{score:Math.max(1,Math.round(((p.rawScore||1)/m)*100))})})}
+
+function App(){
+    var _l=useState("en"),lang=_l[0],setLang=_l[1];
+    var _u=useState(null),user=_u[0],setUser=_u[1];
+    var _p=useState([]),platforms=_p[0],setPlatforms=_p[1];
+    var _us=useState(initialUsers.slice()),users=_us[0],setUsers=_us[1];
+    var _bo=useState(false),showBO=_bo[0],setShowBO=_bo[1];
+    var _fr=useState(false),ready=_fr[0],setReady=_fr[1];
+
+    useEffect(function(){
+        try{var stored=localStorage.getItem("ailobby_lang");if(stored==="en"||stored==="es")setLang(stored)}catch(e){}
+        if(!db){setReady(true);return}
+        try{
+            var pR=db.ref("platforms");
+            pR.on("value",function(s){try{var d=s.val();setPlatforms(d?calcScores(Object.values(d)):[]);setReady(true)}catch(e){console.error(e);setReady(true)}},function(e){console.error("FB err:",e);setReady(true)});
+            var uR=db.ref("users");
+            uR.on("value",function(s){try{var d=s.val();if(d){var fb=Object.values(d);var m=initialUsers.slice();for(var i=0;i<fb.length;i++){var ex=false;for(var j=0;j<m.length;j++){if(m[j].email===fb[i].email){ex=true;break}}if(!ex)m.push(fb[i])}setUsers(m)}}catch(e){console.error(e)}},function(e){console.error("FB users err:",e)});
+            return function(){pR.off();uR.off()}
+        }catch(e){console.error(e);setReady(true)}
+    },[]);
+
+    useEffect(function(){try{localStorage.setItem("ailobby_lang",lang)}catch(e){}},[lang]);
+
+    function savePlatforms(all){if(db){var o={};all.forEach(function(p){o[p.id]=p});db.ref("platforms").set(o)}}
+    function saveNewUser(u){if(db)db.ref("users/"+u.id).set(u)}
+    function delUserFB(id){if(db)db.ref("users/"+id).remove()}
+    function delPlatFB(id){if(db)db.ref("platforms/"+id).remove()}
+
+    if(!ready)return <div className="loading-screen"><div><div className="bell">🔔</div><h2>Loading AI Lobby...</h2><p>Connecting to hotel network</p></div></div>;
+
+    if(!user)return <LoginScreen lang={lang} setLang={setLang} users={users} onLogin={setUser}/>;
+
+    if(showBO&&AM[user.role]&&AM[user.role].config)return <BackOffice lang={lang} user={user} platforms={platforms} setPlatforms={setPlatforms} users={users} setUsers={setUsers} onBack={function(){setShowBO(false)}} savePlatforms={savePlatforms} saveNewUser={saveNewUser} delUserFB={delUserFB} delPlatFB={delPlatFB}/>;
+
+    return <Lobby lang={lang} setLang={setLang} user={user} platforms={platforms} onLogout={function(){setUser(null)}} onShowBO={function(){setShowBO(true)}}/>;
+}
+
+function LoginScreen(props){
+    var _e=useState(""),email=_e[0],setEmail=_e[1];
+    var _er=useState(""),error=_er[0],setError=_er[1];
+    var L=props.lang||"en";
+    function go(e){e.preventDefault();var inp=email.toLowerCase().trim();var f=null;for(var i=0;i<props.users.length;i++){if(props.users[i].email.toLowerCase()===inp){f=props.users[i];break}}if(f)props.onLogin(f);else setError(t(L,"loginErr"))}
+    return(<div className="login-wrap"><div className="login-card"><button className="lang-toggle" onClick={function(){props.setLang(L==="en"?"es":"en")}}>{t(L,"langBtn")}</button><div className="bell">🔔</div><h1>{t(L,"title")}</h1><h3>{t(L,"subtitle")}</h3>{error&&<div className="login-error">{error}</div>}<form onSubmit={go}><input type="email" value={email} onChange={function(e){setEmail(e.target.value);setError("")}} placeholder={t(L,"emailPh")}/><button type="submit" className="login-btn">{t(L,"login")}</button></form></div></div>)
+}
+
+function Lobby(props){
+    var _f=useState("tools"),floor=_f[0],setFloor=_f[1];
+    var _r=useState(null),sel=_r[0],setSel=_r[1];
+    var L=props.lang||"en";
+    var u=props.user;
+    var canBO=AM[u.role]&&AM[u.role].config;
+    var fp=props.platforms.filter(function(p){return p.section===floor});
+    var floors=[{k:"tools",l:t(L,"floorTools")},{k:"analysis",l:t(L,"floorAnalysis")},{k:"strategy",l:t(L,"floorStrategy")}];
+    function accLabel(s){var a=(AM[u.role]||{})[s]||"no-access";if(a==="full")return t(L,"accessFull");if(a==="view-only")return t(L,"accessView");if(a==="use")return t(L,"accessUse");return t(L,"accessNo")}
+    function accClass(s){var a=(AM[u.role]||{})[s]||"no-access";if(a==="full")return"access-full";if(a==="view-only"||a==="use")return"access-view";return"access-no"}
+    return(<div>
+        <div className="lobby-header"><div className="lobby-title"><h1>{t(L,"title")}</h1><p>{t(L,"subtitle")}</p></div><div className="lobby-actions"><div className="user-badge"><div className="avatar">{u.avatar}</div><span>{u.name}</span><span className="role-tag">{u.role}</span></div><button className="btn btn-outline" onClick={function(){props.setLang(L==="en"?"es":"en")}}>{t(L,"langBtn")}</button>{canBO&&<button className="btn btn-gold" onClick={props.onShowBO}>{t(L,"backOffice")}</button>}<button className="btn btn-wine" onClick={props.onLogout}>{t(L,"logout")}</button></div></div>
+        <div className="floor-tabs">{floors.map(function(f){return <div key={f.k} className={"floor-tab"+(floor===f.k?" active":"")} onClick={function(){setFloor(f.k)}}>{f.l}</div>})}</div>
+        <div className="room-grid">{fp.length===0&&<div className="empty-floor"><div className="icon">🚪</div><p>{t(L,"emptyFloor")}</p></div>}{fp.map(function(p){return <div key={p.id} className="room-card" onClick={function(){setSel(p)}}><div className="room-img" style={{backgroundImage:"url("+getImg(p,floor)+")"}}><span className="room-badge">{floor}</span></div><div className="room-info"><div className="room-number">#{p.roomNumber}</div><div className="room-name">{p.name}</div></div></div>})}</div>
+        {sel&&<div className="modal-overlay" onClick={function(){setSel(null)}}><div className="modal-card" onClick={function(e){e.stopPropagation()}}><div className="modal-img" style={{backgroundImage:"url("+getImg(sel,floor)+")"}}><button className="modal-close" onClick={function(){setSel(null)}}>✕</button></div><div className="modal-body"><h2>{sel.name}</h2><span className={"access-badge "+accClass(floor)}>{accLabel(floor)}</span><p className="desc">{sel.description||"—"}</p><div className="meta-chips"><span className="meta-chip">{t(L,"uploadedBy")}: {sel.uploadedBy}</span><span className="meta-chip">{t(L,"date")}: {sel.uploadedDate}</span>{sel.fileSize&&<span className="meta-chip">{t(L,"size")}: {sel.fileSize}</span>}</div>{sel.url&&<a href={sel.url} target="_blank" rel="noopener noreferrer" className="enter-btn">{t(L,"enterRoom")}</a>}</div></div></div>}
+    </div>)
+}
+
+function BackOffice(props){
+    var _t=useState("upload"),tab=_t[0],setTab=_t[1];
+    var _s=useState(1),step=_s[0],setStep=_s[1];
+    var _fc=useState(""),fc=_fc[0],setFC=_fc[1];
+    var _fn=useState(""),fn=_fn[0],setFN=_fn[1];
+    var _fs=useState(""),fz=_fs[0],setFZ=_fs[1];
+    var _fd=useState({name:"",section:"tools",desc:"",url:"",roles:["bellboy"]}),form=_fd[0],setForm=_fd[1];
+    var _ce=useState(false),celeb=_ce[0],setCeleb=_ce[1];
+    var _to=useState(""),toast=_to[0],setToast2=_to[1];
+    var _cd=useState(null),cDel=_cd[0],setCDel=_cd[1];
+    var _dr=useState(false),drag=_dr[0],setDrag=_dr[1];
+    var _nu=useState({name:"",email:"",role:"guest"}),nu=_nu[0],setNU=_nu[1];
+    var L=props.lang||"en";
+    function showT(m){setToast2(m);setTimeout(function(){setToast2("")},3000)}
+    function hFile(f){setFN(f.name);setFZ((f.size/1024).toFixed(1)+" KB");var r=new FileReader();r.onload=function(e){setFC(e.target.result)};r.readAsText(f)}
+    function hPub(){var raw=analyzeCode(fc);var np={id:Date.now(),roomNumber:props.platforms.length+1,name:form.name,section:form.section,uploadedBy:props.user.name,uploadedDate:new Date().toLocaleDateString(),description:form.desc,url:form.url,fileSize:fz,rawScore:raw,accessRoles:form.roles};var all=calcScores(props.platforms.concat([np]));props.setPlatforms(all);props.savePlatforms(all);setStep(1);setFC("");setFN("");setFZ("");setForm({name:"",section:"tools",desc:"",url:"",roles:["bellboy"]});setCeleb(true);setTimeout(function(){setCeleb(false)},6000);showT(t(L,"platformAdded"))}
+    function hAddU(){if(!nu.name||!nu.email)return;var u={id:Date.now(),name:nu.name,email:nu.email,role:nu.role,avatar:nu.name.split(" ").map(function(n){return n[0]}).join("").toUpperCase().slice(0,2)};props.setUsers(props.users.concat([u]));props.saveNewUser(u);setNU({name:"",email:"",role:"guest"});showT(t(L,"userAdded"))}
+    function hDelU(id){if(id===props.user.id)return;props.setUsers(props.users.filter(function(u){return u.id!==id}));props.delUserFB(id);setCDel(null);showT(t(L,"userRemoved"))}
+    function hDelP(id){props.setPlatforms(calcScores(props.platforms.filter(function(p){return p.id!==id})));props.delPlatFB(id)}
+    function togRole(r){var c=form.roles;var n=c.indexOf(r)>-1?c.filter(function(x){return x!==r}):c.concat([r]);setForm(Object.assign({},form,{roles:n}))}
+    var discs=[];["tools","analysis","strategy"].forEach(function(s){var sp=props.platforms.filter(function(p){return p.section===s});for(var i=0;i<sp.length;i++)for(var j=i+1;j<sp.length;j++)if(Math.abs((sp[i].score||0)-(sp[j].score||0))>30)discs.push({a:sp[i].name,b:sp[j].name,s:s,g:Math.abs((sp[i].score||0)-(sp[j].score||0))})});
+    var tabs=[{k:"upload",l:t(L,"tabUpload")},{k:"registry",l:t(L,"tabRegistry")},{k:"scores",l:t(L,"tabScores")},{k:"disc",l:t(L,"tabDisc")}];
+    return(<div className="bo-wrap">
+        <div className="bo-sidebar"><h2>{t(L,"backOffice")}</h2>{tabs.map(function(x){return <div key={x.k} className={"bo-nav-item"+(tab===x.k?" active":"")} onClick={function(){setTab(x.k)}}>{x.l}</div>})}<div style={{marginTop:"30px"}}><button className="btn btn-outline" style={{width:"100%",marginBottom:"8px"}} onClick={props.onBack}>{t(L,"backToLobby")}</button><button className="btn btn-wine" style={{width:"100%"}} onClick={function(){window.location.reload()}}>{t(L,"logout")}</button></div></div>
+        <div className="bo-content">
+            {tab==="upload"&&<div><h3>{t(L,"tabUpload")}</h3><div className="upload-steps"><span className={"step-indicator "+(step>=1?"step-active":"step-inactive")}>{t(L,"step1")}</span><span className={"step-indicator "+(step>=2?"step-active":"step-inactive")}>{t(L,"step2")}</span><span className={"step-indicator "+(step>=3?"step-active":"step-inactive")}>{t(L,"step3")}</span></div>
+                {step===1&&<div><div className={"dropzone"+(drag?" dragging":"")} onDrop={function(e){e.preventDefault();setDrag(false);if(e.dataTransfer.files[0])hFile(e.dataTransfer.files[0])}} onDragOver={function(e){e.preventDefault();setDrag(true)}} onDragLeave={function(){setDrag(false)}} onClick={function(){document.getElementById("fi").click()}}><div className="icon">📁</div><p style={{color:"var(--gold)",fontWeight:600}}>{t(L,"dropText")}</p><p style={{color:"var(--rose)",fontSize:".85rem",marginTop:"5px"}}>{t(L,"dropSub")}</p></div><input id="fi" type="file" style={{display:"none"}} onChange={function(e){if(e.target.files[0])hFile(e.target.files[0])}}/>{fn&&<div style={{marginTop:"15px",padding:"10px",background:"rgba(212,168,67,.1)",borderRadius:"8px"}}><span style={{color:"var(--gold)"}}>{t(L,"fileLabel")}: </span>{fn}<span style={{marginLeft:"15px",color:"var(--gold)"}}>{t(L,"sizeLabel")}: </span>{fz}</div>}{fn&&<button className="btn btn-gold" style={{marginTop:"15px"}} onClick={function(){setStep(2)}}>{t(L,"next")}</button>}</div>}
+                {step===2&&<div><div className="form-group"><label>{t(L,"nameLabel")}</label><input value={form.name} onChange={function(e){setForm(Object.assign({},form,{name:e.target.value}))}}/></div><div className="form-group"><label>{t(L,"sectionLabel")}</label><select value={form.section} onChange={function(e){setForm(Object.assign({},form,{section:e.target.value}))}}><option value="tools">{t(L,"secTools")}</option><option value="analysis">{t(L,"secAnalysis")}</option><option value="strategy">{t(L,"secStrategy")}</option></select></div><div className="form-group"><label>{t(L,"descLabel")}</label><textarea value={form.desc} onChange={function(e){setForm(Object.assign({},form,{desc:e.target.value}))}}/></div><div className="form-group"><label>{t(L,"urlLabel")}</label><input value={form.url} onChange={function(e){setForm(Object.assign({},form,{url:e.target.value}))}}/></div><div className="form-group"><label>{t(L,"rolesLabel")}</label><div className="checkbox-group">{["bellboy","concierge","guest"].map(function(r){return <label key={r}><input type="checkbox" checked={form.roles.indexOf(r)>-1} onChange={function(){togRole(r)}}/>{r}</label>})}</div></div><div style={{display:"flex",gap:"10px"}}><button className="btn btn-outline" onClick={function(){setStep(1)}}>{t(L,"back")}</button><button className="btn btn-gold" onClick={function(){if(form.name)setStep(3)}}>{t(L,"next")}</button></div></div>}
+                {step===3&&<div><h3>{t(L,"preview")}</h3><div style={{background:"rgba(212,168,67,.05)",border:"1px solid var(--gold)",borderRadius:"12px",padding:"20px",marginBottom:"20px"}}><p><strong style={{color:"var(--gold)"}}>{t(L,"nameLabel")}:</strong> {form.name}</p><p><strong style={{color:"var(--gold)"}}>{t(L,"sectionLabel")}:</strong> {form.section}</p><p><strong style={{color:"var(--gold)"}}>{t(L,"descLabel")}:</strong> {form.desc}</p><p><strong style={{color:"var(--gold)"}}>{t(L,"urlLabel")}:</strong> {form.url}</p><p><strong style={{color:"var(--gold)"}}>{t(L,"fileLabel")}:</strong> {fn} ({fz})</p></div><div style={{display:"flex",gap:"10px"}}><button className="btn btn-outline" onClick={function(){setStep(2)}}>{t(L,"back")}</button><button className="btn btn-gold" onClick={hPub}>{t(L,"publish")}</button></div></div>}
+            </div>}
+            {tab==="registry"&&<div><h3>{t(L,"tabRegistry")}</h3><table className="bo-table"><thead><tr><th></th><th>{t(L,"nameCol")}</th><th>{t(L,"emailCol")}</th><th>{t(L,"roleCol")}</th>{props.user.role==="bellboy"&&<th>{t(L,"actionsCol")}</th>}</tr></thead><tbody>{props.users.map(function(u){return <tr key={u.id}><td><div className="avatar" style={{width:"30px",height:"30px",fontSize:".7rem"}}>{u.avatar}</div></td><td>{u.name}</td><td>{u.email}</td><td><span className="role-tag">{u.role}</span></td>{props.user.role==="bellboy"&&<td>{u.id!==props.user.id&&<button className="del-btn" onClick={function(){setCDel(u.id)}}>🗑️</button>}</td>}</tr>})}</tbody></table><div className="add-form"><input placeholder={t(L,"nameCol")} value={nu.name} onChange={function(e){setNU(Object.assign({},nu,{name:e.target.value}))}}/><input placeholder={t(L,"emailCol")} value={nu.email} onChange={function(e){setNU(Object.assign({},nu,{email:e.target.value}))}}/><select value={nu.role} onChange={function(e){setNU(Object.assign({},nu,{role:e.target.value}))}}><option value="bellboy">Bellboy</option><option value="concierge">Concierge</option><option value="guest">Guest</option></select><button className="btn btn-gold" onClick={hAddU}>{t(L,"addUser")}</button></div></div>}
+            {tab==="scores"&&<div><h3>{t(L,"tabScores")}</h3><table className="bo-table"><thead><tr><th>{t(L,"platformCol")}</th><th>{t(L,"sectionLabel")}</th><th>{t(L,"rawCol")}</th><th>{t(L,"scoreCol")}</th><th>{t(L,"byCol")}</th><th>{t(L,"actionsCol")}</th></tr></thead><tbody>{props.platforms.map(function(p){return <tr key={p.id}><td>{p.name}</td><td>{p.section}</td><td>{p.rawScore}</td><td style={{color:"var(--gold)",fontWeight:"bold"}}>{p.score}</td><td>{p.uploadedBy}</td><td><button className="del-btn" onClick={function(){hDelP(p.id)}}>{t(L,"removeBtn")}</button></td></tr>})}</tbody></table></div>}
+            {tab==="disc"&&<div><h3>{t(L,"tabDisc")}</h3>{discs.length===0&&<p style={{color:"var(--rose)"}}>{t(L,"noDisc")}</p>}{discs.map(function(d,i){return <div className="disc-card" key={i}><h4>{t(L,"discAlert")}: {d.a} vs {d.b}</h4><p>{t(L,"sectionLabel")}: {d.s} | Gap: {d.g}</p><p style={{marginTop:"5px"}}>{t(L,"discRec")}</p></div>})}</div>}
         </div>
-    </div>
+        {cDel&&<div className="confirm-overlay" onClick={function(){setCDel(null)}}><div className="confirm-card" onClick={function(e){e.stopPropagation()}}><div className="emoji">🗑️</div><h4>{t(L,"confirmTitle")}</h4><p>{t(L,"confirmMsg")}</p><div className="confirm-btns"><button className="btn btn-wine" onClick={function(){hDelU(cDel)}}>{t(L,"confirm")}</button><button className="btn btn-outline" onClick={function(){setCDel(null)}}>{t(L,"cancel")}</button></div></div></div>}
+        {celeb&&<div className="celebration"><div className="celebration-card"><div className="emoji">🥂</div><div className="phrase">{(TR[L]||TR.en).celebs[Math.floor(Math.random()*(TR[L]||TR.en).celebs.length)]}</div></div></div>}
+        {toast&&<div className="toast">{toast}</div>}
+    </div>)
+}
 
-    <script>
-        // Firebase init - synchronous, before React
-        var db = null;
-        var firebaseError = null;
-        try {
-            firebase.initializeApp({
-                apiKey: "AIzaSyDRWcexkV2fPtam-RmSzO0fac6cLwAPmeM",
-                authDomain: "ai-lobby.firebaseapp.com",
-                databaseURL: "https://ai-lobby-default-rtdb.europe-west1.firebasedatabase.app",
-                projectId: "ai-lobby",
-                storageBucket: "ai-lobby.firebasestorage.app",
-                messagingSenderId: "252396863420",
-                appId: "1:252396863420:web:db0624a69b8f75b73675b9"
-            });
-            db = firebase.database();
-            console.log("Firebase OK");
-        } catch(e) {
-            firebaseError = e.message;
-            console.error("Firebase init failed:", e);
-        }
-    </script>
-
-    <script type="text/babel">
-        /* global db, firebaseError */
-        var useState = React.useState;
-        var useEffect = React.useEffect;
-
-        // ===== TRANSLATIONS =====
-        var T = {
-            en: {
-                title:"AI LOBBY", subtitle:"The Grand Platform Hotel", login:"Check In", emailPh:"Enter your email...",
-                loginErr:"Email not registered. Contact a Bellboy.", langBtn:"ES", logout:"Logout",
-                floors:{ tools:"Tools Floor 🔧", analysis:"Analysis Floor 📊", strategy:"Strategy Floor 🎯" },
-                backOffice:"Back Office", backToLobby:"← Back to Lobby",
-                emptyFloor:"No platforms on this floor yet",
-                enterRoom:"Enter Room", accessFull:"Full Access", accessView:"View Only", accessUse:"Use", accessNo:"No Access",
-                uploadedBy:"Uploaded by", date:"Date", size:"Size",
-                tabs:{ upload:"Upload Platform", registry:"Guest Registry", scores:"Score Analysis", disc:"AI Discrepancies" },
-                step1:"Upload File", step2:"Details", step3:"Publish",
-                dropText:"Drag & drop your file here", dropSub:"or click to browse",
-                fileLabel:"File", sizeLabel:"Size",
-                nameLabel:"Platform Name", sectionLabel:"Section", descLabel:"Description", urlLabel:"URL", rolesLabel:"Access Roles",
-                sectionNames:{ tools:"Tools", analysis:"Analysis", strategy:"Strategy" },
-                preview:"Preview", publish:"Publish to Lobby", next:"Next", back:"Back",
-                platformAdded:"Platform checked in! 🎉",
-                nameCol:"Name", emailCol:"Email", roleCol:"Role", actionsCol:"Actions",
-                addUser:"Add User", userAdded:"Guest registered! 🔑", userRemoved:"Guest checked out 🚪",
-                confirmTitle:"Check Out Guest?", confirmMsg:"This guest will lose access to the hotel.",
-                confirm:"Confirm", cancel:"Cancel",
-                platformCol:"Platform", sectionCol:"Section", rawCol:"Raw", scoreCol:"Score", byCol:"By", removeBtn:"Remove",
-                noDisc:"No discrepancies detected. All floors are balanced! ✨",
-                discAlert:"Score gap detected", discRec:"Consider reviewing the complexity difference.",
-                celebPhrases:["Another masterpiece checked in! 🏨","The penthouse just got an upgrade! ✨","Room service: excellence delivered! 🛎️","A new jewel in our collection! 💎","The Grand Hotel welcomes a star! ⭐"]
-            },
-            es: {
-                title:"AI LOBBY", subtitle:"El Gran Hotel de Plataformas", login:"Registrarse", emailPh:"Ingresa tu correo...",
-                loginErr:"Correo no registrado. Contacta a un Bellboy.", langBtn:"EN", logout:"Salir",
-                floors:{ tools:"Piso Herramientas 🔧", analysis:"Piso Análisis 📊", strategy:"Piso Estrategia 🎯" },
-                backOffice:"Back Office", backToLobby:"← Volver al Lobby",
-                emptyFloor:"No hay plataformas en este piso aún",
-                enterRoom:"Entrar", accessFull:"Acceso Completo", accessView:"Solo Vista", accessUse:"Uso", accessNo:"Sin Acceso",
-                uploadedBy:"Subido por", date:"Fecha", size:"Tamaño",
-                tabs:{ upload:"Subir Plataforma", registry:"Registro Huéspedes", scores:"Análisis Puntajes", disc:"Discrepancias IA" },
-                step1:"Subir Archivo", step2:"Detalles", step3:"Publicar",
-                dropText:"Arrastra tu archivo aquí", dropSub:"o haz clic para buscar",
-                fileLabel:"Archivo", sizeLabel:"Tamaño",
-                nameLabel:"Nombre Plataforma", sectionLabel:"Sección", descLabel:"Descripción", urlLabel:"URL", rolesLabel:"Roles de Acceso",
-                sectionNames:{ tools:"Herramientas", analysis:"Análisis", strategy:"Estrategia" },
-                preview:"Vista Previa", publish:"Publicar en el Lobby", next:"Siguiente", back:"Atrás",
-                platformAdded:"¡Plataforma registrada! 🎉",
-                nameCol:"Nombre", emailCol:"Correo", roleCol:"Rol", actionsCol:"Acciones",
-                addUser:"Agregar Huésped", userAdded:"¡Huésped registrado! 🔑", userRemoved:"Huésped dado de baja 🚪",
-                confirmTitle:"¿Dar de baja?", confirmMsg:"Este huésped perderá acceso al hotel.",
-                confirm:"Confirmar", cancel:"Cancelar",
-                platformCol:"Plataforma", sectionCol:"Sección", rawCol:"Bruto", scoreCol:"Puntaje", byCol:"Por", removeBtn:"Eliminar",
-                noDisc:"Sin discrepancias. ¡Pisos equilibrados! ✨",
-                discAlert:"Brecha de puntaje", discRec:"Revisa la diferencia de complejidad.",
-                celebPhrases:["¡Otra obra maestra registrada! 🏨","¡El penthouse mejoró! ✨","¡Excelencia entregada! 🛎️","¡Nueva joya en la colección! 💎","¡El Gran Hotel da la bienvenida! ⭐"]
-            }
-        };
-
-        // ===== DATA =====
-        var initialUsers = [
-            {id:1,name:"Rafa Vázquez",email:"r.vazquez@sesametime.com",role:"bellboy",avatar:"RV"},
-            {id:2,name:"Carlos Méndez",email:"c.mendez@sesametime.com",role:"concierge",avatar:"CM"},
-            {id:3,name:"Laura García",email:"l.garcia@sesametime.com",role:"concierge",avatar:"LG"},
-            {id:4,name:"Ana López",email:"a.lopez@sesametime.com",role:"guest",avatar:"AL"},
-            {id:5,name:"Miguel Torres",email:"m.torres@sesametime.com",role:"guest",avatar:"MT"},
-            {id:6,name:"Sofía Ruiz",email:"s.ruiz@sesametime.com",role:"guest",avatar:"SR"},
-            {id:7,name:"I. Herrero",email:"i.herrero@sesametime.com",role:"concierge",avatar:"IH"},
-            {id:8,name:"L. Bahía",email:"l.bahia@sesametime.com",role:"concierge",avatar:"LB"},
-            {id:9,name:"M. Díaz",email:"m.diaz@sesametime.com",role:"concierge",avatar:"MD"},
-            {id:10,name:"J. Corpus",email:"j.corpus@sesametime.com",role:"bellboy",avatar:"JC"},
-            {id:11,name:"A. Sevillano",email:"a.sevillano@sesametime.com",role:"concierge",avatar:"AS"},
-            {id:12,name:"A. Céfalo",email:"a.cefalo@sesametime.com",role:"concierge",avatar:"AC"},
-            {id:13,name:"V. Herrera",email:"v.herrera@sesametime.com",role:"concierge",avatar:"VH"},
-            {id:14,name:"J. Herrera",email:"j.herrera@sesametime.com",role:"concierge",avatar:"JH"},
-            {id:15,name:"W. Moreira",email:"w.moreira@sesametime.com",role:"concierge",avatar:"WM"},
-            {id:16,name:"C. Edo",email:"c.edo@sesametime.com",role:"concierge",avatar:"CE"},
-            {id:17,name:"Majo",email:"majo@sesametime.com",role:"concierge",avatar:"MA"},
-            {id:18,name:"F. Berta",email:"f.berta@sesametime.com",role:"concierge",avatar:"FB"}
-        ];
-
-        var accessMatrix = {
-            bellboy:{tools:"full",analysis:"full",strategy:"full",config:true},
-            concierge:{tools:"full",analysis:"full",strategy:"view-only",config:true},
-            guest:{tools:"use",analysis:"view-only",strategy:"no-access",config:false}
-        };
-
-        var hotelImages = {
-            tools:["https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&h=300&fit=crop"],
-            analysis:["https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1496065187959-7f07b8353c55?w=600&h=300&fit=crop"],
-            strategy:["https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&h=300&fit=crop","https://images.unsplash.com/photo-1577412647305-991150c7d163?w=600&h=300&fit=crop"]
-        };
-
-        function getImg(p,sec){var imgs=hotelImages[sec]||hotelImages.tools;var seed=0;var n=p.name||"";for(var i=0;i<n.length;i++){seed+=n.charCodeAt(i)}seed+=(p.id||0);return imgs[seed%imgs.length]}
-
-        function analyzeCode(c){if(!c)return 1;var s=0;var lines=c.split("\n").length;s+=Math.min(lines/10,30);s+=((c.match(/function\s|=>\s*\{/g)||[]).length)*2;s+=Math.min((c.match(/<[a-zA-Z][^>]*>/g)||[]).length/5,15);s+=((c.match(/import\s|require\(/g)||[]).length)*1.5;s+=((c.match(/if\s*\(|switch\s*\(/g)||[]).length)*1.5;s+=((c.match(/for\s*\(|while\s*\(|\.map\(|\.forEach\(/g)||[]).length)*2;s+=((c.match(/use[A-Z]\w*\(/g)||[]).length)*2;s+=((c.match(/fetch\(|axios\./g)||[]).length)*3;s+=Math.min(c.length/1000,20);return Math.max(1,Math.ceil(s))}
-
-        function calcScores(arr){if(!arr||arr.length===0)return[];var maxR=0;for(var i=0;i<arr.length;i++){if((arr[i].rawScore||1)>maxR)maxR=arr[i].rawScore||1}if(maxR===0)maxR=1;return arr.map(function(p){return Object.assign({},p,{score:Math.max(1,Math.round(((p.rawScore||1)/maxR)*100))})})}
-
-        // ===== ERROR BOUNDARY =====
-        class ErrorBoundary extends React.Component {
-            constructor(props){super(props);this.state={hasError:false,error:null}}
-            static getDerivedStateFromError(error){return{hasError:true,error:error}}
-            componentDidCatch(error,info){console.error("React Error:",error,info)}
-            render(){
-                if(this.state.hasError){
-                    return React.createElement("div",{className:"error-screen"},
-                        React.createElement("div",null,
-                            React.createElement("div",{style:{fontSize:"3rem",marginBottom:"15px"}},"⚠️"),
-                            React.createElement("h2",{style:{fontFamily:"Playfair Display,serif",color:"#D4A843",marginBottom:"10px"}},"Something went wrong"),
-                            React.createElement("pre",null,this.state.error && this.state.error.toString()),
-                            React.createElement("button",{className:"btn btn-gold",style:{marginTop:"15px"},onClick:function(){window.location.reload()}},"Reload")
-                        )
-                    )
-                }
-                return this.props.children
-            }
-        }
-
-        // ===== SMALL COMPONENTS =====
-        function Toast(props){ return <div className="toast">{props.message}</div> }
-
-        function ConfirmDialog(props){
-            return (
-                <div className="confirm-overlay" onClick={props.onCancel}>
-                    <div className="confirm-card" onClick={function(e){e.stopPropagation()}}>
-                        <div className="emoji">🗑️</div>
-                        <h4>{props.title}</h4>
-                        <p>{props.message}</p>
-                        <div className="confirm-btns">
-                            <button className="btn btn-wine" onClick={props.onConfirm}>{props.confirmText}</button>
-                            <button className="btn btn-outline" onClick={props.onCancel}>{props.cancelText}</button>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-
-        function Celebration(props){
-            var phrases = T[props.lang].celebPhrases;
-            var phrase = phrases[Math.floor(Math.random()*phrases.length)];
-            return (
-                <div className="celebration">
-                    <div className="celebration-card">
-                        <div className="emoji">🥂</div>
-                        <div className="phrase">{phrase}</div>
-                    </div>
-                </div>
-            )
-        }
-
-        // ===== LOGIN =====
-        function LoginScreen(props){
-            var _s = useState(""); var email = _s[0]; var setEmail = _s[1];
-            var _e = useState(""); var error = _e[0]; var setError = _e[1];
-            var lang = props.lang;
-            var tr = T[lang];
-
-            function handleSubmit(e){
-                e.preventDefault();
-                var found = null;
-                var input = email.toLowerCase().trim();
-                for(var i=0;i<props.users.length;i++){
-                    if(props.users[i].email.toLowerCase()===input){found=props.users[i];break}
-                }
-                if(found){props.onLogin(found)} else {setError(tr.loginErr)}
-            }
-
-            return (
-                <div className="login-wrap">
-                    <div className="login-card">
-                        <button className="lang-toggle" onClick={function(){props.setLang(lang==="en"?"es":"en")}}>{tr.langBtn}</button>
-                        <div className="bell">🔔</div>
-                        <h1>{tr.title}</h1>
-                        <h3>{tr.subtitle}</h3>
-                        {error && <div className="login-error">{error}</div>}
-                        <form onSubmit={handleSubmit}>
-                            <input type="email" value={email} onChange={function(e){setEmail(e.target.value);setError("")}} placeholder={tr.emailPh} />
-                            <button type="submit" className="login-btn">{tr.login}</button>
-                        </form>
-                    </div>
-                </div>
-            )
-        }
-
-        // ===== LOBBY =====
-        function LobbyScreen(props){
-            var _f = useState("tools"); var floor = _f[0]; var setFloor = _f[1];
-            var _r = useState(null); var selectedRoom = _r[0]; var setSelectedRoom = _r[1];
-            var tr = T[props.lang];
-            var canConfig = accessMatrix[props.currentUser.role] && accessMatrix[props.currentUser.role].config;
-            var floorPlatforms = props.platforms.filter(function(p){return p.section===floor});
-            var floorKeys = ["tools","analysis","strategy"];
-
-            function getAccessLabel(sec){
-                var a = accessMatrix[props.currentUser.role][sec];
-                if(a==="full") return tr.accessFull;
-                if(a==="view-only") return tr.accessView;
-                if(a==="use") return tr.accessUse;
-                return tr.accessNo;
-            }
-            function getAccessClass(sec){
-                var a = accessMatrix[props.currentUser.role][sec];
-                if(a==="full") return "access-full";
-                if(a==="view-only"||a==="use") return "access-view";
-                return "access-no";
-            }
-
-            return (
-                <div>
-                    <div className="lobby-header">
-                        <div className="lobby-title">
-                            <h1>{tr.title}</h1>
-                            <p>{tr.subtitle}</p>
-                        </div>
-                        <div className="lobby-actions">
-                            <div className="user-badge">
-                                <div className="avatar">{props.currentUser.avatar}</div>
-                                <span>{props.currentUser.name}</span>
-                                <span className="role-tag">{props.currentUser.role}</span>
-                            </div>
-                            <button className="btn btn-outline" onClick={function(){props.setLang(props.lang==="en"?"es":"en")}}>{tr.langBtn}</button>
-                            {canConfig && <button className="btn btn-gold" onClick={props.onShowBO}>{tr.backOffice}</button>}
-                            <button className="btn btn-wine" onClick={props.onLogout}>{tr.logout}</button>
-                        </div>
-                    </div>
-                    <div className="floor-tabs">
-                        {floorKeys.map(function(k){
-                            return <div key={k} className={"floor-tab"+(floor===k?" active":"")} onClick={function(){setFloor(k)}}>{tr.floors[k]}</div>
-                        })}
-                    </div>
-                    <div className="room-grid">
-                        {floorPlatforms.length===0 && (
-                            <div className="empty-floor">
-                                <div className="icon">🚪</div>
-                                <p>{tr.emptyFloor}</p>
-                            </div>
-                        )}
-                        {floorPlatforms.map(function(p){
-                            return (
-                                <div key={p.id} className="room-card" onClick={function(){setSelectedRoom(p)}}>
-                                    <div className="room-img" style={{backgroundImage:"url("+getImg(p,floor)+")"}}>
-                                        <span className="room-badge">{floor}</span>
-                                    </div>
-                                    <div className="room-info">
-                                        <div className="room-number">#{p.roomNumber}</div>
-                                        <div className="room-name">{p.name}</div>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                    {selectedRoom && (
-                        <div className="modal-overlay" onClick={function(){setSelectedRoom(null)}}>
-                            <div className="modal-card" onClick={function(e){e.stopPropagation()}}>
-                                <div className="modal-img" style={{backgroundImage:"url("+getImg(selectedRoom,floor)+")"}}>
-                                    <button className="modal-close" onClick={function(){setSelectedRoom(null)}}>✕</button>
-                                </div>
-                                <div className="modal-body">
-                                    <h2>{selectedRoom.name}</h2>
-                                    <span className={"access-badge "+getAccessClass(floor)}>{getAccessLabel(floor)}</span>
-                                    <p className="desc">{selectedRoom.description||"No description."}</p>
-                                    <div className="meta-chips">
-                                        <span className="meta-chip">{tr.uploadedBy}: {selectedRoom.uploadedBy}</span>
-                                        <span className="meta-chip">{tr.date}: {selectedRoom.uploadedDate}</span>
-                                        {selectedRoom.fileSize && <span className="meta-chip">{tr.size}: {selectedRoom.fileSize}</span>}
-                                    </div>
-                                    {selectedRoom.url && <a href={selectedRoom.url} target="_blank" rel="noopener noreferrer" className="enter-btn">{tr.enterRoom}</a>}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )
-        }
-
-        // ===== BACK OFFICE =====
-        function BackOffice(props){
-            var _t = useState("upload"); var tab = _t[0]; var setTab = _t[1];
-            var _s = useState(1); var step = _s[0]; var setStep = _s[1];
-            var _fc = useState(""); var fileContent = _fc[0]; var setFileContent = _fc[1];
-            var _fn = useState(""); var fileName = _fn[0]; var setFileName = _fn[1];
-            var _fs = useState(""); var fileSize = _fs[0]; var setFileSize = _fs[1];
-            var _fd = useState({name:"",section:"tools",description:"",url:"",roles:["bellboy"]}); var form = _fd[0]; var setForm = _fd[1];
-            var _ce = useState(false); var showCeleb = _ce[0]; var setShowCeleb = _ce[1];
-            var _to = useState(""); var toast = _to[0]; var setToast = _to[1];
-            var _cd = useState(null); var confirmDel = _cd[0]; var setConfirmDel = _cd[1];
-            var _dr = useState(false); var dragging = _dr[0]; var setDragging = _dr[1];
-            var _nu = useState({name:"",email:"",role:"guest"}); var newUser = _nu[0]; var setNewUser = _nu[1];
-            var tr = T[props.lang];
-
-            function showToastMsg(m){setToast(m);setTimeout(function(){setToast("")},3000)}
-
-            function handleFile(f){
-                setFileName(f.name);setFileSize((f.size/1024).toFixed(1)+" KB");
-                var reader=new FileReader();reader.onload=function(e){setFileContent(e.target.result)};reader.readAsText(f);
-            }
-
-            function handlePublish(){
-                var raw=analyzeCode(fileContent);
-                var newP={id:Date.now(),roomNumber:props.platforms.length+1,name:form.name,section:form.section,uploadedBy:props.currentUser.name,uploadedDate:new Date().toLocaleDateString(),description:form.description,url:form.url,fileSize:fileSize,rawScore:raw,accessRoles:form.roles};
-                var all=calcScores(props.platforms.concat([newP]));
-                props.setPlatforms(all);
-                if(db){var obj={};all.forEach(function(p){obj[p.id]=p});db.ref("platforms").set(obj)}
-                setStep(1);setFileContent("");setFileName("");setFileSize("");
-                setForm({name:"",section:"tools",description:"",url:"",roles:["bellboy"]});
-                setShowCeleb(true);setTimeout(function(){setShowCeleb(false)},6000);
-                showToastMsg(tr.platformAdded);
-            }
-
-            function handleAddUser(){
-                if(!newUser.name||!newUser.email)return;
-                var u={id:Date.now(),name:newUser.name,email:newUser.email,role:newUser.role,avatar:newUser.name.split(" ").map(function(n){return n[0]}).join("").toUpperCase().slice(0,2)};
-                props.setUsers(props.users.concat([u]));
-                if(db){db.ref("users/"+u.id).set(u)}
-                setNewUser({name:"",email:"",role:"guest"});showToastMsg(tr.userAdded);
-            }
-
-            function handleDeleteUser(uid){
-                if(uid===props.currentUser.id)return;
-                props.setUsers(props.users.filter(function(u){return u.id!==uid}));
-                if(db){db.ref("users/"+uid).remove()}
-                setConfirmDel(null);showToastMsg(tr.userRemoved);
-            }
-
-            function handleDeletePlatform(pid){
-                var updated=props.platforms.filter(function(p){return p.id!==pid});
-                props.setPlatforms(calcScores(updated));
-                if(db){db.ref("platforms/"+pid).remove()}
-            }
-
-            function toggleRole(r){
-                var cur=form.roles;
-                var newR=cur.indexOf(r)>-1?cur.filter(function(x){return x!==r}):cur.concat([r]);
-                setForm(Object.assign({},form,{roles:newR}));
-            }
-
-            // Discrepancies
-            var discs=[];
-            ["tools","analysis","strategy"].forEach(function(sec){
-                var sp=props.platforms.filter(function(p){return p.section===sec});
-                for(var i=0;i<sp.length;i++){for(var j=i+1;j<sp.length;j++){
-                    if(Math.abs((sp[i].score||0)-(sp[j].score||0))>30){discs.push({a:sp[i].name,b:sp[j].name,sec:sec,gap:Math.abs((sp[i].score||0)-(sp[j].score||0))})}
-                }}
-            });
-
-            var tabKeys=[{k:"upload",l:tr.tabs.upload},{k:"registry",l:tr.tabs.registry},{k:"scores",l:tr.tabs.scores},{k:"disc",l:tr.tabs.disc}];
-
-            return (
-                <div className="bo-wrap">
-                    <div className="bo-sidebar">
-                        <h2>{tr.backOffice}</h2>
-                        {tabKeys.map(function(t){return <div key={t.k} className={"bo-nav-item"+(tab===t.k?" active":"")} onClick={function(){setTab(t.k)}}>{t.l}</div>})}
-                        <div style={{marginTop:"30px"}}>
-                            <button className="btn btn-outline" style={{width:"100%",marginBottom:"8px"}} onClick={props.onBack}>{tr.backToLobby}</button>
-                            <button className="btn btn-wine" style={{width:"100%"}} onClick={function(){window.location.reload()}}>{tr.logout}</button>
-                        </div>
-                    </div>
-                    <div className="bo-content">
-                        {tab==="upload" && <div>
-                            <h3>{tr.tabs.upload}</h3>
-                            <div className="upload-steps">
-                                <span className={"step-indicator "+(step>=1?"step-active":"step-inactive")}>{tr.step1}</span>
-                                <span className={"step-indicator "+(step>=2?"step-active":"step-inactive")}>{tr.step2}</span>
-                                <span className={"step-indicator "+(step>=3?"step-active":"step-inactive")}>{tr.step3}</span>
-                            </div>
-                            {step===1 && <div>
-                                <div className={"dropzone"+(dragging?" dragging":"")} onDrop={function(e){e.preventDefault();setDragging(false);if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0])}} onDragOver={function(e){e.preventDefault();setDragging(true)}} onDragLeave={function(){setDragging(false)}} onClick={function(){document.getElementById("fileInput").click()}}>
-                                    <div className="icon">📁</div>
-                                    <p style={{color:"var(--gold)",fontWeight:600}}>{tr.dropText}</p>
-                                    <p style={{color:"var(--rose)",fontSize:".85rem",marginTop:"5px"}}>{tr.dropSub}</p>
-                                </div>
-                                <input id="fileInput" type="file" style={{display:"none"}} onChange={function(e){if(e.target.files[0])handleFile(e.target.files[0])}} />
-                                {fileName && <div style={{marginTop:"15px",padding:"10px",background:"rgba(212,168,67,.1)",borderRadius:"8px"}}>
-                                    <span style={{color:"var(--gold)"}}>{tr.fileLabel}: </span>{fileName}
-                                    <span style={{marginLeft:"15px",color:"var(--gold)"}}>{tr.sizeLabel}: </span>{fileSize}
-                                </div>}
-                                {fileName && <button className="btn btn-gold" style={{marginTop:"15px"}} onClick={function(){setStep(2)}}>{tr.next}</button>}
-                            </div>}
-                            {step===2 && <div>
-                                <div className="form-group"><label>{tr.nameLabel}</label><input value={form.name} onChange={function(e){setForm(Object.assign({},form,{name:e.target.value}))}} /></div>
-                                <div className="form-group"><label>{tr.sectionLabel}</label>
-                                    <select value={form.section} onChange={function(e){setForm(Object.assign({},form,{section:e.target.value}))}}>
-                                        <option value="tools">{tr.sectionNames.tools}</option><option value="analysis">{tr.sectionNames.analysis}</option><option value="strategy">{tr.sectionNames.strategy}</option>
-                                    </select></div>
-                                <div className="form-group"><label>{tr.descLabel}</label><textarea value={form.description} onChange={function(e){setForm(Object.assign({},form,{description:e.target.value}))}} /></div>
-                                <div className="form-group"><label>{tr.urlLabel}</label><input value={form.url} onChange={function(e){setForm(Object.assign({},form,{url:e.target.value}))}} /></div>
-                                <div className="form-group"><label>{tr.rolesLabel}</label>
-                                    <div className="checkbox-group">
-                                        {["bellboy","concierge","guest"].map(function(r){return <label key={r}><input type="checkbox" checked={form.roles.indexOf(r)>-1} onChange={function(){toggleRole(r)}} />{r}</label>})}
-                                    </div></div>
-                                <div style={{display:"flex",gap:"10px"}}>
-                                    <button className="btn btn-outline" onClick={function(){setStep(1)}}>{tr.back}</button>
-                                    <button className="btn btn-gold" onClick={function(){if(form.name)setStep(3)}}>{tr.next}</button>
-                                </div>
-                            </div>}
-                            {step===3 && <div>
-                                <h3>{tr.preview}</h3>
-                                <div style={{background:"rgba(212,168,67,.05)",border:"1px solid var(--gold)",borderRadius:"12px",padding:"20px",marginBottom:"20px"}}>
-                                    <p><strong style={{color:"var(--gold)"}}>{tr.nameLabel}:</strong> {form.name}</p>
-                                    <p><strong style={{color:"var(--gold)"}}>{tr.sectionLabel}:</strong> {form.section}</p>
-                                    <p><strong style={{color:"var(--gold)"}}>{tr.descLabel}:</strong> {form.description}</p>
-                                    <p><strong style={{color:"var(--gold)"}}>{tr.urlLabel}:</strong> {form.url}</p>
-                                    <p><strong style={{color:"var(--gold)"}}>{tr.fileLabel}:</strong> {fileName} ({fileSize})</p>
-                                </div>
-                                <div style={{display:"flex",gap:"10px"}}>
-                                    <button className="btn btn-outline" onClick={function(){setStep(2)}}>{tr.back}</button>
-                                    <button className="btn btn-gold" onClick={handlePublish}>{tr.publish}</button>
-                                </div>
-                            </div>}
-                        </div>}
-
-                        {tab==="registry" && <div>
-                            <h3>{tr.tabs.registry}</h3>
-                            <table className="bo-table"><thead><tr><th></th><th>{tr.nameCol}</th><th>{tr.emailCol}</th><th>{tr.roleCol}</th>{props.currentUser.role==="bellboy"&&<th>{tr.actionsCol}</th>}</tr></thead>
-                            <tbody>{props.users.map(function(u){return <tr key={u.id}><td><div className="avatar" style={{width:"30px",height:"30px",fontSize:".7rem"}}>{u.avatar}</div></td><td>{u.name}</td><td>{u.email}</td><td><span className="role-tag">{u.role}</span></td>{props.currentUser.role==="bellboy"&&<td>{u.id!==props.currentUser.id&&<button className="del-btn" onClick={function(){setConfirmDel(u.id)}}>🗑️</button>}</td>}</tr>})}</tbody></table>
-                            <div className="add-form">
-                                <input placeholder={tr.nameCol} value={newUser.name} onChange={function(e){setNewUser(Object.assign({},newUser,{name:e.target.value}))}} />
-                                <input placeholder={tr.emailCol} value={newUser.email} onChange={function(e){setNewUser(Object.assign({},newUser,{email:e.target.value}))}} />
-                                <select value={newUser.role} onChange={function(e){setNewUser(Object.assign({},newUser,{role:e.target.value}))}}><option value="bellboy">Bellboy</option><option value="concierge">Concierge</option><option value="guest">Guest</option></select>
-                                <button className="btn btn-gold" onClick={handleAddUser}>{tr.addUser}</button>
-                            </div>
-                        </div>}
-
-                        {tab==="scores" && <div>
-                            <h3>{tr.tabs.scores}</h3>
-                            <table className="bo-table"><thead><tr><th>{tr.platformCol}</th><th>{tr.sectionCol}</th><th>{tr.rawCol}</th><th>{tr.scoreCol}</th><th>{tr.byCol}</th><th>{tr.actionsCol}</th></tr></thead>
-                            <tbody>{props.platforms.map(function(p){return <tr key={p.id}><td>{p.name}</td><td>{p.section}</td><td>{p.rawScore}</td><td style={{color:"var(--gold)",fontWeight:"bold"}}>{p.score}</td><td>{p.uploadedBy}</td><td><button className="del-btn" onClick={function(){handleDeletePlatform(p.id)}}>{tr.removeBtn}</button></td></tr>})}</tbody></table>
-                        </div>}
-
-                        {tab==="disc" && <div>
-                            <h3>{tr.tabs.disc}</h3>
-                            {discs.length===0 && <p style={{color:"var(--rose)"}}>{tr.noDisc}</p>}
-                            {discs.map(function(d,i){return <div className="disc-card" key={i}><h4>{tr.discAlert}: {d.a} vs {d.b}</h4><p>{tr.sectionCol}: {d.sec} | Gap: {d.gap}</p><p style={{marginTop:"5px"}}>{tr.discRec}</p></div>})}
-                        </div>}
-                    </div>
-                    {confirmDel && <ConfirmDialog title={tr.confirmTitle} message={tr.confirmMsg} onConfirm={function(){handleDeleteUser(confirmDel)}} onCancel={function(){setConfirmDel(null)}} confirmText={tr.confirm} cancelText={tr.cancel} />}
-                    {showCeleb && <Celebration lang={props.lang} />}
-                    {toast && <Toast message={toast} />}
-                </div>
-            )
-        }
-
-        // ===== MAIN APP =====
-        function App(){
-            var _l = useState(function(){try{return localStorage.getItem("ailobby_lang")||"en"}catch(e){return "en"}}); var lang = _l[0]; var setLang = _l[1];
-            var _u = useState(null); var currentUser = _u[0]; var setCurrentUser = _u[1];
-            var _p = useState([]); var platforms = _p[0]; var setPlatforms = _p[1];
-            var _us = useState(initialUsers.slice()); var users = _us[0]; var setUsers = _us[1];
-            var _bo = useState(false); var showBO = _bo[0]; var setShowBO = _bo[1];
-            var _fr = useState(false); var firebaseReady = _fr[0]; var setFirebaseReady = _fr[1];
-
-            useEffect(function(){
-                if(!db){
-                    console.log("No Firebase - running in offline mode");
-                    setFirebaseReady(true);
-                    return;
-                }
-                try {
-                    var pRef = db.ref("platforms");
-                    pRef.on("value", function(snap){
-                        try {
-                            var data = snap.val();
-                            if(data){ setPlatforms(calcScores(Object.values(data))) } else { setPlatforms([]) }
-                        } catch(e){ console.error("Platform parse error:",e) }
-                        setFirebaseReady(true);
-                    }, function(err){
-                        console.error("Firebase read error:",err);
-                        setFirebaseReady(true);
-                    });
-
-                    var uRef = db.ref("users");
-                    uRef.on("value", function(snap){
-                        try {
-                            var data = snap.val();
-                            if(data){
-                                var fbUsers = Object.values(data);
-                                var merged = initialUsers.slice();
-                                for(var i=0;i<fbUsers.length;i++){
-                                    var exists = false;
-                                    for(var j=0;j<merged.length;j++){
-                                        if(merged[j].email===fbUsers[i].email){exists=true;break}
-                                    }
-                                    if(!exists) merged.push(fbUsers[i]);
-                                }
-                                setUsers(merged);
-                            }
-                        } catch(e){ console.error("Users parse error:",e) }
-                    }, function(err){ console.error("Firebase users error:",err) });
-
-                    return function(){ pRef.off(); uRef.off() };
-                } catch(e){
-                    console.error("Firebase listener setup error:",e);
-                    setFirebaseReady(true);
-                }
-            }, []);
-
-            useEffect(function(){try{localStorage.setItem("ailobby_lang",lang)}catch(e){}}, [lang]);
-
-            if(firebaseError){
-                return (
-                    <div className="error-screen">
-                        <div>
-                            <div style={{fontSize:"3rem",marginBottom:"15px"}}>⚠️</div>
-                            <h2 style={{fontFamily:"Playfair Display,serif",color:"#D4A843"}}>Firebase Error</h2>
-                            <pre>{firebaseError}</pre>
-                            <button className="btn btn-gold" style={{marginTop:"15px"}} onClick={function(){window.location.reload()}}>Reload</button>
-                        </div>
-                    </div>
-                )
-            }
-
-            if(!firebaseReady){
-                return (
-                    <div className="loading-screen">
-                        <div>
-                            <div className="bell">🔔</div>
-                            <h2>Loading AI Lobby...</h2>
-                            <p>Connecting to hotel network</p>
-                        </div>
-                    </div>
-                )
-            }
-
-            if(!currentUser){
-                return <LoginScreen onLogin={setCurrentUser} lang={lang} setLang={setLang} users={users} />
-            }
-
-            if(showBO && accessMatrix[currentUser.role] && accessMatrix[currentUser.role].config){
-                return <BackOffice currentUser={currentUser} onBack={function(){setShowBO(false)}} platforms={platforms} setPlatforms={setPlatforms} users={users} setUsers={setUsers} lang={lang} />
-            }
-
-            return <LobbyScreen currentUser={currentUser} onLogout={function(){setCurrentUser(null)}} platforms={platforms} onShowBO={function(){setShowBO(true)}} lang={lang} setLang={setLang} />
-        }
-
-        // ===== RENDER =====
-        try {
-            var root = ReactDOM.createRoot(document.getElementById("root"));
-            root.render(React.createElement(ErrorBoundary, null, React.createElement(App)));
-            console.log("App rendered OK");
-        } catch(e) {
-            console.error("Render error:", e);
-            document.getElementById("root").innerHTML = '<div class="error-screen"><div><div style="font-size:3rem;margin-bottom:15px">⚠️</div><h2 style="font-family:Playfair Display,serif;color:#D4A843">Render Error</h2><pre>' + e.message + '</pre></div></div>';
-        }
-    </script>
+try{ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));console.log("Render OK")}catch(e){console.error("Render err:",e);document.getElementById("root").innerHTML="<div class='error-screen'><pre>"+e.message+"</pre></div>"}
+</script>
 </body>
 </html>
