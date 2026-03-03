@@ -4,1193 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI LOBBY - Platform Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Firebase FIRST -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-    <!-- Then React -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
     <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
         :root {
-            --wine: #9B2335;
-            --burgundy: #5A1A2A;
-            --gold: #D4A843;
-            --cream: #FAF0E4;
-            --dark: #1A0A0E;
-            --brown: #3E1C11;
-            --rose: #C7959B;
-            --green: #2A5A3A;
+            --wine: #9B2335; --burgundy: #5A1A2A; --gold: #D4A843; --cream: #FAF0E4;
+            --dark: #1A0A0E; --brown: #3E1C11; --rose: #C7959B; --green: #2A5A3A;
         }
+        body { font-family:'Inter',sans-serif; background:var(--dark); color:var(--cream); overflow-x:hidden; }
+        .loading-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--burgundy),var(--dark)); text-align:center; }
+        .loading-screen .bell { font-size:4rem; margin-bottom:20px; animation:bounce 1s infinite; }
+        .loading-screen h2 { font-family:'Playfair Display',serif; color:var(--gold); font-size:2rem; }
+        .loading-screen p { color:var(--rose); margin-top:10px; font-size:0.85rem; }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* LOGIN */
+        .login-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--burgundy),var(--dark)); padding:20px; }
+        .login-card { background:rgba(26,10,14,0.9); border:2px solid var(--gold); border-radius:16px; padding:40px; max-width:420px; width:100%; text-align:center; position:relative; }
+        .login-card .bell { font-size:3.5rem; margin-bottom:10px; }
+        .login-card h1 { font-family:'Playfair Display',serif; color:var(--gold); font-size:2.2rem; margin-bottom:5px; }
+        .login-card h3 { color:var(--rose); font-weight:400; font-size:0.9rem; margin-bottom:30px; font-style:italic; }
+        .login-card input { width:100%; padding:14px; border:1px solid var(--gold); border-radius:8px; background:rgba(255,255,255,0.05); color:var(--cream); font-size:1rem; margin-bottom:15px; outline:none; }
+        .login-card input:focus { border-color:var(--wine); box-shadow:0 0 10px rgba(155,35,53,0.3); }
+        .login-card .login-btn { width:100%; padding:14px; background:var(--wine); color:var(--cream); border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.3s; }
+        .login-card .login-btn:hover { background:var(--burgundy); transform:translateY(-2px); }
+        .login-error { color:#ff6b6b; font-size:0.85rem; margin-bottom:10px; }
+        .lang-toggle { position:absolute; top:15px; right:15px; background:none; border:1px solid var(--gold); color:var(--gold); padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--burgundy) 100%);
-            color: var(--cream);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        /* LOBBY */
+        .lobby-header { background:linear-gradient(135deg,var(--burgundy),var(--dark)); padding:20px 30px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--gold); flex-wrap:wrap; gap:10px; }
+        .lobby-title h1 { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.8rem; }
+        .lobby-title p { color:var(--rose); font-size:0.8rem; font-style:italic; }
+        .lobby-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+        .user-badge { display:flex; align-items:center; gap:8px; }
+        .avatar { width:36px; height:36px; border-radius:50%; background:var(--wine); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; border:2px solid var(--gold); }
+        .role-tag { background:var(--gold); color:var(--dark); padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:600; text-transform:uppercase; }
+        .btn { padding:8px 16px; border:none; border-radius:8px; cursor:pointer; font-size:0.85rem; font-weight:600; transition:all 0.3s; }
+        .btn-gold { background:var(--gold); color:var(--dark); }
+        .btn-wine { background:var(--wine); color:var(--cream); }
+        .btn-outline { background:none; border:1px solid var(--gold); color:var(--gold); }
+        .btn:hover { transform:translateY(-2px); opacity:0.9; }
 
-        #root {
-            min-height: 100vh;
-        }
+        /* FLOOR TABS */
+        .floor-tabs { display:flex; justify-content:center; gap:10px; padding:20px; background:rgba(90,26,42,0.3); flex-wrap:wrap; }
+        .floor-tab { padding:12px 24px; border:2px solid transparent; border-radius:10px; background:rgba(255,255,255,0.05); color:var(--rose); cursor:pointer; font-weight:600; transition:all 0.3s; }
+        .floor-tab.active { border-color:var(--gold); color:var(--gold); background:rgba(212,168,67,0.1); }
+        .floor-tab:hover { border-color:var(--rose); }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(212, 168, 67, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(212, 168, 67, 0.6); }
-        }
-
-        /* LOGIN SCREEN */
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .login-card {
-            background: linear-gradient(135deg, rgba(26, 10, 14, 0.95) 0%, rgba(90, 26, 42, 0.95) 100%);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 60px 40px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            animation: slideInUp 0.6s ease-out;
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .login-bell {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .login-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 42px;
-            font-weight: 900;
-            color: var(--gold);
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-
-        .login-subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 16px;
-            color: var(--rose);
-            font-style: italic;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-label {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gold);
-            margin-bottom: 8px;
-        }
-
-        .form-input {
-            padding: 12px 16px;
-            border: 1px solid var(--gold);
-            background: rgba(250, 240, 228, 0.08);
-            color: var(--cream);
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--cream);
-            background: rgba(250, 240, 228, 0.12);
-            box-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
-        }
-
-        .form-input::placeholder {
-            color: rgba(212, 168, 67, 0.5);
-        }
-
-        .login-button {
-            padding: 12px 24px;
-            background: var(--gold);
-            color: var(--dark);
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .login-button:hover {
-            background: var(--cream);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(212, 168, 67, 0.4);
-        }
-
-        .login-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .login-error {
-            color: #ff6b6b;
-            font-size: 13px;
-            text-align: center;
-            padding: 12px;
-            background: rgba(255, 107, 107, 0.1);
-            border-radius: 4px;
-        }
-
-        .login-lang-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        /* LOBBY SCREEN */
-        .lobby-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .lobby-header {
-            background: linear-gradient(90deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
-            border-bottom: 2px solid var(--gold);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-        }
-
-        .lobby-title-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .lobby-bell {
-            font-size: 28px;
-        }
-
-        .lobby-titles {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .lobby-main-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--gold);
-            letter-spacing: 2px;
-        }
-
-        .lobby-subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 14px;
-            color: var(--rose);
-            font-style: italic;
-        }
-
-        .lobby-header-right {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            background: rgba(212, 168, 67, 0.1);
-            border-radius: 8px;
-            border: 1px solid rgba(212, 168, 67, 0.3);
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--gold);
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .user-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-name {
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .user-role {
-            font-size: 11px;
-            color: var(--rose);
-            text-transform: uppercase;
-        }
-
-        .header-button {
-            padding: 10px 16px;
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .header-button:hover {
-            background: var(--gold);
-            color: var(--dark);
-        }
-
-        .lang-toggle-btn {
-            background: none;
-            border: none;
-            color: var(--gold);
-            font-size: 20px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .lang-toggle-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* LOBBY CONTENT */
-        .lobby-content {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .floor-tabs {
-            display: flex;
-            gap: 16px;
-            border-bottom: 2px solid rgba(212, 168, 67, 0.2);
-            padding-bottom: 16px;
-        }
-
-        .floor-tab {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            color: var(--cream);
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .floor-tab:hover {
-            color: var(--gold);
-        }
-
-        .floor-tab.active {
-            color: var(--gold);
-        }
-
-        .floor-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -18px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--gold);
-        }
-
-        .rooms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .room-card {
-            background: rgba(26, 10, 14, 0.6);
-            border: 1px solid rgba(212, 168, 67, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .room-card:hover {
-            transform: scale(1.03);
-            border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.4);
-        }
-
-        .room-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            position: relative;
-        }
-
-        .room-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(155, 35, 53, 0.9);
-            color: var(--gold);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .room-info {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            flex: 1;
-        }
-
-        .room-number {
-            font-size: 12px;
-            color: var(--rose);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .room-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--gold);
-        }
+        /* ROOM GRID */
+        .room-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; padding:30px; max-width:1200px; margin:0 auto; }
+        .room-card { border-radius:12px; overflow:hidden; border:2px solid rgba(212,168,67,0.2); background:rgba(26,10,14,0.8); cursor:pointer; transition:all 0.3s; }
+        .room-card:hover { transform:translateY(-5px); border-color:var(--gold); box-shadow:0 8px 30px rgba(212,168,67,0.2); }
+        .room-img { height:160px; background-size:cover; background-position:center; position:relative; }
+        .room-badge { position:absolute; top:10px; right:10px; background:var(--wine); color:var(--cream); padding:4px 10px; border-radius:6px; font-size:0.7rem; font-weight:600; text-transform:uppercase; }
+        .room-info { padding:15px; }
+        .room-number { color:var(--gold); font-size:0.75rem; font-weight:700; }
+        .room-name { font-family:'Playfair Display',serif; font-size:1.1rem; margin-top:4px; }
+        .empty-floor { text-align:center; padding:60px; color:var(--rose); }
+        .empty-floor .icon { font-size:3rem; margin-bottom:15px; }
 
         /* EXPANDED ROOM MODAL */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .expanded-room {
-            background: linear-gradient(135deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            max-width: 600px;
-            width: 100%;
-            overflow: hidden;
-            animation: slideInUp 0.4s ease-out;
-        }
-
-        .expanded-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-
-        .expanded-content {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .expanded-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--gold);
-        }
-
-        .expanded-description {
-            color: var(--cream);
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .expanded-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(212, 168, 67, 0.2);
-        }
-
-        .meta-chip {
-            padding: 6px 12px;
-            background: rgba(212, 168, 67, 0.1);
-            border: 1px solid rgba(212, 168, 67, 0.3);
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--gold);
-        }
-
-        .access-badge {
-            padding: 8px 16px;
-            background: var(--gold);
-            color: var(--dark);
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            width: fit-content;
-        }
-
-        .expanded-buttons {
-            display: flex;
-            gap: 12px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(212, 168, 67, 0.2);
-        }
-
-        .enter-button {
-            flex: 1;
-            padding: 12px 24px;
-            background: var(--gold);
-            color: var(--dark);
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .enter-button:hover {
-            background: var(--cream);
-            transform: translateY(-2px);
-        }
-
-        .close-button {
-            padding: 12px 24px;
-            background: transparent;
-            color: var(--gold);
-            border: 1px solid var(--gold);
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .close-button:hover {
-            background: var(--gold);
-            color: var(--dark);
-        }
+        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; }
+        .modal-card { background:var(--dark); border:2px solid var(--gold); border-radius:16px; max-width:550px; width:100%; max-height:90vh; overflow-y:auto; }
+        .modal-img { height:200px; background-size:cover; background-position:center; border-radius:14px 14px 0 0; position:relative; }
+        .modal-close { position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); color:var(--cream); border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1.2rem; }
+        .modal-body { padding:25px; }
+        .modal-body h2 { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.5rem; margin-bottom:10px; }
+        .modal-body .desc { color:var(--rose); margin-bottom:15px; line-height:1.5; }
+        .meta-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+        .meta-chip { background:rgba(212,168,67,0.1); border:1px solid var(--gold); padding:4px 10px; border-radius:6px; font-size:0.75rem; color:var(--gold); }
+        .access-badge { display:inline-block; padding:4px 12px; border-radius:6px; font-size:0.8rem; font-weight:600; margin-bottom:15px; }
+        .access-full { background:var(--green); color:white; }
+        .access-view { background:var(--gold); color:var(--dark); }
+        .access-no { background:#666; color:#ccc; }
+        .enter-btn { display:block; width:100%; padding:14px; background:var(--wine); color:var(--cream); border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; text-align:center; text-decoration:none; }
+        .enter-btn:hover { background:var(--burgundy); }
 
         /* BACK OFFICE */
-        .backoffice-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            animation: fadeIn 0.6s ease-out;
-        }
+        .bo-wrap { display:flex; min-height:100vh; }
+        .bo-sidebar { width:220px; background:linear-gradient(180deg,var(--burgundy),var(--dark)); padding:20px; border-right:2px solid var(--gold); }
+        .bo-sidebar h2 { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.3rem; margin-bottom:20px; }
+        .bo-nav-item { padding:12px; border-radius:8px; color:var(--rose); cursor:pointer; margin-bottom:5px; transition:all 0.2s; font-size:0.9rem; }
+        .bo-nav-item.active { background:rgba(212,168,67,0.15); color:var(--gold); border-left:3px solid var(--gold); }
+        .bo-nav-item:hover { background:rgba(255,255,255,0.05); }
+        .bo-content { flex:1; padding:30px; overflow-y:auto; }
+        .bo-content h3 { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.4rem; margin-bottom:20px; }
 
-        .backoffice-header {
-            background: linear-gradient(90deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
-            border-bottom: 2px solid var(--gold);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .backoffice-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--gold);
-            letter-spacing: 2px;
-        }
-
-        .backoffice-controls {
-            display: flex;
-            gap: 12px;
-        }
-
-        .backoffice-content {
-            flex: 1;
-            display: flex;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--burgundy) 100%);
-        }
-
-        .backoffice-tabs {
-            width: 200px;
-            background: rgba(26, 10, 14, 0.9);
-            border-right: 2px solid rgba(212, 168, 67, 0.2);
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .backoffice-tab {
-            padding: 16px 20px;
-            background: none;
-            border: none;
-            color: var(--cream);
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: left;
-            border-left: 3px solid transparent;
-        }
-
-        .backoffice-tab:hover {
-            color: var(--gold);
-            background: rgba(212, 168, 67, 0.1);
-        }
-
-        .backoffice-tab.active {
-            color: var(--gold);
-            border-left-color: var(--gold);
-            background: rgba(212, 168, 67, 0.1);
-        }
-
-        .backoffice-panel {
-            flex: 1;
-            padding: 40px;
-            overflow-y: auto;
-            animation: slideInUp 0.4s ease-out;
-        }
-
-        /* UPLOAD WIZARD */
-        .wizard-steps {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 40px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid rgba(212, 168, 67, 0.2);
-        }
-
-        .wizard-step {
-            flex: 1;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(212, 168, 67, 0.1);
-            border: 2px solid rgba(212, 168, 67, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 8px;
-            font-weight: 600;
-            color: var(--gold);
-            transition: all 0.3s;
-        }
-
-        .wizard-step.active .step-number {
-            background: var(--gold);
-            color: var(--dark);
-            border-color: var(--gold);
-        }
-
-        .wizard-step.completed .step-number {
-            background: var(--green);
-            border-color: var(--green);
-            color: var(--cream);
-        }
-
-        .step-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--cream);
-        }
-
-        /* FILE DROP ZONE */
-        .drop-zone {
-            border: 2px dashed rgba(212, 168, 67, 0.4);
-            border-radius: 8px;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(212, 168, 67, 0.05);
-        }
-
-        .drop-zone:hover,
-        .drop-zone.dragover {
-            border-color: var(--gold);
-            background: rgba(212, 168, 67, 0.1);
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.2);
-        }
-
-        .drop-zone-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .drop-zone-text {
-            font-size: 14px;
-            color: var(--cream);
-            margin-bottom: 8px;
-        }
-
-        .drop-zone-hint {
-            font-size: 12px;
-            color: var(--rose);
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .file-preview {
-            padding: 16px;
-            background: rgba(212, 168, 67, 0.1);
-            border: 1px solid rgba(212, 168, 67, 0.3);
-            border-radius: 6px;
-            margin-top: 16px;
-        }
-
-        .file-preview-name {
-            font-weight: 600;
-            color: var(--gold);
-            font-size: 14px;
-        }
-
-        .file-preview-size {
-            font-size: 12px;
-            color: var(--rose);
-            margin-top: 4px;
-        }
-
-        /* FORM ELEMENTS */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-
-        .textarea {
-            padding: 12px 16px;
-            border: 1px solid rgba(212, 168, 67, 0.3);
-            background: rgba(250, 240, 228, 0.08);
-            color: var(--cream);
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 100px;
-            transition: all 0.3s;
-        }
-
-        .textarea:focus {
-            outline: none;
-            border-color: var(--gold);
-            background: rgba(250, 240, 228, 0.12);
-            box-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
-        }
-
-        .select {
-            padding: 12px 16px;
-            border: 1px solid rgba(212, 168, 67, 0.3);
-            background: rgba(250, 240, 228, 0.08);
-            color: var(--cream);
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .select:focus {
-            outline: none;
-            border-color: var(--gold);
-            background: rgba(250, 240, 228, 0.12);
-        }
-
-        .select option {
-            background: var(--burgundy);
-            color: var(--cream);
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 8px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: var(--gold);
-        }
-
-        .checkbox-item label {
-            cursor: pointer;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* PREVIEW CARD */
-        .preview-card {
-            background: rgba(212, 168, 67, 0.1);
-            border: 2px solid var(--gold);
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-
-        .preview-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(212, 168, 67, 0.2);
-        }
-
-        .preview-row:last-child {
-            border-bottom: none;
-        }
-
-        .preview-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--rose);
-            letter-spacing: 0.5px;
-        }
-
-        .preview-value {
-            font-size: 14px;
-            color: var(--gold);
-            font-weight: 500;
-        }
+        /* UPLOAD */
+        .upload-steps { display:flex; gap:10px; margin-bottom:25px; }
+        .step-indicator { padding:8px 16px; border-radius:20px; font-size:0.8rem; font-weight:600; }
+        .step-active { background:var(--gold); color:var(--dark); }
+        .step-inactive { background:rgba(255,255,255,0.1); color:var(--rose); }
+        .dropzone { border:3px dashed var(--gold); border-radius:12px; padding:60px; text-align:center; cursor:pointer; transition:all 0.3s; }
+        .dropzone:hover,.dropzone.dragging { background:rgba(212,168,67,0.1); border-color:var(--wine); }
+        .dropzone .icon { font-size:3rem; margin-bottom:10px; }
+        .form-group { margin-bottom:15px; }
+        .form-group label { display:block; color:var(--gold); font-weight:600; margin-bottom:5px; font-size:0.85rem; }
+        .form-group input,.form-group select,.form-group textarea { width:100%; padding:10px; border:1px solid rgba(212,168,67,0.3); border-radius:8px; background:rgba(255,255,255,0.05); color:var(--cream); font-size:0.9rem; outline:none; }
+        .form-group textarea { height:100px; resize:vertical; }
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(--gold); }
+        .checkbox-group { display:flex; gap:15px; flex-wrap:wrap; }
+        .checkbox-group label { display:flex; align-items:center; gap:5px; color:var(--cream); font-size:0.85rem; cursor:pointer; }
 
         /* TABLES */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-        }
-
-        .data-table thead {
-            background: rgba(212, 168, 67, 0.1);
-            border-bottom: 2px solid var(--gold);
-        }
-
-        .data-table th {
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--gold);
-        }
-
-        .data-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(212, 168, 67, 0.1);
-            font-size: 13px;
-        }
-
-        .data-table tbody tr:nth-child(even) {
-            background: rgba(26, 10, 14, 0.5);
-        }
-
-        .data-table tbody tr:hover {
-            background: rgba(212, 168, 67, 0.08);
-        }
-
-        /* SCORE COLUMN */
-        .score-cell {
-            color: var(--gold);
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        /* ACTION BUTTONS */
-        .action-button {
-            padding: 8px 12px;
-            background: transparent;
-            border: 1px solid var(--rose);
-            color: var(--rose);
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-
-        .action-button:hover {
-            background: var(--rose);
-            color: var(--dark);
-        }
-
-        .delete-button {
-            background: none;
-            border: none;
-            color: var(--rose);
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .delete-button:hover {
-            color: #ff6b6b;
-            transform: scale(1.2);
-        }
-
-        /* ADD USER FORM */
-        .add-user-section {
-            background: rgba(212, 168, 67, 0.1);
-            border: 1px solid rgba(212, 168, 67, 0.2);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 24px;
-        }
-
-        .add-user-title {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        .add-user-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
-            gap: 16px;
-            align-items: flex-end;
-        }
+        .bo-table { width:100%; border-collapse:collapse; }
+        .bo-table th { text-align:left; padding:12px; color:var(--gold); border-bottom:2px solid var(--gold); font-size:0.85rem; }
+        .bo-table td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem; }
+        .bo-table tr:hover { background:rgba(212,168,67,0.05); }
+        .del-btn { background:none; border:1px solid #ff6b6b; color:#ff6b6b; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem; }
+        .del-btn:hover { background:#ff6b6b; color:white; }
+        .add-form { display:flex; gap:10px; margin-top:15px; flex-wrap:wrap; align-items:flex-end; }
+        .add-form input,.add-form select { padding:8px; border:1px solid rgba(212,168,67,0.3); border-radius:6px; background:rgba(255,255,255,0.05); color:var(--cream); font-size:0.85rem; outline:none; }
 
         /* CELEBRATION */
-        .celebration-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .celebration-card {
-            background: linear-gradient(135deg, var(--wine) 0%, var(--burgundy) 100%);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 60px 40px;
-            text-align: center;
-            max-width: 400px;
-            animation: bounce 0.6s ease-out;
-        }
-
-        .celebration-emoji {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        .celebration-message {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            color: var(--gold);
-            font-weight: 700;
-        }
+        .celebration { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:2000; }
+        .celebration-card { text-align:center; animation:popIn 0.5s ease; }
+        .celebration-card .emoji { font-size:5rem; animation:bounce 0.8s infinite; }
+        .celebration-card .phrase { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.5rem; margin-top:15px; max-width:350px; }
+        @keyframes popIn { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
 
         /* TOAST */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--gold);
-            color: var(--dark);
-            padding: 16px 24px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            animation: slideInUp 0.3s ease-out;
-            z-index: 1500;
-            max-width: 300px;
-        }
+        .toast { position:fixed; bottom:20px; right:20px; background:var(--gold); color:var(--dark); padding:12px 20px; border-radius:8px; font-weight:600; z-index:3000; animation:slideIn 0.3s ease; }
+        @keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
 
-        /* DIALOG */
-        .dialog-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1100;
-            animation: fadeIn 0.3s ease-out;
-        }
+        /* CONFIRM DIALOG */
+        .confirm-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:2500; }
+        .confirm-card { background:var(--dark); border:2px solid var(--wine); border-radius:12px; padding:30px; text-align:center; max-width:350px; }
+        .confirm-card .emoji { font-size:2.5rem; margin-bottom:10px; }
+        .confirm-card h4 { color:var(--cream); margin-bottom:10px; }
+        .confirm-card p { color:var(--rose); font-size:0.85rem; margin-bottom:20px; }
+        .confirm-btns { display:flex; gap:10px; justify-content:center; }
 
-        .dialog-card {
-            background: linear-gradient(135deg, rgba(26, 10, 14, 0.98) 0%, rgba(90, 26, 42, 0.98) 100%);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 40px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            animation: slideInUp 0.3s ease-out;
-        }
+        /* DISCREPANCY */
+        .disc-card { background:rgba(155,35,53,0.1); border:1px solid var(--wine); border-radius:8px; padding:15px; margin-bottom:10px; }
+        .disc-card h4 { color:var(--gold); margin-bottom:5px; }
+        .disc-card p { color:var(--rose); font-size:0.85rem; }
 
-        .dialog-emoji {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .dialog-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 22px;
-            color: var(--gold);
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .dialog-message {
-            color: var(--cream);
-            font-size: 14px;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-
-        .dialog-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .dialog-button {
-            flex: 1;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .dialog-confirm {
-            background: var(--wine);
-            color: var(--cream);
-        }
-
-        .dialog-confirm:hover {
-            background: #bb2944;
-            transform: translateY(-2px);
-        }
-
-        .dialog-cancel {
-            background: transparent;
-            color: var(--gold);
-            border: 1px solid var(--gold);
-        }
-
-        .dialog-cancel:hover {
-            background: var(--gold);
-            color: var(--dark);
-        }
-
-        /* LOADING SCREEN */
-        .loading-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 20px;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .loading-bell {
-            font-size: 64px;
-            animation: bounce 1.5s ease-in-out infinite;
-        }
-
-        .loading-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            color: var(--gold);
-            font-weight: 700;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .lobby-header {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .lobby-header-right {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .rooms-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .add-user-form {
-                grid-template-columns: 1fr;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .backoffice-content {
-                flex-direction: column;
-            }
-
-            .backoffice-tabs {
-                width: 100%;
-                border-right: none;
-                border-bottom: 2px solid rgba(212, 168, 67, 0.2);
-                flex-direction: row;
-                padding: 0;
-            }
-
-            .backoffice-tab {
-                padding: 12px 16px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-            }
-
-            .backoffice-tab.active {
-                border-left: none;
-                border-bottom-color: var(--gold);
-            }
+        @media(max-width:768px) {
+            .bo-wrap { flex-direction:column; }
+            .bo-sidebar { width:100%; border-right:none; border-bottom:2px solid var(--gold); }
+            .lobby-header { flex-direction:column; text-align:center; }
+            .room-grid { grid-template-columns:1fr; padding:15px; }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
-    <!-- Firebase initialization in regular script BEFORE Babel -->
     <script>
-        window.firebaseReady = false;
-        window.firebaseError = null;
-
+        // Initialize Firebase SYNCHRONOUSLY before React
         try {
             var firebaseConfig = {
                 apiKey: "AIzaSyDRWcexkV2fPtam-RmSzO0fac6cLwAPmeM",
@@ -1201,198 +168,112 @@
                 messagingSenderId: "252396863420",
                 appId: "1:252396863420:web:db0624a69b8f75b73675b9"
             };
-
-            firebase.initializeApp(firebaseConfig);
-            window.db = firebase.database();
-            window.firebaseReady = true;
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-            window.firebaseError = error.message;
-            window.firebaseReady = true;
+            var app = firebase.initializeApp(firebaseConfig);
+            var db = firebase.database();
+            console.log("Firebase initialized OK");
+        } catch(e) {
+            console.error("Firebase init error:", e);
+            var db = null;
         }
-
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            console.error("Global error:", msg, error);
-            return false;
-        };
     </script>
 
-    <!-- React and Babel scripts with main app -->
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, createContext, useContext } = React;
 
-        const translations = {
+        // ===================== TRANSLATIONS =====================
+        const T = {
             en: {
-                login_title: "AI LOBBY",
-                login_subtitle: "The Grand Platform Hotel",
-                login_email: "Email",
-                login_submit: "Enter",
-                login_error: "User not found. Please check your email.",
-                lobby_subtitle: "The Grand Platform Hotel",
-                tools_floor: "Tools Floor",
-                analysis_floor: "Analysis Floor",
-                strategy_floor: "Strategy Floor",
-                room_number: "Room",
-                enter_room: "Enter Room",
-                close: "Close",
-                back_office: "Back Office",
-                logout: "Logout",
-                uploaded_by: "Uploaded by",
-                access_level: "Access Level",
-                full_access: "Full Access",
-                view_only: "View Only",
-                use_access: "Can Use",
-                no_access: "No Access",
-                back_to_lobby: "Back to Lobby",
-                upload_platform: "Upload Platform",
-                guest_registry: "Guest Registry",
-                score_analysis: "Score Analysis",
-                ai_discrepancies: "AI Discrepancies",
-                step1_upload: "Upload File",
-                step2_details: "Details",
-                step3_preview: "Preview",
-                drop_files: "Drop your code file here",
-                drop_hint: "or click to select",
-                file_name: "File Name",
-                file_size: "File Size",
-                platform_name: "Platform Name",
-                section: "Section",
-                tools: "Tools",
-                analysis: "Analysis",
-                strategy: "Strategy",
-                description: "Description",
-                url: "Platform URL",
-                access_roles: "Access Roles",
-                publish: "Publish",
-                add_user: "Add New User",
-                user_name: "Name",
-                user_email: "Email",
-                user_role: "Role",
-                user_role_bellboy: "Bellboy",
-                user_role_concierge: "Concierge",
-                user_role_guest: "Guest",
-                add: "Add",
-                platform: "Platform",
-                raw_score: "Raw Score",
-                normalized_score: "Normalized Score",
-                discrepancy_title: "High Score Discrepancy Detected",
-                discrepancy_msg: "Review and audit these platforms for consistency",
-                celebration_msg1: "Another masterpiece checked in!",
-                celebration_msg2: "The penthouse just got an upgrade!",
-                celebration_msg3: "Room service: excellence delivered!",
-                celebration_msg4: "Five stars and counting!",
-                celebration_msg5: "Excellence level: achieved!",
-                toast_published: "Platform published successfully!",
-                toast_user_added: "User added successfully!",
-                toast_user_deleted: "User deleted successfully!",
-                toast_platform_deleted: "Platform deleted successfully!",
-                confirm_delete_user: "Delete User",
-                confirm_delete_user_msg: "Are you sure you want to delete this user? This action cannot be undone.",
-                confirm_delete_platform: "Delete Platform",
-                confirm_delete_platform_msg: "Are you sure you want to delete this platform? This action cannot be undone.",
-                cannot_delete_yourself: "You cannot delete yourself.",
+                title: "AI LOBBY", subtitle: "The Grand Platform Hotel", login: "Check In", emailPlaceholder: "Enter your email...",
+                loginError: "Email not registered. Contact a Bellboy.", langBtn: "ES", logout: "Logout",
+                toolsFloor: "Tools Floor 🔧", analysisFloor: "Analysis Floor 📊", strategyFloor: "Strategy Floor 🎯",
+                backOffice: "Back Office", backToLobby: "← Back to Lobby",
+                emptyFloor: "No platforms on this floor yet", emptyIcon: "🚪",
+                enterRoom: "Enter Room", accessFull: "Full Access", accessView: "View Only", accessUse: "Use", accessNo: "No Access",
+                uploadedBy: "Uploaded by", date: "Date", size: "Size",
+                // Back Office
+                uploadTab: "Upload Platform", registryTab: "Guest Registry", scoresTab: "Score Analysis", discTab: "AI Discrepancies",
+                // Upload steps
+                step1: "Upload File", step2: "Details", step3: "Publish",
+                dropText: "Drag & drop your file here", dropSub: "or click to browse",
+                fileName: "File", fileSize: "Size",
+                nameLabel: "Platform Name", sectionLabel: "Section", descLabel: "Description", urlLabel: "URL", rolesLabel: "Access Roles",
+                tools: "Tools", analysis: "Analysis", strategy: "Strategy",
+                preview: "Preview", publish: "Publish to Lobby", next: "Next", back: "Back",
+                platformAdded: "Platform checked in! 🎉",
+                // Registry
+                name: "Name", email: "Email", role: "Role", actions: "Actions",
+                addUser: "Add User", userAdded: "Guest registered! 🔑", userRemoved: "Guest checked out 🚪",
+                confirmDeleteTitle: "Check Out Guest?", confirmDeleteMsg: "This guest will lose access to the hotel.",
+                confirm: "Confirm", cancel: "Cancel",
+                // Scores
+                platform: "Platform", section: "Section", rawScore: "Raw", score: "Score", by: "By", remove: "Remove",
+                // Discrepancies
+                noDisc: "No discrepancies detected. All floors are balanced! ✨",
+                discAlert: "Score gap detected", discRec: "Consider reviewing the complexity difference between these platforms.",
+                // Celebration
+                celebPhrases: [
+                    "Another masterpiece checked in! 🏨", "The penthouse just got an upgrade! ✨",
+                    "Room service: excellence delivered! 🛎️", "A new jewel in our collection! 💎",
+                    "The Grand Hotel welcomes a star! ⭐"
+                ]
             },
             es: {
-                login_title: "AI LOBBY",
-                login_subtitle: "El Grand Platform Hotel",
-                login_email: "Email",
-                login_submit: "Entrar",
-                login_error: "Usuario no encontrado. Por favor, verifica tu email.",
-                lobby_subtitle: "El Grand Platform Hotel",
-                tools_floor: "Piso de Herramientas",
-                analysis_floor: "Piso de Análisis",
-                strategy_floor: "Piso de Estrategia",
-                room_number: "Habitación",
-                enter_room: "Entrar a la Habitación",
-                close: "Cerrar",
-                back_office: "Oficina Trasera",
-                logout: "Cerrar Sesión",
-                uploaded_by: "Subido por",
-                access_level: "Nivel de Acceso",
-                full_access: "Acceso Completo",
-                view_only: "Solo Visualización",
-                use_access: "Puede Usar",
-                no_access: "Sin Acceso",
-                back_to_lobby: "Volver al Lobby",
-                upload_platform: "Subir Plataforma",
-                guest_registry: "Registro de Huéspedes",
-                score_analysis: "Análisis de Puntuaciones",
-                ai_discrepancies: "Discrepancias IA",
-                step1_upload: "Subir Archivo",
-                step2_details: "Detalles",
-                step3_preview: "Previsualización",
-                drop_files: "Suelta tu archivo de código aquí",
-                drop_hint: "o haz clic para seleccionar",
-                file_name: "Nombre del Archivo",
-                file_size: "Tamaño del Archivo",
-                platform_name: "Nombre de la Plataforma",
-                section: "Sección",
-                tools: "Herramientas",
-                analysis: "Análisis",
-                strategy: "Estrategia",
-                description: "Descripción",
-                url: "URL de la Plataforma",
-                access_roles: "Roles de Acceso",
-                publish: "Publicar",
-                add_user: "Agregar Nuevo Usuario",
-                user_name: "Nombre",
-                user_email: "Email",
-                user_role: "Rol",
-                user_role_bellboy: "Botones",
-                user_role_concierge: "Conserje",
-                user_role_guest: "Huésped",
-                add: "Agregar",
-                platform: "Plataforma",
-                raw_score: "Puntuación Bruta",
-                normalized_score: "Puntuación Normalizada",
-                discrepancy_title: "Alta Discrepancia de Puntuación Detectada",
-                discrepancy_msg: "Revisa y audita estas plataformas para consistencia",
-                celebration_msg1: "¡Otra obra maestra registrada!",
-                celebration_msg2: "¡El penthouse acaba de mejorar!",
-                celebration_msg3: "Servicio a la habitación: ¡excelencia entregada!",
-                celebration_msg4: "¡Cinco estrellas y contando!",
-                celebration_msg5: "¡Nivel de excelencia: logrado!",
-                toast_published: "¡Plataforma publicada exitosamente!",
-                toast_user_added: "¡Usuario agregado exitosamente!",
-                toast_user_deleted: "¡Usuario eliminado exitosamente!",
-                toast_platform_deleted: "¡Plataforma eliminada exitosamente!",
-                confirm_delete_user: "Eliminar Usuario",
-                confirm_delete_user_msg: "¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.",
-                confirm_delete_platform: "Eliminar Plataforma",
-                confirm_delete_platform_msg: "¿Estás seguro de que deseas eliminar esta plataforma? Esta acción no se puede deshacer.",
-                cannot_delete_yourself: "No puedes eliminarte a ti mismo.",
+                title: "AI LOBBY", subtitle: "El Gran Hotel de Plataformas", login: "Registrarse", emailPlaceholder: "Ingresa tu correo...",
+                loginError: "Correo no registrado. Contacta a un Bellboy.", langBtn: "EN", logout: "Salir",
+                toolsFloor: "Piso de Herramientas 🔧", analysisFloor: "Piso de Análisis 📊", strategyFloor: "Piso de Estrategia 🎯",
+                backOffice: "Back Office", backToLobby: "← Volver al Lobby",
+                emptyFloor: "No hay plataformas en este piso aún", emptyIcon: "🚪",
+                enterRoom: "Entrar a la Habitación", accessFull: "Acceso Completo", accessView: "Solo Vista", accessUse: "Uso", accessNo: "Sin Acceso",
+                uploadedBy: "Subido por", date: "Fecha", size: "Tamaño",
+                uploadTab: "Subir Plataforma", registryTab: "Registro de Huéspedes", scoresTab: "Análisis de Puntajes", discTab: "Discrepancias IA",
+                step1: "Subir Archivo", step2: "Detalles", step3: "Publicar",
+                dropText: "Arrastra tu archivo aquí", dropSub: "o haz clic para buscar",
+                fileName: "Archivo", fileSize: "Tamaño",
+                nameLabel: "Nombre de Plataforma", sectionLabel: "Sección", descLabel: "Descripción", urlLabel: "URL", rolesLabel: "Roles de Acceso",
+                tools: "Herramientas", analysis: "Análisis", strategy: "Estrategia",
+                preview: "Vista Previa", publish: "Publicar en el Lobby", next: "Siguiente", back: "Atrás",
+                platformAdded: "¡Plataforma registrada! 🎉",
+                name: "Nombre", email: "Correo", role: "Rol", actions: "Acciones",
+                addUser: "Agregar Huésped", userAdded: "¡Huésped registrado! 🔑", userRemoved: "Huésped dado de baja 🚪",
+                confirmDeleteTitle: "¿Dar de baja al huésped?", confirmDeleteMsg: "Este huésped perderá acceso al hotel.",
+                confirm: "Confirmar", cancel: "Cancelar",
+                platform: "Plataforma", section: "Sección", rawScore: "Bruto", score: "Puntaje", by: "Por", remove: "Eliminar",
+                noDisc: "No se detectaron discrepancias. ¡Todos los pisos están equilibrados! ✨",
+                discAlert: "Brecha de puntaje detectada", discRec: "Considera revisar la diferencia de complejidad entre estas plataformas.",
+                celebPhrases: [
+                    "¡Otra obra maestra registrada! 🏨", "¡El penthouse se acaba de mejorar! ✨",
+                    "Servicio a la habitación: ¡excelencia entregada! 🛎️", "¡Una nueva joya en nuestra colección! 💎",
+                    "¡El Gran Hotel da la bienvenida a una estrella! ⭐"
+                ]
             }
         };
 
-        function t(key, lang) {
-            return translations[lang]?.[key] || translations.en[key] || key;
-        }
-
+        // ===================== DATA =====================
         const initialUsers = [
-            { id: 1, name: "Rafa Vázquez", email: "r.vazquez@sesametime.com", role: "bellboy", avatar: "RV" },
-            { id: 2, name: "Carlos Méndez", email: "c.mendez@sesametime.com", role: "concierge", avatar: "CM" },
-            { id: 3, name: "Laura García", email: "l.garcia@sesametime.com", role: "concierge", avatar: "LG" },
-            { id: 4, name: "Ana López", email: "a.lopez@sesametime.com", role: "guest", avatar: "AL" },
-            { id: 5, name: "Miguel Torres", email: "m.torres@sesametime.com", role: "guest", avatar: "MT" },
-            { id: 6, name: "Sofía Ruiz", email: "s.ruiz@sesametime.com", role: "guest", avatar: "SR" },
-            { id: 7, name: "I. Herrero", email: "i.herrero@sesametime.com", role: "concierge", avatar: "IH" },
-            { id: 8, name: "L. Bahía", email: "l.bahia@sesametime.com", role: "concierge", avatar: "LB" },
-            { id: 9, name: "M. Díaz", email: "m.diaz@sesametime.com", role: "concierge", avatar: "MD" },
-            { id: 10, name: "J. Corpus", email: "j.corpus@sesametime.com", role: "bellboy", avatar: "JC" },
-            { id: 11, name: "A. Sevillano", email: "a.sevillano@sesametime.com", role: "concierge", avatar: "AS" },
-            { id: 12, name: "A. Céfalo", email: "a.cefalo@sesametime.com", role: "concierge", avatar: "AC" },
-            { id: 13, name: "V. Herrera", email: "v.herrera@sesametime.com", role: "concierge", avatar: "VH" },
-            { id: 14, name: "J. Herrera", email: "j.herrera@sesametime.com", role: "concierge", avatar: "JH" },
-            { id: 15, name: "W. Moreira", email: "w.moreira@sesametime.com", role: "concierge", avatar: "WM" },
-            { id: 16, name: "C. Edo", email: "c.edo@sesametime.com", role: "concierge", avatar: "CE" },
-            { id: 17, name: "Majo", email: "majo@sesametime.com", role: "concierge", avatar: "MA" },
-            { id: 18, name: "F. Berta", email: "f.berta@sesametime.com", role: "concierge", avatar: "FB" },
+            { id:1, name:"Rafa Vázquez", email:"r.vazquez@sesametime.com", role:"bellboy", avatar:"RV" },
+            { id:2, name:"Carlos Méndez", email:"c.mendez@sesametime.com", role:"concierge", avatar:"CM" },
+            { id:3, name:"Laura García", email:"l.garcia@sesametime.com", role:"concierge", avatar:"LG" },
+            { id:4, name:"Ana López", email:"a.lopez@sesametime.com", role:"guest", avatar:"AL" },
+            { id:5, name:"Miguel Torres", email:"m.torres@sesametime.com", role:"guest", avatar:"MT" },
+            { id:6, name:"Sofía Ruiz", email:"s.ruiz@sesametime.com", role:"guest", avatar:"SR" },
+            { id:7, name:"I. Herrero", email:"i.herrero@sesametime.com", role:"concierge", avatar:"IH" },
+            { id:8, name:"L. Bahía", email:"l.bahia@sesametime.com", role:"concierge", avatar:"LB" },
+            { id:9, name:"M. Díaz", email:"m.diaz@sesametime.com", role:"concierge", avatar:"MD" },
+            { id:10, name:"J. Corpus", email:"j.corpus@sesametime.com", role:"bellboy", avatar:"JC" },
+            { id:11, name:"A. Sevillano", email:"a.sevillano@sesametime.com", role:"concierge", avatar:"AS" },
+            { id:12, name:"A. Céfalo", email:"a.cefalo@sesametime.com", role:"concierge", avatar:"AC" },
+            { id:13, name:"V. Herrera", email:"v.herrera@sesametime.com", role:"concierge", avatar:"VH" },
+            { id:14, name:"J. Herrera", email:"j.herrera@sesametime.com", role:"concierge", avatar:"JH" },
+            { id:15, name:"W. Moreira", email:"w.moreira@sesametime.com", role:"concierge", avatar:"WM" },
+            { id:16, name:"C. Edo", email:"c.edo@sesametime.com", role:"concierge", avatar:"CE" },
+            { id:17, name:"Majo", email:"majo@sesametime.com", role:"concierge", avatar:"MA" },
+            { id:18, name:"F. Berta", email:"f.berta@sesametime.com", role:"concierge", avatar:"FB" },
         ];
 
         const accessMatrix = {
-            bellboy: { tools: 'full', analysis: 'full', strategy: 'full', config: true },
-            concierge: { tools: 'full', analysis: 'full', strategy: 'view-only', config: true },
-            guest: { tools: 'use', analysis: 'view-only', strategy: 'no-access', config: false },
+            bellboy: { tools:'full', analysis:'full', strategy:'full', config:true },
+            concierge: { tools:'full', analysis:'full', strategy:'view-only', config:true },
+            guest: { tools:'use', analysis:'view-only', strategy:'no-access', config:false },
         };
 
         const hotelImages = {
@@ -1419,974 +300,637 @@
             ],
         };
 
-        function getPlatformImage(platform, section) {
-            const images = hotelImages[section] || hotelImages.tools;
-            const seed = (platform.name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) + (platform.id || 0);
-            return images[seed % images.length];
+        function getImg(p, sec) {
+            var imgs = hotelImages[sec] || hotelImages.tools;
+            var seed = (p.name||'').split('').reduce(function(a,c){return a+c.charCodeAt(0)},0) + (p.id||0);
+            return imgs[seed % imgs.length];
         }
 
-        function analyzeCodeComplexity(fileContent) {
-            if (!fileContent) return 1;
-            let score = 0;
-            const lines = fileContent.split('\n').length;
-            score += Math.min(lines / 10, 30);
-            const functions = (fileContent.match(/function\s|=>\s*\{|\.prototype\./g) || []).length;
-            score += functions * 2;
-            const htmlTags = (fileContent.match(/<[a-zA-Z][^>]*>/g) || []).length;
-            score += Math.min(htmlTags / 5, 15);
-            const cssRules = (fileContent.match(/[{][^}]*[:][^}]*[}]/g) || []).length;
-            score += Math.min(cssRules, 10);
-            const imports = (fileContent.match(/import\s|require\(/g) || []).length;
-            score += imports * 1.5;
-            const conditionals = (fileContent.match(/if\s*\(|switch\s*\(|\?\s*.*:/g) || []).length;
-            score += conditionals * 1.5;
-            const loops = (fileContent.match(/for\s*\(|while\s*\(|\.map\(|\.forEach\(|\.filter\(|\.reduce\(/g) || []).length;
-            score += loops * 2;
-            const hooks = (fileContent.match(/use[A-Z]\w*\(/g) || []).length;
-            score += hooks * 2;
-            const apiCalls = (fileContent.match(/fetch\(|axios\.|\.ajax\(|XMLHttpRequest/g) || []).length;
-            score += apiCalls * 3;
-            const events = (fileContent.match(/addEventListener|on[A-Z]\w+\s*=/g) || []).length;
-            score += events * 1.5;
-            const comments = (fileContent.match(/\/\/.*|\/\*[\s\S]*?\*\//g) || []).length;
-            score += Math.min(comments / 5, 5);
-            const errorHandling = (fileContent.match(/try\s*{|catch\s*\(|\.catch\(/g) || []).length;
-            score += errorHandling * 2;
-            score += Math.min(fileContent.length / 1000, 20);
-            return Math.max(1, Math.ceil(score));
+        function analyzeCode(content) {
+            if (!content) return 1;
+            var s = 0, lines = content.split('\n').length;
+            s += Math.min(lines/10, 30);
+            s += ((content.match(/function\s|=>\s*\{|\.prototype\./g)||[]).length) * 2;
+            s += Math.min((content.match(/<[a-zA-Z][^>]*>/g)||[]).length / 5, 15);
+            s += Math.min((content.match(/\{[^}]*:[^}]*\}/g)||[]).length, 10);
+            s += ((content.match(/import\s|require\(/g)||[]).length) * 1.5;
+            s += ((content.match(/if\s*\(|switch\s*\(/g)||[]).length) * 1.5;
+            s += ((content.match(/for\s*\(|while\s*\(|\.map\(|\.forEach\(|\.filter\(|\.reduce\(/g)||[]).length) * 2;
+            s += ((content.match(/use[A-Z]\w*\(/g)||[]).length) * 2;
+            s += ((content.match(/fetch\(|axios\.|XMLHttpRequest/g)||[]).length) * 3;
+            s += ((content.match(/addEventListener|on[A-Z]\w+\s*=/g)||[]).length) * 1.5;
+            s += Math.min(content.length/1000, 20);
+            return Math.max(1, Math.ceil(s));
         }
 
         function calcScores(platforms) {
-            if (platforms.length === 0) return platforms;
-            const maxRaw = Math.max(...platforms.map(p => p.rawScore || 1));
-            return platforms.map(p => ({
-                ...p,
-                score: Math.max(1, Math.round(((p.rawScore || 1) / maxRaw) * 100))
-            }));
+            if (!platforms.length) return platforms;
+            var maxRaw = Math.max.apply(null, platforms.map(function(p){return p.rawScore||1}));
+            return platforms.map(function(p){
+                return Object.assign({}, p, { score: Math.max(1, Math.round(((p.rawScore||1)/maxRaw)*100)) });
+            });
         }
 
-        function Toast({ message, lang }) {
-            return <div className="toast">{t(message, lang)}</div>;
+        // ===================== COMPONENTS =====================
+
+        // Toast
+        function Toast({ message }) {
+            return <div className="toast">{message}</div>;
         }
 
+        // Confirm Dialog
+        function ConfirmDialog({ title, message, onConfirm, onCancel, t }) {
+            return (
+                <div className="confirm-overlay" onClick={onCancel}>
+                    <div className="confirm-card" onClick={function(e){e.stopPropagation()}}>
+                        <div className="emoji">🗑️</div>
+                        <h4>{title}</h4>
+                        <p>{message}</p>
+                        <div className="confirm-btns">
+                            <button className="btn btn-wine" onClick={onConfirm}>{t('confirm')}</button>
+                            <button className="btn btn-outline" onClick={onCancel}>{t('cancel')}</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Celebration
         function Celebration({ lang }) {
-            const phrases = [
-                'celebration_msg1',
-                'celebration_msg2',
-                'celebration_msg3',
-                'celebration_msg4',
-                'celebration_msg5',
-            ];
-            const msg = phrases[Math.floor(Math.random() * phrases.length)];
-
-            useEffect(() => {
-                const timer = setTimeout(() => {
-                    window.location.reload();
-                }, 6000);
-                return () => clearTimeout(timer);
-            }, []);
-
+            var phrases = T[lang].celebPhrases;
+            var phrase = phrases[Math.floor(Math.random() * phrases.length)];
             return (
-                <div className="celebration-overlay">
+                <div className="celebration">
                     <div className="celebration-card">
-                        <div className="celebration-emoji">🥂</div>
-                        <div className="celebration-message">{t(msg, lang)}</div>
+                        <div className="emoji">🥂</div>
+                        <div className="phrase">{phrase}</div>
                     </div>
                 </div>
             );
         }
 
-        function ConfirmDialog({ title, message, onConfirm, onCancel, lang }) {
-            return (
-                <div className="dialog-overlay">
-                    <div className="dialog-card">
-                        <div className="dialog-emoji">⚠️</div>
-                        <div className="dialog-title">{t(title, lang)}</div>
-                        <div className="dialog-message">{t(message, lang)}</div>
-                        <div className="dialog-buttons">
-                            <button className="dialog-button dialog-confirm" onClick={onConfirm}>
-                                {t('confirm_delete_user', lang)}
-                            </button>
-                            <button className="dialog-button dialog-cancel" onClick={onCancel}>
-                                {t('close', lang)}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
+        // ===================== LOGIN =====================
+        function LoginScreen({ onLogin, lang, setLang, users, t }) {
+            var [email, setEmail] = useState('');
+            var [error, setError] = useState('');
 
-        function LoginScreen({ onLogin, t: tFunc, lang, setLang, users }) {
-            const [email, setEmail] = useState('');
-            const [error, setError] = useState('');
-
-            const handleSubmit = (e) => {
+            function handleSubmit(e) {
                 e.preventDefault();
-                const user = users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
-                if (user) {
-                    onLogin(user);
+                var found = users.find(function(u){ return u.email.toLowerCase() === email.toLowerCase().trim(); });
+                if (found) {
+                    onLogin(found);
                 } else {
-                    setError('login_error');
+                    setError(t('loginError'));
                 }
-            };
+            }
 
             return (
-                <div className="login-container">
-                    <button className="lang-toggle-btn" onClick={() => setLang(lang === 'en' ? 'es' : 'en')}>
-                        {lang === 'en' ? '🇪🇸' : '🇬🇧'}
-                    </button>
+                <div className="login-wrap">
                     <div className="login-card">
-                        <div className="login-header">
-                            <div className="login-bell">🔔</div>
-                            <div className="login-title">{tFunc('login_title', lang)}</div>
-                            <div className="login-subtitle">{tFunc('login_subtitle', lang)}</div>
-                        </div>
-                        <form onSubmit={handleSubmit} className="login-form">
-                            <div className="form-group">
-                                <label className="form-label">{tFunc('login_email', lang)}</label>
-                                <input
-                                    type="email"
-                                    className="form-input"
-                                    placeholder="example@sesametime.com"
-                                    value={email}
-                                    onChange={(e) => {
-                                        setEmail(e.target.value);
-                                        setError('');
-                                    }}
-                                />
-                            </div>
-                            {error && <div className="login-error">{tFunc(error, lang)}</div>}
-                            <button type="submit" className="login-button">
-                                {tFunc('login_submit', lang)}
-                            </button>
+                        <button className="lang-toggle" onClick={function(){setLang(lang==='en'?'es':'en')}}>{t('langBtn')}</button>
+                        <div className="bell">🔔</div>
+                        <h1>{t('title')}</h1>
+                        <h3>{t('subtitle')}</h3>
+                        {error && <div className="login-error">{error}</div>}
+                        <form onSubmit={handleSubmit}>
+                            <input type="email" value={email} onChange={function(e){setEmail(e.target.value);setError('')}} placeholder={t('emailPlaceholder')} />
+                            <button type="submit" className="login-btn">{t('login')}</button>
                         </form>
                     </div>
                 </div>
             );
         }
 
-        function ExpandedRoom({ platform, section, onClose, lang, t: tFunc, currentUser }) {
-            const image = getPlatformImage(platform, section);
-            const access = accessMatrix[currentUser.role];
-            const sectionKey = section === 'tools' ? 'tools_floor' : section === 'analysis' ? 'analysis_floor' : 'strategy_floor';
+        // ===================== LOBBY =====================
+        function RoomCard({ platform, section, onClick }) {
+            var imgUrl = getImg(platform, section);
+            return (
+                <div className="room-card" onClick={function(){onClick(platform)}}>
+                    <div className="room-img" style={{backgroundImage:'url('+imgUrl+')'}}>
+                        <span className="room-badge">{section}</span>
+                    </div>
+                    <div className="room-info">
+                        <div className="room-number">#{platform.roomNumber}</div>
+                        <div className="room-name">{platform.name}</div>
+                    </div>
+                </div>
+            );
+        }
 
-            let accessText = 'full_access';
-            if (access[section] === 'view-only') accessText = 'view_only';
-            else if (access[section] === 'use') accessText = 'use_access';
-            else if (access[section] === 'no-access') accessText = 'no_access';
+        function ExpandedRoom({ platform, section, onClose, currentUser, t }) {
+            var imgUrl = getImg(platform, section);
+            var access = accessMatrix[currentUser.role] ? accessMatrix[currentUser.role][section] : 'no-access';
+            var accessLabel = access === 'full' ? t('accessFull') : access === 'view-only' ? t('accessView') : access === 'use' ? t('accessUse') : t('accessNo');
+            var accessClass = access === 'full' ? 'access-full' : access === 'view-only' || access === 'use' ? 'access-view' : 'access-no';
 
             return (
                 <div className="modal-overlay" onClick={onClose}>
-                    <div className="expanded-room" onClick={(e) => e.stopPropagation()}>
-                        <img src={image} alt={platform.name} className="expanded-image" />
-                        <div className="expanded-content">
-                            <h2 className="expanded-title">{platform.name}</h2>
-                            <p className="expanded-description">{platform.description}</p>
-
-                            <div className="expanded-meta">
-                                <div className="meta-chip">
-                                    {tFunc('uploaded_by', lang)}: {platform.uploadedBy || 'Unknown'}
-                                </div>
-                                <div className="meta-chip">
-                                    {new Date(platform.createdAt || 0).toLocaleDateString()}
-                                </div>
-                                <div className="meta-chip">
-                                    {platform.fileSize || '—'}
-                                </div>
+                    <div className="modal-card" onClick={function(e){e.stopPropagation()}}>
+                        <div className="modal-img" style={{backgroundImage:'url('+imgUrl+')'}}>
+                            <button className="modal-close" onClick={onClose}>✕</button>
+                        </div>
+                        <div className="modal-body">
+                            <h2>{platform.name}</h2>
+                            <span className={"access-badge " + accessClass}>{accessLabel}</span>
+                            <p className="desc">{platform.description || "No description provided."}</p>
+                            <div className="meta-chips">
+                                <span className="meta-chip">{t('uploadedBy')}: {platform.uploadedBy}</span>
+                                <span className="meta-chip">{t('date')}: {platform.uploadedDate}</span>
+                                {platform.fileSize && <span className="meta-chip">{t('size')}: {platform.fileSize}</span>}
                             </div>
-
-                            <div className="access-badge">{tFunc(accessText, lang)}</div>
-
-                            <div className="expanded-buttons">
-                                <a href={platform.url} target="_blank" rel="noopener noreferrer" className="enter-button">
-                                    {tFunc('enter_room', lang)}
-                                </a>
-                                <button className="close-button" onClick={onClose}>
-                                    {tFunc('close', lang)}
-                                </button>
-                            </div>
+                            {platform.url && <a href={platform.url} target="_blank" rel="noopener noreferrer" className="enter-btn">{t('enterRoom')}</a>}
                         </div>
                     </div>
                 </div>
             );
         }
 
-        function Lobby({ currentUser, platforms, lang, setLang, onLogout, onBackOffice, t: tFunc, users }) {
-            const [activeSection, setActiveSection] = useState('tools');
-            const [expandedRoom, setExpandedRoom] = useState(null);
-
-            const sectionPlatforms = platforms.filter(p => p.section === activeSection);
+        function LobbyScreen({ currentUser, onLogout, platforms, onShowBackOffice, t, lang, setLang }) {
+            var [activeFloor, setActiveFloor] = useState('tools');
+            var [selectedRoom, setSelectedRoom] = useState(null);
+            var floors = [
+                { key:'tools', label: t('toolsFloor') },
+                { key:'analysis', label: t('analysisFloor') },
+                { key:'strategy', label: t('strategyFloor') },
+            ];
+            var floorPlatforms = platforms.filter(function(p){return p.section === activeFloor});
+            var canConfig = accessMatrix[currentUser.role] && accessMatrix[currentUser.role].config;
 
             return (
-                <div className="lobby-container">
+                <div>
                     <div className="lobby-header">
-                        <div className="lobby-title-section">
-                            <div className="lobby-bell">🔔</div>
-                            <div className="lobby-titles">
-                                <div className="lobby-main-title">AI LOBBY</div>
-                                <div className="lobby-subtitle">{tFunc('lobby_subtitle', lang)}</div>
-                            </div>
+                        <div className="lobby-title">
+                            <h1>{t('title')}</h1>
+                            <p>{t('subtitle')}</p>
                         </div>
-
-                        <div className="lobby-header-right">
-                            <div className="user-info">
-                                <div className="user-avatar">{currentUser.avatar}</div>
-                                <div className="user-details">
-                                    <div className="user-name">{currentUser.name}</div>
-                                    <div className="user-role">{tFunc(`user_role_${currentUser.role}`, lang)}</div>
-                                </div>
+                        <div className="lobby-actions">
+                            <div className="user-badge">
+                                <div className="avatar">{currentUser.avatar}</div>
+                                <span>{currentUser.name}</span>
+                                <span className="role-tag">{currentUser.role}</span>
                             </div>
-
-                            {accessMatrix[currentUser.role].config && (
-                                <button className="header-button" onClick={onBackOffice}>
-                                    {tFunc('back_office', lang)}
-                                </button>
-                            )}
-
-                            <button className="lang-toggle-btn" onClick={() => setLang(lang === 'en' ? 'es' : 'en')}>
-                                {lang === 'en' ? '🇪🇸' : '🇬🇧'}
-                            </button>
-
-                            <button className="header-button" onClick={onLogout}>
-                                {tFunc('logout', lang)}
-                            </button>
+                            <button className="btn btn-outline" onClick={function(){setLang(lang==='en'?'es':'en')}}>{t('langBtn')}</button>
+                            {canConfig && <button className="btn btn-gold" onClick={onShowBackOffice}>{t('backOffice')}</button>}
+                            <button className="btn btn-wine" onClick={onLogout}>{t('logout')}</button>
                         </div>
                     </div>
+                    <div className="floor-tabs">
+                        {floors.map(function(f){
+                            return <div key={f.key} className={"floor-tab" + (activeFloor===f.key?" active":"")} onClick={function(){setActiveFloor(f.key)}}>{f.label}</div>
+                        })}
+                    </div>
+                    <div className="room-grid">
+                        {floorPlatforms.length === 0 && (
+                            <div className="empty-floor">
+                                <div className="icon">{t('emptyIcon')}</div>
+                                <p>{t('emptyFloor')}</p>
+                            </div>
+                        )}
+                        {floorPlatforms.map(function(p){
+                            return <RoomCard key={p.id} platform={p} section={activeFloor} onClick={function(){setSelectedRoom(p)}} />
+                        })}
+                    </div>
+                    {selectedRoom && <ExpandedRoom platform={selectedRoom} section={activeFloor} onClose={function(){setSelectedRoom(null)}} currentUser={currentUser} t={t} />}
+                </div>
+            );
+        }
 
-                    <div className="lobby-content">
-                        <div className="floor-tabs">
-                            <button
-                                className={`floor-tab ${activeSection === 'tools' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('tools')}
-                            >
-                                🔧 {tFunc('tools_floor', lang)}
-                            </button>
-                            <button
-                                className={`floor-tab ${activeSection === 'analysis' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('analysis')}
-                            >
-                                📊 {tFunc('analysis_floor', lang)}
-                            </button>
-                            <button
-                                className={`floor-tab ${activeSection === 'strategy' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('strategy')}
-                            >
-                                🎯 {tFunc('strategy_floor', lang)}
-                            </button>
+        // ===================== BACK OFFICE =====================
+        function BackOfficeScreen({ currentUser, onBack, platforms, setPlatforms, users, setUsers, t, lang, savePlatform, saveUser, deleteUser, deletePlatform }) {
+            var [activeTab, setActiveTab] = useState('upload');
+            var [uploadStep, setUploadStep] = useState(1);
+            var [fileContent, setFileContent] = useState('');
+            var [fileName, setFileName] = useState('');
+            var [fileSize, setFileSize] = useState('');
+            var [formData, setFormData] = useState({ name:'', section:'tools', description:'', url:'', roles:['bellboy'] });
+            var [showCeleb, setShowCeleb] = useState(false);
+            var [toast, setToast] = useState('');
+            var [confirmDel, setConfirmDel] = useState(null);
+            var [dragging, setDragging] = useState(false);
+            var [newUser, setNewUser] = useState({ name:'', email:'', role:'guest' });
+
+            function showToast(msg) { setToast(msg); setTimeout(function(){ setToast('') }, 3000); }
+
+            // Upload handlers
+            function handleFile(file) {
+                setFileName(file.name);
+                setFileSize((file.size/1024).toFixed(1) + ' KB');
+                var reader = new FileReader();
+                reader.onload = function(e) { setFileContent(e.target.result); };
+                reader.readAsText(file);
+            }
+            function handleDrop(e) { e.preventDefault(); setDragging(false); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }
+            function handleDragOver(e) { e.preventDefault(); setDragging(true); }
+            function handleDragLeave() { setDragging(false); }
+
+            function handlePublish() {
+                var raw = analyzeCode(fileContent);
+                var newP = {
+                    id: Date.now(),
+                    roomNumber: platforms.length + 1,
+                    name: formData.name,
+                    section: formData.section,
+                    uploadedBy: currentUser.name,
+                    uploadedDate: new Date().toLocaleDateString(),
+                    description: formData.description,
+                    url: formData.url,
+                    fileSize: fileSize,
+                    rawScore: raw,
+                    accessRoles: formData.roles,
+                };
+                var all = calcScores([].concat(platforms, [newP]));
+                setPlatforms(all);
+                // Save to Firebase
+                savePlatform(all);
+                setUploadStep(1);
+                setFileContent(''); setFileName(''); setFileSize('');
+                setFormData({ name:'', section:'tools', description:'', url:'', roles:['bellboy'] });
+                setShowCeleb(true);
+                setTimeout(function(){ setShowCeleb(false) }, 6000);
+                showToast(t('platformAdded'));
+            }
+
+            function handleAddUser() {
+                if (!newUser.name || !newUser.email) return;
+                var u = {
+                    id: Date.now(),
+                    name: newUser.name,
+                    email: newUser.email,
+                    role: newUser.role,
+                    avatar: newUser.name.split(' ').map(function(n){return n[0]}).join('').toUpperCase().slice(0,2)
+                };
+                var updated = [].concat(users, [u]);
+                setUsers(updated);
+                saveUser(u);
+                setNewUser({ name:'', email:'', role:'guest' });
+                showToast(t('userAdded'));
+            }
+
+            function handleDeleteUser(uid) {
+                if (uid === currentUser.id) return;
+                var updated = users.filter(function(u){return u.id !== uid});
+                setUsers(updated);
+                deleteUser(uid);
+                setConfirmDel(null);
+                showToast(t('userRemoved'));
+            }
+
+            function handleDeletePlatform(pid) {
+                var updated = platforms.filter(function(p){return p.id !== pid});
+                setPlatforms(calcScores(updated));
+                deletePlatform(pid);
+            }
+
+            // Discrepancies
+            var discrepancies = [];
+            ['tools','analysis','strategy'].forEach(function(sec) {
+                var sp = platforms.filter(function(p){return p.section===sec});
+                for(var i=0;i<sp.length;i++) {
+                    for(var j=i+1;j<sp.length;j++) {
+                        if(Math.abs((sp[i].score||0)-(sp[j].score||0)) > 30) {
+                            discrepancies.push({ a:sp[i].name, b:sp[j].name, section:sec, gap:Math.abs((sp[i].score||0)-(sp[j].score||0)) });
+                        }
+                    }
+                }
+            });
+
+            var tabs = [
+                { key:'upload', label: t('uploadTab') },
+                { key:'registry', label: t('registryTab') },
+                { key:'scores', label: t('scoresTab') },
+                { key:'disc', label: t('discTab') },
+            ];
+
+            return (
+                <div className="bo-wrap">
+                    <div className="bo-sidebar">
+                        <h2>{t('backOffice')}</h2>
+                        {tabs.map(function(tab){
+                            return <div key={tab.key} className={"bo-nav-item"+(activeTab===tab.key?" active":"")} onClick={function(){setActiveTab(tab.key)}}>{tab.label}</div>
+                        })}
+                        <div style={{marginTop:'30px'}}>
+                            <button className="btn btn-outline" style={{width:'100%',marginBottom:'8px'}} onClick={onBack}>{t('backToLobby')}</button>
+                            <button className="btn btn-wine" style={{width:'100%'}} onClick={function(){localStorage.removeItem('ailobby_lang');window.location.reload()}}>{t('logout')}</button>
                         </div>
-
-                        <div className="rooms-grid">
-                            {sectionPlatforms.map((platform, idx) => (
-                                <div
-                                    key={platform.id}
-                                    className="room-card"
-                                    onClick={() => setExpandedRoom(platform)}
-                                >
-                                    <div style={{ position: 'relative', height: '180px' }}>
-                                        <img
-                                            src={getPlatformImage(platform, activeSection)}
-                                            alt={platform.name}
-                                            className="room-image"
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                        />
-                                        <div className="room-badge">{activeSection.toUpperCase()}</div>
-                                    </div>
-                                    <div className="room-info">
-                                        <div className="room-number">
-                                            {tFunc('room_number', lang)} #{idx + 1}
-                                        </div>
-                                        <div className="room-name">{platform.name}</div>
-                                    </div>
+                    </div>
+                    <div className="bo-content">
+                        {/* UPLOAD TAB */}
+                        {activeTab === 'upload' && (
+                            <div>
+                                <h3>{t('uploadTab')}</h3>
+                                <div className="upload-steps">
+                                    <span className={"step-indicator "+(uploadStep>=1?"step-active":"step-inactive")}>{t('step1')}</span>
+                                    <span className={"step-indicator "+(uploadStep>=2?"step-active":"step-inactive")}>{t('step2')}</span>
+                                    <span className={"step-indicator "+(uploadStep>=3?"step-active":"step-inactive")}>{t('step3')}</span>
                                 </div>
-                            ))}
-                        </div>
+                                {uploadStep === 1 && (
+                                    <div>
+                                        <div className={"dropzone"+(dragging?" dragging":"")} onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onClick={function(){document.getElementById('fileInput').click()}}>
+                                            <div className="icon">📁</div>
+                                            <p style={{color:'var(--gold)',fontWeight:600}}>{t('dropText')}</p>
+                                            <p style={{color:'var(--rose)',fontSize:'0.85rem',marginTop:'5px'}}>{t('dropSub')}</p>
+                                        </div>
+                                        <input id="fileInput" type="file" style={{display:'none'}} onChange={function(e){if(e.target.files[0])handleFile(e.target.files[0])}} />
+                                        {fileName && (
+                                            <div style={{marginTop:'15px',padding:'10px',background:'rgba(212,168,67,0.1)',borderRadius:'8px'}}>
+                                                <span style={{color:'var(--gold)'}}>{t('fileName')}: </span>{fileName}
+                                                <span style={{marginLeft:'15px',color:'var(--gold)'}}>{t('fileSize')}: </span>{fileSize}
+                                            </div>
+                                        )}
+                                        {fileName && <button className="btn btn-gold" style={{marginTop:'15px'}} onClick={function(){setUploadStep(2)}}>{t('next')}</button>}
+                                    </div>
+                                )}
+                                {uploadStep === 2 && (
+                                    <div>
+                                        <div className="form-group">
+                                            <label>{t('nameLabel')}</label>
+                                            <input value={formData.name} onChange={function(e){setFormData(Object.assign({},formData,{name:e.target.value}))}} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t('sectionLabel')}</label>
+                                            <select value={formData.section} onChange={function(e){setFormData(Object.assign({},formData,{section:e.target.value}))}}>
+                                                <option value="tools">{t('tools')}</option>
+                                                <option value="analysis">{t('analysis')}</option>
+                                                <option value="strategy">{t('strategy')}</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t('descLabel')}</label>
+                                            <textarea value={formData.description} onChange={function(e){setFormData(Object.assign({},formData,{description:e.target.value}))}} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t('urlLabel')}</label>
+                                            <input value={formData.url} onChange={function(e){setFormData(Object.assign({},formData,{url:e.target.value}))}} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>{t('rolesLabel')}</label>
+                                            <div className="checkbox-group">
+                                                {['bellboy','concierge','guest'].map(function(r){
+                                                    return (
+                                                        <label key={r}>
+                                                            <input type="checkbox" checked={formData.roles.indexOf(r)>-1} onChange={function(){
+                                                                var newRoles = formData.roles.indexOf(r)>-1 ? formData.roles.filter(function(x){return x!==r}) : [].concat(formData.roles,[r]);
+                                                                setFormData(Object.assign({},formData,{roles:newRoles}));
+                                                            }} />
+                                                            {r}
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div style={{display:'flex',gap:'10px'}}>
+                                            <button className="btn btn-outline" onClick={function(){setUploadStep(1)}}>{t('back')}</button>
+                                            <button className="btn btn-gold" onClick={function(){if(formData.name)setUploadStep(3)}}>{t('next')}</button>
+                                        </div>
+                                    </div>
+                                )}
+                                {uploadStep === 3 && (
+                                    <div>
+                                        <h3 style={{marginBottom:'10px'}}>{t('preview')}</h3>
+                                        <div style={{background:'rgba(212,168,67,0.05)',border:'1px solid var(--gold)',borderRadius:'12px',padding:'20px',marginBottom:'20px'}}>
+                                            <p><strong style={{color:'var(--gold)'}}>{t('nameLabel')}:</strong> {formData.name}</p>
+                                            <p><strong style={{color:'var(--gold)'}}>{t('sectionLabel')}:</strong> {formData.section}</p>
+                                            <p><strong style={{color:'var(--gold)'}}>{t('descLabel')}:</strong> {formData.description}</p>
+                                            <p><strong style={{color:'var(--gold)'}}>{t('urlLabel')}:</strong> {formData.url}</p>
+                                            <p><strong style={{color:'var(--gold)'}}>{t('fileName')}:</strong> {fileName} ({fileSize})</p>
+                                        </div>
+                                        <div style={{display:'flex',gap:'10px'}}>
+                                            <button className="btn btn-outline" onClick={function(){setUploadStep(2)}}>{t('back')}</button>
+                                            <button className="btn btn-gold" onClick={handlePublish}>{t('publish')}</button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
-                        {sectionPlatforms.length === 0 && (
-                            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--rose)' }}>
-                                <div style={{ fontSize: '48px', marginBottom: '20px' }}>🏨</div>
-                                <div>No platforms available in this section yet.</div>
+                        {/* REGISTRY TAB */}
+                        {activeTab === 'registry' && (
+                            <div>
+                                <h3>{t('registryTab')}</h3>
+                                <table className="bo-table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>{t('name')}</th>
+                                            <th>{t('email')}</th>
+                                            <th>{t('role')}</th>
+                                            {currentUser.role === 'bellboy' && <th>{t('actions')}</th>}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {users.map(function(u){
+                                            return (
+                                                <tr key={u.id}>
+                                                    <td><div className="avatar" style={{width:'30px',height:'30px',fontSize:'0.7rem'}}>{u.avatar}</div></td>
+                                                    <td>{u.name}</td>
+                                                    <td>{u.email}</td>
+                                                    <td><span className="role-tag">{u.role}</span></td>
+                                                    {currentUser.role === 'bellboy' && (
+                                                        <td>
+                                                            {u.id !== currentUser.id && <button className="del-btn" onClick={function(){setConfirmDel(u.id)}}>🗑️</button>}
+                                                        </td>
+                                                    )}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                                <div className="add-form">
+                                    <input placeholder={t('name')} value={newUser.name} onChange={function(e){setNewUser(Object.assign({},newUser,{name:e.target.value}))}} />
+                                    <input placeholder={t('email')} value={newUser.email} onChange={function(e){setNewUser(Object.assign({},newUser,{email:e.target.value}))}} />
+                                    <select value={newUser.role} onChange={function(e){setNewUser(Object.assign({},newUser,{role:e.target.value}))}}>
+                                        <option value="bellboy">Bellboy</option>
+                                        <option value="concierge">Concierge</option>
+                                        <option value="guest">Guest</option>
+                                    </select>
+                                    <button className="btn btn-gold" onClick={handleAddUser}>{t('addUser')}</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* SCORES TAB */}
+                        {activeTab === 'scores' && (
+                            <div>
+                                <h3>{t('scoresTab')}</h3>
+                                <table className="bo-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{t('platform')}</th>
+                                            <th>{t('section')}</th>
+                                            <th>{t('rawScore')}</th>
+                                            <th>{t('score')}</th>
+                                            <th>{t('by')}</th>
+                                            <th>{t('actions')}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {platforms.map(function(p){
+                                            return (
+                                                <tr key={p.id}>
+                                                    <td>{p.name}</td>
+                                                    <td>{p.section}</td>
+                                                    <td>{p.rawScore}</td>
+                                                    <td style={{color:'var(--gold)',fontWeight:'bold'}}>{p.score}</td>
+                                                    <td>{p.uploadedBy}</td>
+                                                    <td><button className="del-btn" onClick={function(){handleDeletePlatform(p.id)}}>{t('remove')}</button></td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {/* DISCREPANCIES TAB */}
+                        {activeTab === 'disc' && (
+                            <div>
+                                <h3>{t('discTab')}</h3>
+                                {discrepancies.length === 0 && <p style={{color:'var(--rose)'}}>{t('noDisc')}</p>}
+                                {discrepancies.map(function(d, i){
+                                    return (
+                                        <div className="disc-card" key={i}>
+                                            <h4>{t('discAlert')}: {d.a} vs {d.b}</h4>
+                                            <p>{t('section')}: {d.section} | Gap: {d.gap} pts</p>
+                                            <p style={{marginTop:'5px'}}>{t('discRec')}</p>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
 
-                    {expandedRoom && (
-                        <ExpandedRoom
-                            platform={expandedRoom}
-                            section={activeSection}
-                            onClose={() => setExpandedRoom(null)}
-                            lang={lang}
-                            t={tFunc}
-                            currentUser={currentUser}
-                        />
-                    )}
+                    {confirmDel && <ConfirmDialog title={t('confirmDeleteTitle')} message={t('confirmDeleteMsg')} onConfirm={function(){handleDeleteUser(confirmDel)}} onCancel={function(){setConfirmDel(null)}} t={t} />}
+                    {showCeleb && <Celebration lang={lang} />}
+                    {toast && <Toast message={toast} />}
                 </div>
             );
         }
 
-        function BackOffice({ currentUser, platforms, users, lang, setLang, onBack, onLogout, t: tFunc }) {
-            const [activeTab, setActiveTab] = useState('upload');
-            const [uploadStep, setUploadStep] = useState(1);
-            const [uploadFile, setUploadFile] = useState(null);
-            const [uploadData, setUploadData] = useState({
-                name: '',
-                section: 'tools',
-                description: '',
-                url: '',
-                accessRoles: ['bellboy', 'concierge', 'guest']
-            });
-            const [toast, setToast] = useState(null);
-            const [celebration, setCelebration] = useState(false);
-            const [newUser, setNewUser] = useState({ name: '', email: '', role: 'guest' });
-            const [confirmDialog, setConfirmDialog] = useState(null);
-            const fileInputRef = useRef(null);
-
-            const handleFileUpload = (file) => {
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    setUploadFile({
-                        name: file.name,
-                        size: file.size,
-                        content: e.target.result
-                    });
-                };
-                reader.readAsText(file);
-            };
-
-            const handleDrop = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const files = e.dataTransfer.files;
-                if (files.length > 0) handleFileUpload(files[0]);
-            };
-
-            const handlePublish = () => {
-                if (!uploadFile || !uploadData.name || !uploadData.url) {
-                    alert('Please fill in all fields');
-                    return;
-                }
-
-                const rawScore = analyzeCodeComplexity(uploadFile.content);
-                const newPlatform = {
-                    id: Date.now(),
-                    ...uploadData,
-                    rawScore,
-                    uploadedBy: currentUser.name,
-                    createdAt: new Date().getTime(),
-                    fileSize: (uploadFile.size / 1024).toFixed(2) + ' KB'
-                };
-
-                const updatedPlatforms = [...platforms, newPlatform];
-                const scoredPlatforms = calcScores(updatedPlatforms);
-                const platformsObj = {};
-                scoredPlatforms.forEach(p => {
-                    platformsObj[p.id] = p;
-                });
-
-                window.db.ref('platforms').set(platformsObj).then(() => {
-                    setCelebration(true);
-                });
-            };
-
-            const handleAddUser = () => {
-                if (!newUser.name || !newUser.email) {
-                    alert('Please fill in all fields');
-                    return;
-                }
-
-                const userId = Date.now();
-                const userToAdd = {
-                    id: userId,
-                    ...newUser,
-                    avatar: newUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
-                };
-
-                window.db.ref('users/' + userId).set(userToAdd).then(() => {
-                    setNewUser({ name: '', email: '', role: 'guest' });
-                    setToast('toast_user_added');
-                    setTimeout(() => setToast(null), 3000);
-                });
-            };
-
-            const handleDeleteUser = (userId, userName) => {
-                if (userId === currentUser.id) {
-                    alert(tFunc('cannot_delete_yourself', lang));
-                    return;
-                }
-                setConfirmDialog({
-                    title: 'confirm_delete_user',
-                    message: 'confirm_delete_user_msg',
-                    onConfirm: () => {
-                        window.db.ref('users/' + userId).remove().then(() => {
-                            setConfirmDialog(null);
-                            setToast('toast_user_deleted');
-                            setTimeout(() => setToast(null), 3000);
-                        });
-                    }
-                });
-            };
-
-            const handleDeletePlatform = (platformId) => {
-                setConfirmDialog({
-                    title: 'confirm_delete_platform',
-                    message: 'confirm_delete_platform_msg',
-                    onConfirm: () => {
-                        window.db.ref('platforms/' + platformId).remove().then(() => {
-                            setConfirmDialog(null);
-                            setToast('toast_platform_deleted');
-                            setTimeout(() => setToast(null), 3000);
-                        });
-                    }
-                });
-            };
-
-            const detectDiscrepancies = () => {
-                const discrepancies = [];
-                const sections = ['tools', 'analysis', 'strategy'];
-                sections.forEach(section => {
-                    const sectionPlats = platforms.filter(p => p.section === section);
-                    for (let i = 0; i < sectionPlats.length; i++) {
-                        for (let j = i + 1; j < sectionPlats.length; j++) {
-                            const gap = Math.abs((sectionPlats[i].score || 0) - (sectionPlats[j].score || 0));
-                            if (gap > 30) {
-                                discrepancies.push({
-                                    section,
-                                    plat1: sectionPlats[i],
-                                    plat2: sectionPlats[j],
-                                    gap
-                                });
-                            }
-                        }
-                    }
-                });
-                return discrepancies;
-            };
-
-            if (celebration) {
-                return <Celebration lang={lang} />;
-            }
-
-            return (
-                <div className="backoffice-container">
-                    <div className="backoffice-header">
-                        <div className="backoffice-title">{tFunc('back_office', lang)}</div>
-                        <div className="backoffice-controls">
-                            <button className="lang-toggle-btn" onClick={() => setLang(lang === 'en' ? 'es' : 'en')}>
-                                {lang === 'en' ? '🇪🇸' : '🇬🇧'}
-                            </button>
-                            <button className="header-button" onClick={onBack}>
-                                {tFunc('back_to_lobby', lang)}
-                            </button>
-                            <button className="header-button" onClick={onLogout}>
-                                {tFunc('logout', lang)}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="backoffice-content">
-                        <div className="backoffice-tabs">
-                            <button
-                                className={`backoffice-tab ${activeTab === 'upload' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('upload')}
-                            >
-                                {tFunc('upload_platform', lang)}
-                            </button>
-                            <button
-                                className={`backoffice-tab ${activeTab === 'users' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('users')}
-                            >
-                                {tFunc('guest_registry', lang)}
-                            </button>
-                            <button
-                                className={`backoffice-tab ${activeTab === 'scores' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('scores')}
-                            >
-                                {tFunc('score_analysis', lang)}
-                            </button>
-                            <button
-                                className={`backoffice-tab ${activeTab === 'discrepancies' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('discrepancies')}
-                            >
-                                {tFunc('ai_discrepancies', lang)}
-                            </button>
-                        </div>
-
-                        <div className="backoffice-panel">
-                            {activeTab === 'upload' && (
-                                <div>
-                                    <div className="wizard-steps">
-                                        <div className={`wizard-step ${uploadStep >= 1 ? 'active' : ''} ${uploadStep > 1 ? 'completed' : ''}`}>
-                                            <div className="step-number">1</div>
-                                            <div className="step-label">{tFunc('step1_upload', lang)}</div>
-                                        </div>
-                                        <div className={`wizard-step ${uploadStep >= 2 ? 'active' : ''} ${uploadStep > 2 ? 'completed' : ''}`}>
-                                            <div className="step-number">2</div>
-                                            <div className="step-label">{tFunc('step2_details', lang)}</div>
-                                        </div>
-                                        <div className={`wizard-step ${uploadStep >= 3 ? 'active' : ''} ${uploadStep > 3 ? 'completed' : ''}`}>
-                                            <div className="step-number">3</div>
-                                            <div className="step-label">{tFunc('step3_preview', lang)}</div>
-                                        </div>
-                                    </div>
-
-                                    {uploadStep === 1 && (
-                                        <div>
-                                            <div
-                                                className="drop-zone"
-                                                onDragOver={(e) => e.preventDefault()}
-                                                onDragLeave={(e) => e.preventDefault()}
-                                                onDrop={handleDrop}
-                                                onClick={() => fileInputRef.current?.click()}
-                                            >
-                                                <div className="drop-zone-icon">📁</div>
-                                                <div className="drop-zone-text">{tFunc('drop_files', lang)}</div>
-                                                <div className="drop-zone-hint">{tFunc('drop_hint', lang)}</div>
-                                            </div>
-                                            <input
-                                                ref={fileInputRef}
-                                                type="file"
-                                                className="file-input"
-                                                onChange={(e) => handleFileUpload(e.target.files?.[0])}
-                                            />
-                                            {uploadFile && (
-                                                <div className="file-preview">
-                                                    <div className="file-preview-name">📄 {uploadFile.name}</div>
-                                                    <div className="file-preview-size">
-                                                        {tFunc('file_size', lang)}: {(uploadFile.size / 1024).toFixed(2)} KB
-                                                    </div>
-                                                </div>
-                                            )}
-                                            <button
-                                                className="login-button"
-                                                onClick={() => setUploadStep(2)}
-                                                style={{ marginTop: '24px', width: '100%' }}
-                                                disabled={!uploadFile}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    {uploadStep === 2 && (
-                                        <div>
-                                            <div className="form-row">
-                                                <div className="form-group">
-                                                    <label className="form-label">{tFunc('platform_name', lang)}</label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-input"
-                                                        value={uploadData.name}
-                                                        onChange={(e) => setUploadData({ ...uploadData, name: e.target.value })}
-                                                    />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label">{tFunc('section', lang)}</label>
-                                                    <select
-                                                        className="select"
-                                                        value={uploadData.section}
-                                                        onChange={(e) => setUploadData({ ...uploadData, section: e.target.value })}
-                                                    >
-                                                        <option value="tools">{tFunc('tools', lang)}</option>
-                                                        <option value="analysis">{tFunc('analysis', lang)}</option>
-                                                        <option value="strategy">{tFunc('strategy', lang)}</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div className="form-row full">
-                                                <div className="form-group">
-                                                    <label className="form-label">{tFunc('description', lang)}</label>
-                                                    <textarea
-                                                        className="textarea"
-                                                        value={uploadData.description}
-                                                        onChange={(e) => setUploadData({ ...uploadData, description: e.target.value })}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="form-row full">
-                                                <div className="form-group">
-                                                    <label className="form-label">{tFunc('url', lang)}</label>
-                                                    <input
-                                                        type="url"
-                                                        className="form-input"
-                                                        value={uploadData.url}
-                                                        onChange={(e) => setUploadData({ ...uploadData, url: e.target.value })}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="form-row full">
-                                                <div className="form-group">
-                                                    <label className="form-label">{tFunc('access_roles', lang)}</label>
-                                                    <div className="checkbox-group">
-                                                        {['bellboy', 'concierge', 'guest'].map(role => (
-                                                            <div key={role} className="checkbox-item">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    id={`role-${role}`}
-                                                                    checked={uploadData.accessRoles.includes(role)}
-                                                                    onChange={(e) => {
-                                                                        if (e.target.checked) {
-                                                                            setUploadData({
-                                                                                ...uploadData,
-                                                                                accessRoles: [...uploadData.accessRoles, role]
-                                                                            });
-                                                                        } else {
-                                                                            setUploadData({
-                                                                                ...uploadData,
-                                                                                accessRoles: uploadData.accessRoles.filter(r => r !== role)
-                                                                            });
-                                                                        }
-                                                                    }}
-                                                                />
-                                                                <label htmlFor={`role-${role}`}>
-                                                                    {tFunc(`user_role_${role}`, lang)}
-                                                                </label>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-                                                <button
-                                                    className="login-button"
-                                                    onClick={() => setUploadStep(1)}
-                                                    style={{ flex: 1, background: 'transparent', color: 'var(--gold)', border: '1px solid var(--gold)' }}
-                                                >
-                                                    Back
-                                                </button>
-                                                <button
-                                                    className="login-button"
-                                                    onClick={() => setUploadStep(3)}
-                                                    style={{ flex: 1 }}
-                                                >
-                                                    Preview
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {uploadStep === 3 && (
-                                        <div>
-                                            <div className="preview-card">
-                                                <div className="preview-row">
-                                                    <div className="preview-label">{tFunc('platform_name', lang)}</div>
-                                                    <div className="preview-value">{uploadData.name}</div>
-                                                </div>
-                                                <div className="preview-row">
-                                                    <div className="preview-label">{tFunc('section', lang)}</div>
-                                                    <div className="preview-value">{uploadData.section}</div>
-                                                </div>
-                                                <div className="preview-row">
-                                                    <div className="preview-label">{tFunc('description', lang)}</div>
-                                                    <div className="preview-value">{uploadData.description}</div>
-                                                </div>
-                                                <div className="preview-row">
-                                                    <div className="preview-label">{tFunc('url', lang)}</div>
-                                                    <div className="preview-value">{uploadData.url}</div>
-                                                </div>
-                                                <div className="preview-row">
-                                                    <div className="preview-label">{tFunc('access_roles', lang)}</div>
-                                                    <div className="preview-value">
-                                                        {uploadData.accessRoles.map(r => tFunc(`user_role_${r}`, lang)).join(', ')}
-                                                    </div>
-                                                </div>
-                                                <div className="preview-row">
-                                                    <div className="preview-label">{tFunc('file_name', lang)}</div>
-                                                    <div className="preview-value">{uploadFile?.name}</div>
-                                                </div>
-                                                <div className="preview-row">
-                                                    <div className="preview-label">{tFunc('file_size', lang)}</div>
-                                                    <div className="preview-value">{(uploadFile?.size || 0) / 1024} KB</div>
-                                                </div>
-                                            </div>
-
-                                            <div style={{ display: 'flex', gap: '12px' }}>
-                                                <button
-                                                    className="login-button"
-                                                    onClick={() => setUploadStep(2)}
-                                                    style={{ flex: 1, background: 'transparent', color: 'var(--gold)', border: '1px solid var(--gold)' }}
-                                                >
-                                                    Back
-                                                </button>
-                                                <button
-                                                    className="login-button"
-                                                    onClick={handlePublish}
-                                                    style={{ flex: 1 }}
-                                                >
-                                                    {tFunc('publish', lang)}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {activeTab === 'users' && (
-                                <div>
-                                    <table className="data-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Avatar</th>
-                                                <th>{tFunc('user_name', lang)}</th>
-                                                <th>{tFunc('user_email', lang)}</th>
-                                                <th>{tFunc('user_role', lang)}</th>
-                                                {currentUser.role === 'bellboy' && <th>Action</th>}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {users.map(user => (
-                                                <tr key={user.id}>
-                                                    <td><div className="user-avatar">{user.avatar}</div></td>
-                                                    <td>{user.name}</td>
-                                                    <td>{user.email}</td>
-                                                    <td>{tFunc(`user_role_${user.role}`, lang)}</td>
-                                                    {currentUser.role === 'bellboy' && (
-                                                        <td>
-                                                            <button
-                                                                className="delete-button"
-                                                                onClick={() => handleDeleteUser(user.id, user.name)}
-                                                                title="Delete"
-                                                            >
-                                                                🗑️
-                                                            </button>
-                                                        </td>
-                                                    )}
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-
-                                    <div className="add-user-section">
-                                        <div className="add-user-title">{tFunc('add_user', lang)}</div>
-                                        <div className="add-user-form">
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                placeholder={tFunc('user_name', lang)}
-                                                value={newUser.name}
-                                                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                                            />
-                                            <input
-                                                type="email"
-                                                className="form-input"
-                                                placeholder={tFunc('user_email', lang)}
-                                                value={newUser.email}
-                                                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                                            />
-                                            <select
-                                                className="select"
-                                                value={newUser.role}
-                                                onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                                            >
-                                                <option value="bellboy">{tFunc('user_role_bellboy', lang)}</option>
-                                                <option value="concierge">{tFunc('user_role_concierge', lang)}</option>
-                                                <option value="guest">{tFunc('user_role_guest', lang)}</option>
-                                            </select>
-                                            <button className="action-button" onClick={handleAddUser}>
-                                                {tFunc('add', lang)}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {activeTab === 'scores' && (
-                                <div>
-                                    <table className="data-table">
-                                        <thead>
-                                            <tr>
-                                                <th>{tFunc('platform', lang)}</th>
-                                                <th>{tFunc('section', lang)}</th>
-                                                <th>{tFunc('raw_score', lang)}</th>
-                                                <th>{tFunc('normalized_score', lang)}</th>
-                                                <th>{tFunc('uploaded_by', lang)}</th>
-                                                {currentUser.role === 'bellboy' && <th>Action</th>}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {platforms.map(platform => (
-                                                <tr key={platform.id}>
-                                                    <td>{platform.name}</td>
-                                                    <td>{platform.section}</td>
-                                                    <td className="score-cell">{platform.rawScore || 0}</td>
-                                                    <td className="score-cell">{platform.score || 0}</td>
-                                                    <td>{platform.uploadedBy}</td>
-                                                    {currentUser.role === 'bellboy' && (
-                                                        <td>
-                                                            <button
-                                                                className="delete-button"
-                                                                onClick={() => handleDeletePlatform(platform.id)}
-                                                                title="Delete"
-                                                            >
-                                                                🗑️
-                                                            </button>
-                                                        </td>
-                                                    )}
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
-
-                            {activeTab === 'discrepancies' && (
-                                <div>
-                                    {detectDiscrepancies().length === 0 ? (
-                                        <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--rose)' }}>
-                                            <div style={{ fontSize: '48px', marginBottom: '20px' }}>✅</div>
-                                            <div>All scores are consistent. No discrepancies detected.</div>
-                                        </div>
-                                    ) : (
-                                        detectDiscrepancies().map((disc, idx) => (
-                                            <div key={idx} style={{
-                                                background: 'rgba(212, 168, 67, 0.1)',
-                                                border: '1px solid rgba(212, 168, 67, 0.3)',
-                                                borderRadius: '8px',
-                                                padding: '16px',
-                                                marginBottom: '16px'
-                                            }}>
-                                                <div style={{ color: 'var(--gold)', fontWeight: 600, marginBottom: '8px' }}>
-                                                    ⚠️ {tFunc('discrepancy_title', lang)}
-                                                </div>
-                                                <div style={{ color: 'var(--cream)', fontSize: '13px', marginBottom: '12px' }}>
-                                                    {disc.plat1.name} ({disc.plat1.score}) vs {disc.plat2.name} ({disc.plat2.score}) - Gap: {disc.gap}
-                                                </div>
-                                                <div style={{ color: 'var(--rose)', fontSize: '12px' }}>
-                                                    {tFunc('discrepancy_msg', lang)}
-                                                </div>
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {toast && <Toast message={toast} lang={lang} />}
-                    {confirmDialog && (
-                        <ConfirmDialog
-                            title={confirmDialog.title}
-                            message={confirmDialog.message}
-                            onConfirm={confirmDialog.onConfirm}
-                            onCancel={() => setConfirmDialog(null)}
-                            lang={lang}
-                        />
-                    )}
-                </div>
-            );
-        }
-
+        // ===================== MAIN APP =====================
         function App() {
-            const [lang, setLang] = useState(() => localStorage.getItem('ailobby_lang') || 'en');
-            const [currentUser, setCurrentUser] = useState(null);
-            const [platforms, setPlatforms] = useState([]);
-            const [users, setUsers] = useState(initialUsers);
-            const [showBackOffice, setShowBackOffice] = useState(false);
-            const [firebaseReady, setFirebaseReady] = useState(window.firebaseReady || false);
+            var [lang, setLang] = useState(function(){ return localStorage.getItem('ailobby_lang') || 'en'; });
+            var [currentUser, setCurrentUser] = useState(null);
+            var [platforms, setPlatforms] = useState([]);
+            var [users, setUsers] = useState(initialUsers);
+            var [showBackOffice, setShowBackOffice] = useState(false);
+            var [firebaseReady, setFirebaseReady] = useState(false);
 
-            useEffect(() => {
-                localStorage.setItem('ailobby_lang', lang);
-            }, [lang]);
+            function t(key) { return T[lang][key] || T.en[key] || key; }
 
-            useEffect(() => {
-                if (!window.db) {
-                    setTimeout(() => setFirebaseReady(true), 1000);
-                    return;
-                }
+            // Firebase listeners
+            useEffect(function() {
+                if (!db) { setFirebaseReady(true); return; }
 
-                try {
-                    const platformsRef = window.db.ref('platforms');
-                    platformsRef.on('value', (snapshot) => {
-                        const data = snapshot.val();
-                        setPlatforms(data ? calcScores(Object.values(data)) : []);
-                        setFirebaseReady(true);
-                    });
-
-                    const usersRef = window.db.ref('users');
-                    usersRef.on('value', (snapshot) => {
-                        const data = snapshot.val();
-                        if (data) {
-                            const fbUsers = Object.values(data);
-                            const merged = [...initialUsers];
-                            fbUsers.forEach(u => {
-                                if (!merged.find(m => m.email === u.email)) merged.push(u);
-                            });
-                            setUsers(merged);
-                        }
-                    });
-
-                    return () => {
-                        platformsRef.off();
-                        usersRef.off();
-                    };
-                } catch (error) {
-                    console.error('Firebase error:', error);
+                var platformsRef = db.ref('platforms');
+                platformsRef.on('value', function(snapshot) {
+                    var data = snapshot.val();
+                    if (data) {
+                        setPlatforms(calcScores(Object.values(data)));
+                    } else {
+                        setPlatforms([]);
+                    }
                     setFirebaseReady(true);
-                }
+                }, function(error) {
+                    console.error("Firebase platforms error:", error);
+                    setFirebaseReady(true);
+                });
+
+                var usersRef = db.ref('users');
+                usersRef.on('value', function(snapshot) {
+                    var data = snapshot.val();
+                    if (data) {
+                        var fbUsers = Object.values(data);
+                        var merged = [].concat(initialUsers);
+                        fbUsers.forEach(function(u) {
+                            if (!merged.find(function(m){ return m.email === u.email; })) {
+                                merged.push(u);
+                            }
+                        });
+                        setUsers(merged);
+                    }
+                });
+
+                return function() {
+                    platformsRef.off();
+                    usersRef.off();
+                };
             }, []);
 
-            const handleLogout = () => {
-                setCurrentUser(null);
-                setShowBackOffice(false);
-                localStorage.removeItem('ailobby_lang');
-                window.location.reload();
-            };
+            useEffect(function() { localStorage.setItem('ailobby_lang', lang); }, [lang]);
 
+            // Firebase CRUD helpers
+            function savePlatform(allPlatforms) {
+                if (!db) return;
+                var obj = {};
+                allPlatforms.forEach(function(p) { obj[p.id] = p; });
+                db.ref('platforms').set(obj);
+            }
+            function saveUser(user) {
+                if (!db) return;
+                db.ref('users/' + user.id).set(user);
+            }
+            function deleteUserFB(uid) {
+                if (!db) return;
+                db.ref('users/' + uid).remove();
+            }
+            function deletePlatformFB(pid) {
+                if (!db) return;
+                db.ref('platforms/' + pid).remove();
+            }
+
+            // Loading
             if (!firebaseReady) {
                 return (
-                    <div className="loading-container">
-                        <div className="loading-bell">🔔</div>
-                        <div className="loading-text">Loading AI Lobby...</div>
+                    <div className="loading-screen">
+                        <div>
+                            <div className="bell">🔔</div>
+                            <h2>Loading AI Lobby...</h2>
+                            <p>Connecting to hotel network</p>
+                        </div>
                     </div>
                 );
             }
 
+            // Login
             if (!currentUser) {
-                return (
-                    <LoginScreen
-                        onLogin={setCurrentUser}
-                        t={t}
-                        lang={lang}
-                        setLang={setLang}
-                        users={users}
-                    />
-                );
+                return <LoginScreen onLogin={setCurrentUser} t={t} lang={lang} setLang={setLang} users={users} />;
             }
 
-            if (showBackOffice && accessMatrix[currentUser.role].config) {
+            // Back Office
+            if (showBackOffice && accessMatrix[currentUser.role] && accessMatrix[currentUser.role].config) {
                 return (
-                    <BackOffice
+                    <BackOfficeScreen
                         currentUser={currentUser}
+                        onBack={function(){setShowBackOffice(false)}}
                         platforms={platforms}
+                        setPlatforms={setPlatforms}
                         users={users}
-                        lang={lang}
-                        setLang={setLang}
-                        onBack={() => setShowBackOffice(false)}
-                        onLogout={handleLogout}
+                        setUsers={setUsers}
                         t={t}
+                        lang={lang}
+                        savePlatform={savePlatform}
+                        saveUser={saveUser}
+                        deleteUser={deleteUserFB}
+                        deletePlatform={deletePlatformFB}
                     />
                 );
             }
 
+            // Lobby
             return (
-                <Lobby
+                <LobbyScreen
                     currentUser={currentUser}
+                    onLogout={function(){setCurrentUser(null)}}
                     platforms={platforms}
+                    onShowBackOffice={function(){setShowBackOffice(true)}}
+                    t={t}
                     lang={lang}
                     setLang={setLang}
-                    onLogout={handleLogout}
-                    onBackOffice={() => setShowBackOffice(true)}
-                    t={t}
-                    users={users}
                 />
             );
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
     </script>
 </body>
 </html>
